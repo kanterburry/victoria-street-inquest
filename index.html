@@ -44,6 +44,8 @@ h2,h3{text-wrap:balance}
 .brand{min-width:0;flex:1}
 .brand b{font-family:var(--f-display);letter-spacing:.07em;font-size:1.02rem;display:block;line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .brand span{font-family:var(--f-type);font-size:.66rem;letter-spacing:.1em;color:var(--ui-soft)}
+.synctag{display:block;font-style:normal;font-family:var(--f-type);font-size:.66rem;letter-spacing:.1em;color:var(--brass,#d8b46a);cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px}
+.synctag:empty{display:none}
 .clock{font-family:var(--f-type);text-align:right;line-height:1.1}
 .clock b{font-size:1.15rem;font-variant-numeric:tabular-nums;display:block}
 .clock span{font-size:.62rem;letter-spacing:.1em;color:var(--ui-soft);font-variant-numeric:tabular-nums}
@@ -427,7 +429,7 @@ main{max-width:1080px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-le
 
 <header class="top">
   <div class="top-in">
-    <div class="brand"><b>VICTORIA ST. INQUEST</b><span>DOCKET 45/11 · 16 NOV 1945 <em id="sync" style="font-style:normal;cursor:pointer"></em></span></div>
+    <div class="brand"><b>VICTORIA ST. INQUEST</b><span>DOCKET 45/11 · 16 NOV 1945</span><em id="sync" class="synctag" role="button" tabindex="0"></em></div>
     <button class="chip8b" id="chip8b">FORM 8B</button>
     <div class="clock"><b id="worldTime">20:00</b><span id="remain">120:00 left</span></div>
   </div>
@@ -787,7 +789,7 @@ let ref=null, docExists=false, readOnly=false, chain=Promise.resolve();
 let ROOM=null, roomRev=0, pending=0, writeSeq=0, pollT=null, roomMode=false;
 const bootAt = Date.now();
 const saveLocal = () => LS.set("vsi3-state", JSON.stringify(S));
-const setSync = t => { $("sync").textContent = t ? "· "+t : ""; };
+const setSync = t => { $("sync").textContent = t || ""; };
 
 function commit(patch){
   S = merge(S, patch); saveLocal(); renderAll();
@@ -1584,10 +1586,10 @@ async function pollRoom(){
     const rows=await sbRpc("vsi_get",{p_code:code}); const row=Array.isArray(rows)?rows[0]:rows;
     if(code!==ROOM) return;
     if(!row){ ROOM=null; ref=null; clearInterval(pollT); LS.set("vsi3-room",""); setSync(""); showGate(true,"Commission "+code+" has closed. Enter a new code."); return; }
-    setSync("LIVE · ROOM "+code);
+    setSync("CODE "+code+" · LIVE");
     if(pending>0 || seq!==writeSeq) return;
     if(row.rev>roomRev){ roomRev=row.rev; S=normalize(row.state); saveLocal(); renderAll(); }
-  }catch(e){ if(code===ROOM) setSync("OFFLINE · ROOM "+code); }
+  }catch(e){ if(code===ROOM) setSync("CODE "+code+" · OFFLINE"); }
 }
 function startPolling(){ clearInterval(pollT); pollT=setInterval(()=>{ if(document.visibilityState!=="hidden") pollRoom(); }, 2000); }
 document.addEventListener("visibilitychange",()=>{ if(document.visibilityState==="visible") pollRoom(); });
@@ -1597,7 +1599,7 @@ async function joinRoom(code, create){
   else { const rows=await sbRpc("vsi_get",{p_code:code}); if(!rows||!rows.length) return "missing"; }
   ROOM=code; roomRev=0; LS.set("vsi3-room",code); ref=roomRef(code); docExists=true; readOnly=false;
   if(create){ S=initial(); saveLocal(); }
-  setSync("LIVE · ROOM "+code); await pollRoom(); startPolling(); renderAll(); return "ok";
+  setSync("CODE "+code+" · LIVE"); await pollRoom(); startPolling(); renderAll(); return "ok";
 }
 function leaveRoom(){ ROOM=null; ref=null; clearInterval(pollT); LS.set("vsi3-room",""); setSync(""); S=initial(); saveLocal(); renderAll(); showGate(true); }
 const newCode = () => { const A="ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; let c=""; const r=crypto.getRandomValues(new Uint32Array(5)); for(const n of r) c+=A[n%A.length]; return c; };
@@ -1636,6 +1638,7 @@ function openRoomSheet(){
   $("roomLeave").addEventListener("click",()=>{ leaveRoom(); });
 }
 $("sync").addEventListener("click", openRoomSheet);
+$("sync").addEventListener("keydown", e=>{ if(e.key==="Enter") openRoomSheet(); });
 function renderRoomCard(){
   const el=$("roomCard"); if(!el) return;
   if(!roomMode){ el.hidden=true; return; } el.hidden=false;
@@ -1667,10 +1670,10 @@ function renderRoomCard(){
   const urlCode=cleanCode(new URLSearchParams(location.search).get("room"));
   const saved=urlCode||cleanCode(LS.get("vsi3-room",""));
   if(saved){
-    setSync("JOINING ROOM "+saved+"…");
+    setSync("JOINING "+saved+"…");
     $("gateCode").value=saved; $("gateFb").textContent="Joining commission "+saved+"…";
     try{ const r=await joinRoom(saved,false); if(r==="ok"){ if(urlCode) history.replaceState(null,"",location.pathname); showGate(false); return; } }
-    catch(e){ if(!urlCode && LS.get("vsi3-room","")===saved){ setSync("OFFLINE · ROOM "+saved); ROOM=saved; ref=roomRef(saved); docExists=true; startPolling(); showGate(false); return; } $("gateFb").textContent="Can't reach the commission. Check this phone is online, then tap Join."; return; }
+    catch(e){ if(!urlCode && LS.get("vsi3-room","")===saved){ setSync("CODE "+saved+" · OFFLINE"); ROOM=saved; ref=roomRef(saved); docExists=true; startPolling(); showGate(false); return; } $("gateFb").textContent="Can't reach the commission. Check this phone is online, then tap Join."; return; }
     $("gateFb").textContent="No commission with code "+saved+". Check it with the officers.";
     LS.set("vsi3-room","");
   }
