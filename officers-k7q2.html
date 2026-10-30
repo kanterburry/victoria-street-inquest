@@ -898,6 +898,7 @@ const SCREENS = ["case","tasks","map","files","verdict","host"];
 if(!SCREENS.includes(screen)) screen="case";
 let lastPlace = LS.get("vsi3-place","scene");
 function go(s){
+  if(typeof roomMode!=="undefined" && roomMode && !ROOM){ showGate(true); return; }
   if($("sheet").classList.contains("on")) closeSheet();
   if(s==="host" && !isHost()) s="case";
   if(s==="places"||s==="scene") s="map";
@@ -1619,6 +1620,12 @@ async function gateSubmit(create){
   }catch(e){ fb("Can't reach the commission. Check this phone is online and try again."); }
   btns.forEach(b=>b.disabled=false);
 }
+/* belt and braces: with no commission joined, no tap or key reaches the game */
+const gateLocked = () => roomMode && !ROOM;
+["click","pointerdown","touchstart","keydown"].forEach(t=>document.addEventListener(t,e=>{
+  if(gateLocked() && !(e.target.closest && e.target.closest("#gate"))){ e.preventDefault(); e.stopPropagation(); if(!$("gate").classList.contains("on")) showGate(true); }
+},{capture:true,passive:false}));
+setInterval(()=>{ if(gateLocked() && !$("gate").classList.contains("on")) showGate(true); },1000);
 $("gateJoin").addEventListener("click",()=>gateSubmit(false));
 $("gateNew").addEventListener("click",()=>gateSubmit(true));
 $("gateCode").addEventListener("keydown",e=>{ if(e.key==="Enter") gateSubmit(false); });
