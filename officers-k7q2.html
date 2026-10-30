@@ -1669,6 +1669,13 @@ function renderRoomCard(){
   }
   roomMode=true; showGate(true); renderAll();
   if(new URLSearchParams(location.search).has("room")) history.replaceState(null,"",location.pathname);
+  /* a phone that has joined by hand before stays joined; links never join on their own */
+  const saved=cleanCode(LS.get("vsi3-room",""));
+  if(saved){
+    $("gateFb").textContent="Rejoining commission "+saved+"…";
+    try{ const r=await joinRoom(saved,false); if(r==="ok"){ showGate(false); return; } LS.set("vsi3-room",""); $("gateFb").textContent=""; }
+    catch(e){ ROOM=saved; ref=roomRef(saved); docExists=true; setSync("CODE "+saved+" · OFFLINE"); startPolling(); showGate(false); return; }
+  }
   setSync("");
   showGate(true);
 })();
