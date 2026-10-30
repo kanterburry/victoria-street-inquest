@@ -336,6 +336,12 @@ main{max-width:1080px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-le
 .truth .tl{margin:6px 0}
 .hist{font-size:.9rem;color:var(--ink-soft);border-left:3px solid var(--line);padding-left:12px}
 /* ---------- bottom sheet ---------- */
+.gate{position:fixed;inset:0;z-index:90;display:none;place-items:center;overflow:auto;background:#14120e;padding:24px max(16px,env(safe-area-inset-left,0px))}
+.gate.on{display:grid}
+.gate .card{width:100%;max-width:420px;background:var(--paper);color:var(--ink);border-radius:12px;padding:22px 20px 18px;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+.gate h2{margin:4px 0 8px}
+.gate input{width:100%;font-family:'Stardos Stencil',monospace;font-size:28px;letter-spacing:.22em;text-transform:uppercase;text-align:center;padding:10px 8px;border:1.5px solid var(--ink);border-radius:8px;background:#fffdf6;color:var(--ink);box-sizing:border-box}
+.gate .btn{width:100%;justify-content:center;margin-top:10px}
 .scrim{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:60;opacity:0;pointer-events:none;transition:opacity .2s}
 .scrim.on{opacity:1;pointer-events:auto}
 .sheet{position:fixed;left:0;right:0;bottom:0;z-index:61;max-height:88%;overflow:auto;background:var(--paper);color:var(--ink);border-radius:14px 14px 0 0;
@@ -585,6 +591,16 @@ main{max-width:1080px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-le
   </div>
 </nav>
 
+<div class="gate" id="gate" role="dialog" aria-modal="true" aria-labelledby="gateTitle"><div class="card">
+  <p class="kicker">B.M.A. Civil Affairs · Docket 45/11</p>
+  <h2 id="gateTitle">Join the inquest</h2>
+  <p id="gateLede">Enter the commission code the officers give you. Every phone on the same code shares one case.</p>
+  <label for="gateCode" class="typed" style="display:block;margin:10px 0 6px">Commission code</label>
+  <input id="gateCode" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="8" inputmode="text">
+  <button class="btn" id="gateJoin" style="background:var(--ink);border-color:var(--ink);color:var(--paper)">Join the commission</button>
+  <button class="btn red" id="gateNew" hidden>Start a new commission</button>
+  <p class="fb" id="gateFb" role="status" style="min-height:1.4em"></p>
+</div></div>
 <div class="scrim" id="scrim"></div>
 <div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-label="Details"><div class="grab"></div><button class="x" id="sheetX" aria-label="Close">×</button><div id="sheetBody"></div></div>
 <div class="dispatch" id="dispatch" role="dialog" aria-modal="true" aria-label="Dispatch">
@@ -797,6 +813,7 @@ const exOpen = e => e.phase <= S.phase;
 
 let DEV = LS.get("vsi3-dev",""); if(!DEV){ DEV="d"+Math.random().toString(36).slice(2,10); LS.set("vsi3-dev",DEV); }
 const HOSTPAGE = !!window.VSI_HOST;
+if(!(window.claude && window.claude.use)){ const g=document.getElementById("gate"); if(g){ g.classList.add("on"); [...document.body.children].forEach(el=>{ if(el!==g && el.tagName!=="SCRIPT") el.inert=true; }); } }
 let hostOn = HOSTPAGE || LS.get("vsi3-host","")==="1";
 const isHost = () => hostOn;
 
@@ -1565,7 +1582,7 @@ async function pollRoom(){
   try{
     const rows=await sbRpc("vsi_get",{p_code:code}); const row=Array.isArray(rows)?rows[0]:rows;
     if(code!==ROOM) return;
-    if(!row){ setSync("ROOM "+code+" NOT FOUND"); return; }
+    if(!row){ ROOM=null; ref=null; clearInterval(pollT); LS.set("vsi3-room",""); setSync(""); showGate(true,"Commission "+code+" has closed. Enter a new code."); return; }
     setSync("LIVE · ROOM "+code);
     if(pending>0 || seq!==writeSeq) return;
     if(row.rev>roomRev){ roomRev=row.rev; S=normalize(row.state); saveLocal(); renderAll(); }
@@ -1581,31 +1598,35 @@ async function joinRoom(code, create){
   if(create){ S=initial(); saveLocal(); }
   setSync("LIVE · ROOM "+code); await pollRoom(); startPolling(); renderAll(); return "ok";
 }
-function leaveRoom(){ ROOM=null; ref=null; clearInterval(pollT); LS.set("vsi3-room",""); setSync("THIS SCREEN ONLY"); renderAll(); }
+function leaveRoom(){ ROOM=null; ref=null; clearInterval(pollT); LS.set("vsi3-room",""); setSync(""); S=initial(); saveLocal(); renderAll(); showGate(true); }
 const newCode = () => { const A="ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; let c=""; const r=crypto.getRandomValues(new Uint32Array(5)); for(const n of r) c+=A[n%A.length]; return c; };
 function guestLink(code){ const u=new URL(location.href); u.search=""; u.hash=""; u.pathname=u.pathname.replace(/[^/]*$/,""); u.searchParams.set("room",code); return u.toString(); }
+function showGate(on, msg){
+  const g=$("gate"); g.classList.toggle("on",!!on);
+  [...document.body.children].forEach(el=>{ if(el!==g && el.tagName!=="SCRIPT") el.inert=!!on; });
+  if(on){ closeSheet(); closeDispatch(); $("gateNew").hidden=!HOSTPAGE; $("gateFb").textContent=msg||""; setTimeout(()=>$("gateCode").focus(),60); }
+}
+async function gateSubmit(create){
+  const fb=m=>{ $("gateFb").textContent=m; };
+  const btns=[$("gateJoin"),$("gateNew")]; btns.forEach(b=>b.disabled=true);
+  fb(create?"Opening a new commission…":"Checking the code…");
+  try{
+    let res; if(create){ for(let i=0;i<5;i++){ res=await joinRoom(newCode(),true); if(res!=="taken") break; } }
+    else res=await joinRoom($("gateCode").value,false);
+    if(res==="ok"){ showGate(false); toast(create?"New commission "+ROOM+" opened.":"Joined commission "+ROOM+"."); if(HOSTPAGE) go("host"); }
+    else fb(res==="missing"?"No commission with that code. Check it with the officers.":res==="short"?"The code has at least four letters or digits.":"Couldn't open a commission. Try again.");
+  }catch(e){ fb("Can't reach the commission. Check this phone is online and try again."); }
+  btns.forEach(b=>b.disabled=false);
+}
+$("gateJoin").addEventListener("click",()=>gateSubmit(false));
+$("gateNew").addEventListener("click",()=>gateSubmit(true));
+$("gateCode").addEventListener("keydown",e=>{ if(e.key==="Enter") gateSubmit(false); });
 function openRoomSheet(){
-  if(!roomMode) return;
-  openSheet(`<p class="kicker">Docket 45/11</p><h2>${ROOM?"Commission "+ROOM:"Join the inquest"}</h2>
-    <p>${ROOM?"This phone is sharing the case with everyone on code <b>"+ROOM+"</b>. To move to another code, enter it below.":"Enter the commission code the officers give you. Every phone on the same code shares one case: findings, hints and the final vote."}</p>
-    <div class="fld"><label for="roomCode">Commission code</label><input id="roomCode" autocomplete="off" autocapitalize="characters" maxlength="8" style="text-transform:uppercase;letter-spacing:.2em;font-size:22px"></div>
-    <button class="btn" id="roomJoin" style="background:var(--ink);border-color:var(--ink);color:var(--paper)">Join</button>
-    ${HOSTPAGE?'<button class="btn red" id="roomNew" style="margin-top:8px">Start a new commission</button>':""}
-    <p class="fb" id="roomFb"></p>
-    <p style="margin-top:14px"><button class="btn" id="roomSolo" style="background:transparent">${ROOM?"Leave and play on this phone only":"Play on this phone only"}</button></p>`, "Commission code");
-  const fb=m=>{ $("roomFb").textContent=m; };
-  const go1=async create=>{
-    fb(create?"Opening a new commission…":"Joining…");
-    try{
-      let res; if(create){ for(let i=0;i<5;i++){ res=await joinRoom(newCode(),true); if(res!=="taken") break; } }
-      else res=await joinRoom($("roomCode").value,false);
-      if(res==="ok"){ closeSheet(); toast(create?"New commission "+ROOM+" opened.":"Joined commission "+ROOM+"."); if(create) go("host"); }
-      else fb(res==="missing"?"No commission with that code. Check it with the officers.":res==="short"?"The code has at least four letters or digits.":"Couldn't open a commission. Try again.");
-    }catch(e){ fb("Can't reach the commission. Check this phone is online and try again."); }
-  };
-  $("roomJoin").addEventListener("click",()=>go1(false)); $("roomCode").addEventListener("keydown",e=>{ if(e.key==="Enter") go1(false); });
-  if($("roomNew")) $("roomNew").addEventListener("click",()=>go1(true));
-  $("roomSolo").addEventListener("click",()=>{ if(ROOM) leaveRoom(); closeSheet(); });
+  if(!roomMode || !ROOM) return;
+  openSheet(`<p class="kicker">Docket 45/11</p><h2>Commission ${ROOM}</h2>
+    <p>This phone is sharing the case with everyone on code <b>${ROOM}</b>.</p>
+    <button class="btn" id="roomLeave" style="background:transparent">Leave this commission</button>`, "Commission code");
+  $("roomLeave").addEventListener("click",()=>{ leaveRoom(); });
 }
 $("sync").addEventListener("click", openRoomSheet);
 function renderRoomCard(){
@@ -1613,12 +1634,12 @@ function renderRoomCard(){
   if(!roomMode){ el.hidden=true; return; } el.hidden=false;
   if(!ROOM){ el.innerHTML=`<p class="kicker">Commission code</p><h3>No shared game yet</h3><p>Start a commission and give guests its code. Every phone on the code shares one case.</p><button class="btn red" id="rcNew">Start a new commission</button> <button class="btn" id="rcJoin" style="margin-top:8px">Join an existing code</button>`;
     $("rcNew").addEventListener("click",async()=>{ try{ let r; for(let i=0;i<5;i++){ r=await joinRoom(newCode(),true); if(r!=="taken") break; } if(r==="ok") toast("New commission "+ROOM+" opened."); else toast("Couldn't open a commission."); }catch(e){ toast("Can't reach the server. Check you're online."); } });
-    $("rcJoin").addEventListener("click",openRoomSheet); return; }
+    $("rcJoin").addEventListener("click",()=>showGate(true)); return; }
   const link=guestLink(ROOM);
   el.innerHTML=`<p class="kicker">Commission code · give this to every guest</p>
     <div style="font-family:'Stardos Stencil',monospace;font-size:44px;letter-spacing:.18em;line-height:1.1;margin:4px 0 6px" id="rcCode">${ROOM}</div>
     <p class="typed" style="color:var(--ink-soft);word-break:break-all;margin:0 0 10px">${link}</p>
-    <button class="btn" id="rcCopy">Copy guest link</button> <button class="btn" id="rcLeave" style="margin-top:8px;background:transparent">Switch or leave</button>`;
+    <button class="btn" id="rcCopy">Copy guest link</button> <button class="btn" id="rcLeave" style="margin-top:8px;background:transparent">Leave commission</button>`;
   $("rcCopy").addEventListener("click",async()=>{ try{ await navigator.clipboard.writeText(link); toast("Guest link copied."); }catch(e){ toast("Copy failed. Read out the code instead."); } });
   $("rcLeave").addEventListener("click",openRoomSheet);
 }
@@ -1635,16 +1656,19 @@ function renderRoomCard(){
       return;
     }
   }
-  roomMode=true; renderAll();
+  roomMode=true; showGate(true); renderAll();
   const urlCode=cleanCode(new URLSearchParams(location.search).get("room"));
   const saved=urlCode||cleanCode(LS.get("vsi3-room",""));
   if(saved){
     setSync("JOINING ROOM "+saved+"…");
-    try{ const r=await joinRoom(saved,false); if(r==="ok"){ if(urlCode) history.replaceState(null,"",location.pathname); return; } }catch(e){ setSync("OFFLINE · ROOM "+saved); ROOM=saved; ref=roomRef(saved); docExists=true; startPolling(); return; }
+    $("gateCode").value=saved; $("gateFb").textContent="Joining commission "+saved+"…";
+    try{ const r=await joinRoom(saved,false); if(r==="ok"){ if(urlCode) history.replaceState(null,"",location.pathname); showGate(false); return; } }
+    catch(e){ if(!urlCode && LS.get("vsi3-room","")===saved){ setSync("OFFLINE · ROOM "+saved); ROOM=saved; ref=roomRef(saved); docExists=true; startPolling(); showGate(false); return; } $("gateFb").textContent="Can't reach the commission. Check this phone is online, then tap Join."; return; }
+    $("gateFb").textContent="No commission with code "+saved+". Check it with the officers.";
     LS.set("vsi3-room","");
   }
-  setSync("THIS SCREEN ONLY · TAP TO JOIN");
-  openRoomSheet();
+  setSync("");
+  showGate(true);
 })();
 })();
 </script>
