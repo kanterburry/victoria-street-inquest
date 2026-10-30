@@ -1,0 +1,1557 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="robots" content="noindex,nofollow">
+<title>The Victoria Street Inquest</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Stardos+Stencil:wght@400;700&family=Spectral:ital,wght@0,400;0,600;1,400&family=Courier+Prime:wght@400;700&family=IM+Fell+English:ital@0;1&family=IM+Fell+English+SC&display=swap" rel="stylesheet">
+<style>
+/* Layout: a lamp-lit night desk. Manila files, a survey map and a corkboard sit on dark walnut; one brass accent marks what you can touch. Single deliberate dark look. */
+:root{
+  color-scheme:dark;
+  --desk:#14120e; --desk-2:#1f1b15; --desk-3:#2b251b; --edge:#3a3226;
+  --ui:#ece3c8; --ui-soft:#a89e82; --brass:#d6ad5c; --brass-ink:#1b160c;
+  --paper:#efe6cc; --paper-2:#e3d7b5; --paper-3:#d3c49c; --line:#b9aa80;
+  --ink:#1f211d; --ink-soft:#5f5948; --type:#2b3a6b; --stamp:#b32820; --ok:#3d7a45;
+  --ok-ui:#8fcf97; --red-ui:#ff8a7a; --string:#c4232b;
+  --m-paper:#eadfbf; --m-block:#dccca3; --m-bldg:#bba979; --m-road:#f7f0dc; --m-casing:#6f6346;
+  --m-sea:#a7bfc2; --m-sea-2:#8fa9ad; --m-park:#c3c896; --m-hill:#8a7a52; --m-ink:#3a3324; --m-sand:#e9d8a6; --m-dmg:#9a4a32;
+  --s-sky1:#0b1222; --s-sky2:#263350; --s-soil:#5a3d26; --s-soil-2:#4a321f; --s-clay:#3b4850; --s-wall:#cdbb93; --s-wall-d:#8c7a56;
+  --s-roof:#7a3b26; --s-room:#2a241b; --s-dark:#170f0e; --s-safe:#ff3b2a; --s-water:#2f6f9a; --s-rubble:#6d6450; --s-grass:#8a9a3e; --s-lamp:#ffd27a;
+  --kraft:#c49a62; --leaf:#5d7a3a; --metal:#4b5154; --metal-2:#6c7377; --brass-k:#c49a3c; --bp:#2f4f86;
+  --f-display:"Stardos Stencil","Arial Narrow",Impact,sans-serif;
+  --f-body:"Spectral",Georgia,"Times New Roman",serif;
+  --f-type:"Courier Prime","Courier New",Courier,monospace;
+  --f-map:"IM Fell English",Georgia,serif;
+  --f-mapsc:"IM Fell English SC","IM Fell English",Georgia,serif;
+  --r:4px;
+  --nav-h:66px;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{height:100%}
+body{background:var(--desk);color:var(--ui);font-family:var(--f-body);font-size:16px;line-height:1.5;
+  background-image:radial-gradient(ellipse 80% 50% at 50% 0%, rgba(255,196,110,.10), transparent 70%);background-attachment:fixed}
+button,input{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--brass);outline-offset:2px}
+p{margin:0 0 10px;max-width:65ch}
+h2,h3{text-wrap:balance}
+
+/* ---------- top bar ---------- */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:40;background:rgba(20,18,14,.94);backdrop-filter:blur(6px);border-bottom:1px solid var(--edge);
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:8px}
+.top-in{max-width:1080px;margin:0 auto;display:flex;align-items:center;gap:12px}
+.brand{min-width:0;flex:1}
+.brand b{font-family:var(--f-display);letter-spacing:.07em;font-size:1.02rem;display:block;line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.brand span{font-family:var(--f-type);font-size:.66rem;letter-spacing:.1em;color:var(--ui-soft)}
+.clock{font-family:var(--f-type);text-align:right;line-height:1.1}
+.clock b{font-size:1.15rem;font-variant-numeric:tabular-nums;display:block}
+.clock span{font-size:.62rem;letter-spacing:.1em;color:var(--ui-soft);font-variant-numeric:tabular-nums}
+.clock .paused{color:var(--brass)}
+.chip8b{display:none;border:0;background:var(--stamp);color:var(--paper);font-family:var(--f-display);letter-spacing:.08em;padding:6px 10px;border-radius:999px;font-size:.8rem;white-space:nowrap}
+.chip8b.on{display:inline-block;animation:pulse 2s ease-in-out infinite}
+@keyframes pulse{50%{box-shadow:0 0 0 6px rgba(179,40,32,.25)}}
+
+/* ---------- bottom nav ---------- */
+.nav{position:fixed;left:0;right:0;bottom:0;z-index:40;background:rgba(20,18,14,.97);border-top:1px solid var(--edge);
+  padding-left:max(8px,env(safe-area-inset-left,0px));padding-right:max(8px,env(safe-area-inset-right,0px));padding-bottom:env(safe-area-inset-bottom,0px)}
+.nav-in{max-width:520px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);height:var(--nav-h)}
+.officers{justify-self:center;border:0;background:transparent;color:var(--ui-soft);font-family:var(--f-type);font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;padding:10px;opacity:.6}
+.cast{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.cast button{padding:16px 10px;border-radius:var(--r);border:2px solid var(--ink-soft);background:var(--paper);color:var(--ink);font-family:var(--f-display);letter-spacing:.06em;font-size:1.05rem}
+.cast .castA[aria-pressed="true"]{background:var(--stamp);border-color:var(--stamp);color:var(--paper)}
+.cast .castB[aria-pressed="true"]{background:var(--ok);border-color:var(--ok);color:var(--paper)}
+.cast button[disabled]{opacity:.45;cursor:not-allowed}
+.lead-q{font-family:var(--f-body);font-style:italic;font-size:1.08rem;border-left:3px solid var(--ink);padding:2px 0 2px 12px;margin:6px 0 14px}
+.suspects{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,92px),1fr));gap:8px}
+.suspects button{border:1.5px solid var(--line);background:var(--paper);color:var(--ink);border-radius:var(--r);padding:6px;display:grid;gap:4px;justify-items:center;font-family:var(--f-type);font-size:.72rem;line-height:1.2;text-align:center}
+.suspects button svg{width:100%;max-width:70px;height:auto}
+.suspects button.opt[aria-pressed="true"]{border-color:var(--ink);box-shadow:inset 0 0 0 2px var(--ink);background:var(--paper-2);color:var(--ink)}
+.spotpick{background:#0b0d12;border-radius:var(--r);overflow:hidden}
+.spotpick svg{display:block;width:100%;height:auto}
+.spotpick .zone{cursor:pointer}
+.spotpick .zone rect,.spotpick .zone circle{fill:rgba(214,173,92,.12);stroke:var(--brass);stroke-width:2;stroke-dasharray:6 4}
+.spotpick .zone[aria-pressed="true"] rect,.spotpick .zone[aria-pressed="true"] circle{fill:rgba(255,74,58,.35);stroke:#ff4a3a;stroke-dasharray:none}
+.spotpick .zone text{font-family:var(--f-type);font-size:13px;fill:#fff3d6;paint-order:stroke;stroke:#000;stroke-width:3px;pointer-events:none}
+.nav button{border:0;background:transparent;color:var(--ui-soft);display:grid;justify-items:center;align-content:center;gap:3px;font-family:var(--f-type);font-size:.68rem;letter-spacing:.06em;position:relative}
+.nav button svg{width:24px;height:24px;stroke:currentColor;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.nav button[aria-current="page"]{color:var(--brass)}
+.nav button[aria-current="page"]::before{content:"";position:absolute;top:0;left:30%;right:30%;height:2px;background:var(--brass)}
+.nav .dot{position:absolute;top:10px;right:calc(50% - 18px);width:8px;height:8px;border-radius:50%;background:var(--stamp);display:none}
+.nav .dot.on{display:block}
+
+main{max-width:1080px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));
+  padding-block:18px calc(var(--nav-h) + 28px + env(safe-area-inset-bottom,0px))}
+.screen{display:grid;gap:18px;animation:fade .25s ease-out}
+@keyframes fade{from{opacity:.4;transform:translateY(4px)}to{opacity:1;transform:none}}
+.kicker{font-family:var(--f-type);font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ui-soft);margin:0 0 4px}
+.title{font-family:var(--f-display);font-size:1.7rem;letter-spacing:.04em;line-height:1.1;margin:0}
+.lede{color:var(--ui-soft);margin:6px 0 0}
+.btn{border:1.5px solid var(--brass);background:var(--brass);color:var(--brass-ink);padding:11px 16px;border-radius:var(--r);font-family:var(--f-display);letter-spacing:.08em;font-size:.95rem;display:inline-flex;align-items:center;gap:8px;justify-content:center}
+.btn:hover{filter:brightness(1.08)}
+.btn.ghost{background:transparent;color:var(--ui);border-color:var(--edge)}
+.btn.small{padding:7px 11px;font-size:.82rem}
+.btn.red{background:var(--stamp);border-color:var(--stamp);color:var(--paper)}
+.btn[disabled]{opacity:.4;cursor:not-allowed}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.pill{display:inline-block;font-family:var(--f-type);font-size:.66rem;letter-spacing:.1em;padding:2px 7px;border-radius:2px;border:1px solid currentColor;white-space:nowrap;line-height:1.5}
+.pill.ok{color:var(--ok)} .pill.warn{color:#8a5a12} .pill.red{color:var(--stamp)} .pill.mute{color:var(--ink-soft)}
+.on-desk .pill.ok{color:var(--ok-ui)} .on-desk .pill.red{color:var(--red-ui)} .on-desk .pill.warn{color:var(--brass)} .on-desk .pill.mute{color:var(--ui-soft)}
+
+/* paper sheet */
+.paper{background:var(--paper);color:var(--ink);border-radius:var(--r);padding:20px;box-shadow:0 10px 30px rgba(0,0,0,.45),inset 0 0 40px rgba(160,130,80,.18);position:relative;min-width:0}
+.paper .kicker{color:var(--ink-soft)}
+.paper h3{font-family:var(--f-display);letter-spacing:.05em;font-size:1.15rem;margin:0 0 8px}
+.stamp{display:inline-block;border:3px double var(--stamp);color:var(--stamp);font-family:var(--f-display);letter-spacing:.12em;text-transform:uppercase;padding:2px 10px;font-size:.85rem;transform:rotate(-4deg);white-space:nowrap}
+.typed{font-family:var(--f-type);font-size:.88rem}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:18px}
+
+/* ---------- CASE ---------- */
+.hero{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:18px;align-items:end}
+.hero-photo{width:120px;transform:rotate(3deg);background:var(--paper);padding:6px 6px 22px;box-shadow:0 8px 20px rgba(0,0,0,.5);position:relative}
+.hero-photo svg{display:block;width:100%;height:auto}
+.hero-photo span{position:absolute;bottom:4px;left:0;right:0;text-align:center;font-family:var(--f-type);font-size:.62rem;color:var(--ink)}
+.hero-photo .stamp{position:absolute;top:44%;left:-8px;font-size:.7rem;background:rgba(239,230,204,.7)}
+.track{display:grid;grid-template-columns:repeat(3,1fr);gap:0;position:relative;margin-top:4px}
+.track::before{content:"";position:absolute;top:13px;left:16%;right:16%;height:2px;background:var(--edge)}
+.track .bar{position:absolute;top:13px;left:16%;height:2px;background:var(--brass);transition:width .6s}
+.stage{display:grid;justify-items:center;gap:6px;text-align:center;position:relative;z-index:1}
+.stage i{width:28px;height:28px;border-radius:50%;border:2px solid var(--edge);background:var(--desk);display:grid;place-items:center;font-style:normal;font-family:var(--f-type);font-size:.8rem}
+.stage.done i{background:var(--brass);border-color:var(--brass);color:var(--brass-ink)}
+.stage.now i{border-color:var(--brass);color:var(--brass);box-shadow:0 0 0 5px rgba(214,173,92,.18)}
+.stage b{font-family:var(--f-display);font-weight:400;letter-spacing:.04em;font-size:.9rem;line-height:1.2}
+.stage small{font-family:var(--f-type);font-size:.66rem;color:var(--ui-soft)}
+.seals{display:flex;gap:10px;flex-wrap:wrap;margin:6px 0 2px}
+.seal{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;border:2px dashed var(--line);color:var(--ink-soft);font-family:var(--f-type);font-size:.6rem;text-align:center;line-height:1.1}
+.seal.on{border:0;background:radial-gradient(circle at 35% 30%,#d3463a,#8e1c16);color:#f6d9c8;box-shadow:0 2px 4px rgba(0,0,0,.35);transform:rotate(-8deg)}
+.tl{list-style:none;margin:0;padding:0}
+.tl li{display:grid;grid-template-columns:58px 14px 1fr;gap:10px;padding:7px 0}
+.tl time{font-family:var(--f-type);font-weight:700;font-variant-numeric:tabular-nums;text-align:right}
+.tl .nd{position:relative}
+.tl .nd::before{content:"";position:absolute;left:6px;top:-7px;bottom:-7px;width:2px;background:var(--line)}
+.tl .nd::after{content:"";position:absolute;left:2px;top:6px;width:10px;height:10px;border-radius:50%;background:var(--ink)}
+.tl li.gap{color:var(--ink-soft);font-style:italic}
+.tl li.gap .nd::after{background:var(--paper);border:2px dashed var(--ink-soft);width:6px;height:6px}
+.tl li.new span{color:var(--type)}
+.feed{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.feed li{border-left:3px solid var(--ok);padding:2px 0 2px 12px}
+.feed li small{display:block;font-family:var(--f-type);font-size:.7rem;letter-spacing:.08em;color:var(--ok)}
+.go-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));gap:12px}
+.go{border:1px solid var(--edge);background:var(--desk-2);border-radius:var(--r);padding:14px;text-align:left;display:grid;gap:4px;color:var(--ui)}
+.go:hover{border-color:var(--brass)}
+.go b{font-family:var(--f-display);letter-spacing:.05em;font-weight:400;font-size:1.05rem}
+.go span{color:var(--ui-soft);font-size:.9rem}
+
+/* ---------- SCENE ---------- */
+.stagebox{background:#05070c;border-radius:var(--r);overflow-x:auto;overflow-y:hidden;border:1px solid var(--edge);position:relative;-webkit-overflow-scrolling:touch}
+.stagebox svg{display:block;width:max(100%,860px);height:auto}
+.swipe{font-family:var(--f-type);font-size:.74rem;color:var(--ui-soft);display:none}
+@media (max-width:860px){ .swipe{display:block} }
+.hot{cursor:pointer}
+.hot .ring{fill:none;stroke:var(--brass);stroke-width:2.5;transform-box:fill-box;transform-origin:center;animation:ring 2.2s ease-out infinite}
+.hot .core{fill:var(--brass);stroke:#1b160c;stroke-width:2}
+.hot:hover .core,.hot:focus .core{fill:#fff1c9}
+.hot.seen .ring{animation:none;opacity:0}
+.hot.seen .core{fill:var(--paper-3)}
+@keyframes ring{0%{transform:scale(.6);opacity:.9}100%{transform:scale(1.9);opacity:0}}
+.hot text{font-family:var(--f-type);font-size:13px;fill:#fff3d6;paint-order:stroke;stroke:#000;stroke-width:3px;pointer-events:none}
+.scene-legend{display:flex;flex-wrap:wrap;gap:8px 16px;font-family:var(--f-type);font-size:.78rem;color:var(--ui-soft)}
+.scene-legend span{display:inline-flex;align-items:center;gap:6px}
+.scene-legend i{width:12px;height:12px;border-radius:50%;background:var(--brass);display:inline-block}
+
+/* ---------- MAP ---------- */
+.mapwrap{position:relative;border-radius:var(--r);overflow:hidden;border:1px solid var(--edge);background:var(--m-paper);height:min(68vh,640px);min-height:380px;touch-action:none}
+#map{width:100%;height:100%;display:block;cursor:grab;user-select:none;-webkit-user-select:none}
+#map.drag{cursor:grabbing}
+.map-ctl{position:absolute;right:max(10px,env(safe-area-inset-right,0px));top:10px;display:grid;gap:6px;z-index:2}
+.map-ctl button{width:40px;height:40px;border-radius:var(--r);border:1px solid var(--m-casing);background:rgba(234,223,191,.95);color:var(--m-ink);font-size:1.2rem;font-family:var(--f-type)}
+.map-presets{position:absolute;left:10px;top:10px;display:flex;gap:6px;z-index:2;flex-wrap:wrap;max-width:calc(100% - 70px)}
+.map-presets button{border:1px solid var(--m-casing);background:rgba(234,223,191,.95);color:var(--m-ink);font-family:var(--f-mapsc);font-size:.9rem;padding:5px 10px;border-radius:var(--r)}
+.map-presets button[aria-pressed="true"]{background:var(--m-ink);color:var(--m-paper)}
+.layers{display:flex;gap:8px;flex-wrap:wrap}
+.toggle{border:1px solid var(--edge);background:var(--desk-2);color:var(--ui);padding:7px 12px;border-radius:999px;font-family:var(--f-type);font-size:.78rem;display:inline-flex;gap:8px;align-items:center}
+.toggle[aria-pressed="true"]{border-color:var(--brass);color:var(--brass)}
+.toggle[disabled]{opacity:.45;cursor:not-allowed}
+.toggle i{width:10px;height:10px;border-radius:50%;border:1.5px solid currentColor;display:inline-block}
+.toggle[aria-pressed="true"] i{background:currentColor}
+#map text{font-family:var(--f-map);fill:var(--m-ink)}
+#map .sc{font-family:var(--f-mapsc)}
+#map .st{font-family:var(--f-mapsc);font-size:13px;letter-spacing:1.5px;fill:#4a412d}
+#map .water{font-style:italic;fill:#3e5c63;letter-spacing:3px}
+#map .lod2,#map .lod3{display:none}
+#map.z2 .lod2{display:inline}
+#map.z3 .lod3{display:inline}
+#map.z2 .lod1{display:none}
+#map .pin{cursor:pointer}
+#map .pin circle.halo{fill:rgba(179,40,32,.18)}
+
+/* ---------- FILES ---------- */
+.seg{display:inline-grid;grid-template-columns:1fr 1fr;border:1px solid var(--edge);border-radius:999px;padding:3px;background:var(--desk-2)}
+.seg button{border:0;background:transparent;color:var(--ui-soft);padding:7px 18px;border-radius:999px;font-family:var(--f-display);letter-spacing:.06em}
+.seg button[aria-pressed="true"]{background:var(--brass);color:var(--brass-ink)}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{border:1px solid var(--edge);background:var(--desk-2);color:var(--ui-soft);padding:6px 12px;border-radius:999px;font-family:var(--f-type);font-size:.78rem}
+.chip[aria-pressed="true"]{border-color:var(--brass);color:var(--brass)}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,230px),1fr));gap:16px}
+.card{background:var(--paper);color:var(--ink);border-radius:var(--r);padding:10px 10px 12px;border:0;text-align:left;display:grid;gap:6px;box-shadow:0 8px 20px rgba(0,0,0,.4);transition:transform .15s;min-width:0}
+.card:hover{transform:translateY(-2px) rotate(-.4deg)}
+.card .art{background:var(--paper-2);border-radius:2px;aspect-ratio:16/11;max-width:100%;overflow:hidden;position:relative}
+.card .art svg{width:100%;height:100%;display:block}
+.card .meta{display:flex;justify-content:space-between;gap:6px;align-items:center}
+.card .no{font-family:var(--f-type);font-weight:700;font-size:.78rem;background:var(--ink);color:var(--paper);padding:1px 7px;border-radius:2px}
+.card b{font-family:var(--f-display);font-weight:400;letter-spacing:.04em;font-size:1rem;line-height:1.2}
+.card small{font-family:var(--f-type);font-size:.72rem;color:var(--ink-soft)}
+.card.sealed{background:var(--paper-3)}
+.card.sealed .art::after{content:"SEALED · PHASE " attr(data-phase);position:absolute;inset:auto -20% 42% -20%;transform:rotate(-12deg);background:#d9b23a;color:#1b160c;font-family:var(--f-display);letter-spacing:.14em;text-align:center;font-size:.8rem;padding:3px 0;
+  background-image:repeating-linear-gradient(45deg,transparent 0 10px,rgba(0,0,0,.18) 10px 20px)}
+.card.person .art{aspect-ratio:5/6}
+
+/* ---------- VERDICT ---------- */
+.form8b{max-width:780px;margin:0 auto;width:100%}
+.voices{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:12px;margin:14px 0}
+.voice{display:grid;grid-template-columns:56px 1fr;gap:12px;align-items:start;background:var(--paper-2);padding:12px;border-left:4px solid var(--ink-soft)}
+.voice.a{border-left-color:var(--stamp)} .voice.b{border-left-color:var(--ok)}
+.voice svg{width:56px;height:auto;display:block}
+.voice b{font-family:var(--f-display);font-weight:400;letter-spacing:.05em;display:block}
+.vopt{display:grid;gap:10px;margin-bottom:14px}
+.vopt div{border:1.5px solid var(--line);padding:12px 14px;border-radius:var(--r)}
+.vopt h3{margin:0 0 4px}
+.vopt .a h3{color:var(--stamp)} .vopt .b h3{color:var(--ok)}
+.sig{display:grid;grid-template-columns:40px minmax(0,1fr) auto;gap:10px;align-items:center;padding:8px 4px;border-bottom:1px solid var(--line)}
+.sig svg{width:40px;height:auto;display:block}
+.sig .nm{font-family:var(--f-display);letter-spacing:.04em}
+.sig .nm small{display:block;font-family:var(--f-type);font-size:.72rem;color:var(--ink-soft);letter-spacing:0}
+.sig.me-row{background:rgba(214,173,92,.18)}
+.ab{display:flex;gap:6px}
+.ab button{min-width:46px;padding:8px 0;border:1.5px solid var(--ink-soft);background:var(--paper);color:var(--ink);border-radius:var(--r);font-family:var(--f-display);font-size:1rem}
+.ab button[aria-pressed="true"].A{background:var(--stamp);border-color:var(--stamp);color:var(--paper)}
+.ab button[aria-pressed="true"].B{background:var(--ok);border-color:var(--ok);color:var(--paper)}
+.ab button[disabled]{opacity:.35;cursor:not-allowed}
+.scale{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;margin:16px 0 8px;font-family:var(--f-display);letter-spacing:.06em}
+.scale .beam{height:14px;border-radius:7px;background:var(--paper-2);position:relative;overflow:hidden}
+.scale .beam i{position:absolute;top:0;bottom:0;left:0;background:var(--stamp);transition:width .5s}
+.scale .beam u{position:absolute;top:0;bottom:0;right:0;background:var(--ok);transition:width .5s}
+.fb{font-family:var(--f-type);font-size:.85rem;min-height:1.3em;color:var(--stamp);margin:6px 0 0}
+.wax{width:120px;height:120px;margin:10px auto;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle at 35% 30%,#d3463a,#7e1813);color:#f6d9c8;font-family:var(--f-display);letter-spacing:.1em;text-align:center;font-size:.8rem;box-shadow:0 6px 16px rgba(0,0,0,.5);animation:slam .55s cubic-bezier(.2,1.6,.4,1)}
+@keyframes slam{from{transform:scale(2.4) rotate(-20deg);opacity:0}to{transform:scale(1) rotate(-8deg);opacity:1}}
+.epi{background:var(--ink);color:var(--paper);padding:20px;border-radius:var(--r);margin-top:12px}
+.epi h3{color:var(--paper)}
+
+/* ---------- HOST ---------- */
+.ctl-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;padding:9px 0;border-bottom:1px solid var(--line)}
+.ctl-row b{font-family:var(--f-display);font-weight:400;letter-spacing:.04em}
+.ctl-row small{display:block;font-family:var(--f-type);font-size:.74rem;color:var(--ink-soft)}
+.script{border-left:4px solid var(--ink-soft);padding:8px 12px;margin-bottom:10px;background:var(--paper-2)}
+.script.camp{border-left-color:var(--stamp)} .script.mei{border-left-color:var(--ok)}
+.script b{font-family:var(--f-type);font-size:.74rem;letter-spacing:.1em;display:block}
+.scroll{overflow-x:auto}
+.keytbl{width:100%;border-collapse:collapse;font-size:.88rem;min-width:520px}
+.keytbl th,.keytbl td{text-align:left;padding:6px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+.keytbl th{font-family:var(--f-type);font-size:.7rem;letter-spacing:.1em;color:var(--ink-soft)}
+.confirm{border:2px solid var(--stamp);padding:12px;border-radius:var(--r);margin-top:10px}
+.paper .btn.ghost{color:var(--ink);border-color:var(--ink-soft)}
+
+/* ---------- TASKS ---------- */
+.tasks{display:grid;gap:12px}
+.task{display:grid;grid-template-columns:72px minmax(0,1fr) auto;gap:14px;align-items:center;background:var(--paper);color:var(--ink);border:0;border-radius:var(--r);padding:10px 14px 10px 10px;text-align:left;box-shadow:0 6px 16px rgba(0,0,0,.4);min-width:0}
+.task svg{width:72px;height:auto;display:block;border-radius:2px}
+.task b{font-family:var(--f-display);font-weight:400;letter-spacing:.04em;font-size:1.08rem;display:block;line-height:1.2}
+.task small{display:block;font-family:var(--f-type);font-size:.74rem;color:var(--ink-soft);margin-top:2px}
+.task .go-arrow{font-size:1.4rem;color:var(--ink-soft)}
+.task.locked{background:var(--paper-3);opacity:.8}
+.task.done{box-shadow:inset 0 0 0 2px var(--ok),0 6px 16px rgba(0,0,0,.4)}
+.task .num{font-family:var(--f-type);font-size:.68rem;letter-spacing:.12em;color:var(--ink-soft)}
+.where{display:grid;grid-template-columns:auto 1fr;gap:10px;align-items:center;background:var(--ink);color:var(--paper);padding:10px 12px;border-radius:var(--r);margin:4px 0 12px}
+.where svg{width:26px;height:26px;stroke:var(--paper);fill:none;stroke-width:1.6}
+.where b{font-family:var(--f-display);font-weight:400;letter-spacing:.05em;display:block}
+.where small{font-family:var(--f-type);font-size:.74rem;color:var(--paper-3)}
+.steps{margin:0 0 12px;padding:0;list-style:none;counter-reset:st;display:grid;gap:8px}
+.steps li{counter-increment:st;display:grid;grid-template-columns:28px 1fr;gap:10px;align-items:start}
+.steps li::before{content:counter(st);width:26px;height:26px;border-radius:50%;background:var(--paper-2);border:1.5px solid var(--ink);display:grid;place-items:center;font-family:var(--f-type);font-weight:700;font-size:.8rem}
+.props{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 12px;padding:0;list-style:none}
+.props li{font-family:var(--f-type);font-size:.76rem;background:var(--paper-2);border:1px solid var(--line);padding:3px 8px;border-radius:2px}
+.hintbox{display:grid;gap:8px;margin-bottom:8px}
+.hint{border-left:3px solid var(--type);background:var(--paper-2);padding:7px 10px;font-style:italic;font-size:.95rem}
+.hint span{display:block;font-style:normal;font-family:var(--f-type);font-size:.68rem;letter-spacing:.1em;color:var(--type)}
+.answer{border:2px solid var(--ink);border-radius:var(--r);padding:14px;margin-top:14px;background:#f6efd9}
+.answer h3{margin-bottom:10px}
+.fld{display:grid;gap:6px;margin-bottom:14px}
+.fld > label,.fld > .q{font-weight:600}
+.fld input{width:100%;max-width:320px;padding:11px 12px;border:1.5px solid var(--ink-soft);background:var(--paper);border-radius:var(--r);font-family:var(--f-type);font-size:1rem;color:var(--ink)}
+.opts{display:flex;flex-wrap:wrap;gap:8px}
+.opt{border:1.5px solid var(--ink-soft);background:var(--paper);color:var(--ink);padding:9px 12px;border-radius:var(--r);font-family:var(--f-type);font-size:.86rem;text-align:left}
+.opt[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.dials{display:flex;gap:10px;justify-content:center;margin:6px 0}
+.dial{display:grid;justify-items:center;gap:4px}
+.dial button{width:58px;height:34px;border:1px solid var(--line);background:var(--paper-2);border-radius:var(--r);color:var(--ink);font-size:.9rem}
+.dial output{width:58px;height:70px;display:grid;place-items:center;font-family:var(--f-type);font-size:2.3rem;font-weight:700;background:var(--ink);color:var(--paper);border-radius:var(--r);font-variant-numeric:tabular-nums}
+.dial small{font-family:var(--f-type);font-size:.7rem;color:var(--ink-soft);letter-spacing:.1em}
+.fold summary{cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center}
+.fold summary::after{content:"▾";font-size:1.2rem;color:var(--ink-soft)}
+.fold[open] summary::after{content:"▴"}
+.fold summary::-webkit-details-marker{display:none}
+.fold summary b{font-family:var(--f-display);font-weight:400;letter-spacing:.05em;font-size:1.1rem}
+.placeseg{justify-self:start}
+.placebtn{grid-template-columns:40px minmax(0,1fr)}
+.pnum{width:30px;height:30px;border-radius:50%;background:var(--stamp);display:grid;place-items:center;justify-self:center}
+.pnum{color:#fff;font-family:var(--f-type);font-weight:700;font-size:.85rem}
+.setup{display:grid;grid-template-columns:28px minmax(0,1fr);gap:10px;align-items:start;padding:10px 0;border-bottom:1px solid var(--line)}
+.setup input{width:22px;height:22px;margin-top:2px;accent-color:var(--ink)}
+.setup b{font-family:var(--f-display);font-weight:400;letter-spacing:.04em}
+.setup ul{margin:4px 0 0;padding-left:18px;font-size:.92rem}
+
+.htrack{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:14px}
+.hstep{display:grid;justify-items:center;gap:4px;text-align:center;font-family:var(--f-type);font-size:.72rem;color:var(--ink-soft)}
+.hstep i{width:28px;height:28px;border-radius:50%;border:2px solid var(--line);display:grid;place-items:center;font-style:normal;font-weight:700;background:var(--paper)}
+.hstep.cur i{border-color:var(--stamp);color:var(--stamp)} .hstep.cur{color:var(--ink)}
+.hstep.done i{background:var(--ink);border-color:var(--ink);color:var(--paper)}
+.hdo{margin:6px 0 14px;padding-left:20px;display:grid;gap:6px}
+.hbar,.pbar{height:8px;background:var(--paper-2);border-radius:4px;overflow:hidden;margin:4px 0 10px}
+.hbar i,.pbar i{display:block;height:100%;background:var(--ok);transition:width .4s}
+.lrow{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)}
+.lrow b{font-family:var(--f-display);font-weight:400;letter-spacing:.04em}
+.lrow small{display:block;font-family:var(--f-type);font-size:.72rem;color:var(--ink-soft)}
+.lrow.ok b{color:var(--ok)}
+@media (max-width:520px){ .lrow{grid-template-columns:1fr} .lrow .row{justify-content:flex-start!important} }
+.next{border-top:1px dashed var(--line);margin-top:12px;padding-top:10px;font-size:.95rem}
+.next b{font-family:var(--f-type);font-size:.7rem;letter-spacing:.12em;color:var(--ink-soft);display:block;font-weight:700}
+.part{border-top:2px solid var(--ink);margin-top:18px;padding-top:12px}
+.partno{font-family:var(--f-type);font-size:.7rem;letter-spacing:.2em;color:var(--stamp);margin:0}
+.part>h3{font-size:1.25rem;margin:2px 0 6px}
+.reveal{display:grid;gap:16px;margin-top:16px}
+.score{border:2px solid var(--ink);border-radius:var(--r);padding:14px}
+.score .big{font-family:var(--f-display);font-size:1.6rem;letter-spacing:.04em;line-height:1.1}
+.srow{display:grid;grid-template-columns:28px minmax(0,1fr);gap:10px;padding:10px 0;border-top:1px dotted var(--line)}
+.srow i{width:24px;height:24px;border-radius:50%;display:grid;place-items:center;font-style:normal;font-weight:700;color:var(--paper);font-size:.85rem}
+.srow.y i{background:var(--ok)} .srow.n i{background:var(--stamp)}
+.srow b{font-family:var(--f-type);font-size:.7rem;letter-spacing:.1em;color:var(--ink-soft);display:block}
+.srow p{margin:2px 0 0;font-size:.95rem}
+.ending{background:var(--ink);color:var(--paper);border-radius:var(--r);padding:20px}
+.ending .kicker{color:var(--paper-3)}
+.ending h3{color:var(--paper);font-size:1.4rem;margin-bottom:10px}
+.ending p{color:var(--paper)}
+.ending .later{border-top:1px solid #5a5448;padding-top:10px;margin-top:6px;font-style:italic}
+.truth h4{font-family:var(--f-display);font-weight:400;letter-spacing:.05em;font-size:1.05rem;margin:16px 0 4px}
+.truth h4:first-of-type{margin-top:6px}
+.truth .tl{margin:6px 0}
+.hist{font-size:.9rem;color:var(--ink-soft);border-left:3px solid var(--line);padding-left:12px}
+/* ---------- bottom sheet ---------- */
+.scrim{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:60;opacity:0;pointer-events:none;transition:opacity .2s}
+.scrim.on{opacity:1;pointer-events:auto}
+.sheet{position:fixed;left:0;right:0;bottom:0;z-index:61;max-height:88%;overflow:auto;background:var(--paper);color:var(--ink);border-radius:14px 14px 0 0;
+  transform:translateY(105%);transition:transform .28s cubic-bezier(.2,.8,.2,1);box-shadow:0 -10px 40px rgba(0,0,0,.6);
+  padding-left:max(18px,env(safe-area-inset-left,0px));padding-right:max(18px,env(safe-area-inset-right,0px));padding-block:10px calc(22px + env(safe-area-inset-bottom,0px))}
+.sheet.on{transform:none}
+@media (min-width:760px){ .sheet{left:50%;right:auto;width:720px;margin-left:-360px} }
+.sheet .grab{width:44px;height:5px;border-radius:3px;background:var(--line);margin:0 auto 10px}
+.sheet .x{position:absolute;right:max(12px,env(safe-area-inset-right,0px));top:10px;border:0;background:var(--paper-2);width:36px;height:36px;border-radius:50%;font-size:1.1rem;color:var(--ink)}
+.sheet h2{font-family:var(--f-display);letter-spacing:.04em;font-size:1.45rem;margin:0 40px 6px 0;line-height:1.15}
+.sheet .kicker{color:var(--ink-soft)}
+.sheet .bigart{background:var(--paper-2);border-radius:var(--r);max-width:100%;margin:8px 0 12px;overflow:hidden}
+.sheet .bigart svg{width:100%;height:auto;display:block;max-height:280px}
+.sheet dl{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;margin:0 0 12px;font-size:.95rem}
+.sheet dt{font-family:var(--f-type);font-size:.72rem;letter-spacing:.08em;color:var(--ink-soft);padding-top:3px}
+.sheet dd{margin:0}
+.finding{border:2px solid var(--ok);border-radius:var(--r);padding:12px;background:rgba(61,122,69,.08)}
+.finding b{font-family:var(--f-type);font-size:.72rem;letter-spacing:.1em;color:var(--ok);display:block;margin-bottom:2px}
+.list{display:grid;gap:10px}
+.li{display:grid;grid-template-columns:84px minmax(0,1fr);gap:12px;align-items:center;border:1px solid var(--line);border-radius:var(--r);padding:8px;background:var(--paper);text-align:left;color:var(--ink)}
+.li svg{width:84px;height:auto;display:block;background:var(--paper-2)}
+.li b{font-family:var(--f-display);font-weight:400;letter-spacing:.03em;display:block;line-height:1.2}
+.li small{font-family:var(--f-type);font-size:.72rem;color:var(--ink-soft)}
+.who{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,130px),1fr));gap:10px;margin:10px 0}
+.who button{border:1.5px solid var(--line);background:var(--paper);color:var(--ink);border-radius:var(--r);padding:8px;display:grid;gap:4px;justify-items:center;font-family:var(--f-display);letter-spacing:.04em}
+.who button svg{width:64px;height:auto}
+.who button small{font-family:var(--f-type);font-size:.66rem;color:var(--ink-soft);letter-spacing:0}
+.who button[aria-pressed="true"]{border-color:var(--ink);box-shadow:inset 0 0 0 2px var(--ink)}
+
+/* ---------- dispatch overlay ---------- */
+.dispatch{position:fixed;inset:0;z-index:80;display:grid;place-items:center;background:rgba(0,0,0,.72);padding:24px max(16px,env(safe-area-inset-left,0px));opacity:0;pointer-events:none;transition:opacity .25s}
+.dispatch.on{opacity:1;pointer-events:auto}
+.tele{width:min(560px,100%);background:#f3e9c9;color:var(--ink);padding:22px;box-shadow:0 20px 60px rgba(0,0,0,.6);position:relative;transform:rotate(-1deg) translateY(20px);transition:transform .35s cubic-bezier(.2,1.4,.4,1);
+  background-image:repeating-linear-gradient(0deg,transparent 0 27px,rgba(43,58,107,.08) 27px 28px)}
+.dispatch.on .tele{transform:rotate(-1deg)}
+.tele .hd{display:flex;justify-content:space-between;gap:10px;border-bottom:2px solid var(--ink);padding-bottom:8px;margin-bottom:12px;font-family:var(--f-type);font-size:.72rem;letter-spacing:.12em}
+.tele h2{font-family:var(--f-display);letter-spacing:.05em;font-size:1.5rem;margin:0 0 10px;line-height:1.15}
+.tele .tx{font-family:var(--f-type);font-size:.98rem;line-height:1.6;min-height:5em;white-space:pre-wrap}
+.tele .stamp{position:absolute;right:18px;bottom:62px;font-size:1rem;opacity:0;transform:scale(2) rotate(-12deg);transition:all .3s cubic-bezier(.2,1.6,.4,1)}
+.tele .stamp.in{opacity:1;transform:scale(1) rotate(-12deg)}
+
+.toast{position:fixed;left:50%;bottom:calc(var(--nav-h) + 16px + env(safe-area-inset-bottom,0px));transform:translate(-50%,20px);background:var(--paper);color:var(--ink);font-family:var(--f-type);font-size:.85rem;padding:9px 14px;border-radius:999px;box-shadow:0 6px 20px rgba(0,0,0,.5);z-index:70;opacity:0;transition:all .25s;pointer-events:none;max-width:calc(100% - 32px)}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+.hidden-svg{position:absolute;width:0;height:0;overflow:hidden}
+
+@media (max-width:560px){
+  .title{font-size:1.4rem}
+  .paper{padding:16px}
+  .hero{grid-template-columns:1fr}
+  .hero-photo{display:none}
+  .brand span{display:none}
+}
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+}
+</style>
+
+<svg class="hidden-svg" aria-hidden="true">
+  <defs>
+    <filter id="grain" x="0" y="0" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency=".85" numOctaves="2" seed="4" result="n"/>
+      <feColorMatrix in="n" values="0 0 0 0 .35  0 0 0 0 .28  0 0 0 0 .15  0 0 0 .22 0" result="g"/>
+      <feComposite in="g" in2="SourceGraphic" operator="in" result="gg"/>
+      <feBlend in="SourceGraphic" in2="gg" mode="multiply"/>
+    </filter>
+    <filter id="rough"><feTurbulence type="fractalNoise" baseFrequency=".04" numOctaves="2" seed="2"/><feDisplacementMap in="SourceGraphic" scale="3"/></filter>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--s-sky1)"/><stop offset="1" stop-color="var(--s-sky2)"/></linearGradient>
+    <radialGradient id="safe" cx=".5" cy=".6" r=".7"><stop offset="0" stop-color="var(--s-safe)" stop-opacity=".55"/><stop offset="1" stop-color="var(--s-safe)" stop-opacity="0"/></radialGradient>
+    <radialGradient id="lampg" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="var(--s-lamp)" stop-opacity=".55"/><stop offset="1" stop-color="var(--s-lamp)" stop-opacity="0"/></radialGradient>
+    <radialGradient id="sepia" cx=".5" cy=".4" r=".75"><stop offset="0" stop-color="#e9dcb8"/><stop offset=".7" stop-color="#cbb98f"/><stop offset="1" stop-color="#8f7c56"/></radialGradient>
+    <linearGradient id="metal" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--metal-2)"/><stop offset="1" stop-color="var(--metal)"/></linearGradient>
+    <pattern id="tiles" width="14" height="8" patternUnits="userSpaceOnUse"><rect width="14" height="8" fill="var(--s-roof)"/><path d="M0 8 Q7 2 14 8" fill="none" stroke="#4e2216" stroke-width="1.2"/></pattern>
+    <pattern id="brick" width="20" height="10" patternUnits="userSpaceOnUse"><rect width="20" height="10" fill="var(--s-wall-d)"/><path d="M0 .5H20M0 5.5H20M5 .5V5.5M15 5.5V10" stroke="#6a5a3e" stroke-width="1"/></pattern>
+    <pattern id="strata" width="40" height="12" patternUnits="userSpaceOnUse"><rect width="40" height="12" fill="var(--s-soil)"/><path d="M0 6 Q10 3 20 6 T40 6" fill="none" stroke="var(--s-soil-2)" stroke-width="1.5"/><circle cx="8" cy="10" r="1" fill="#7a5638"/><circle cx="30" cy="3" r="1.2" fill="#7a5638"/></pattern>
+    <pattern id="clayp" width="30" height="10" patternUnits="userSpaceOnUse"><rect width="30" height="10" fill="var(--s-clay)"/><path d="M0 5 H30" stroke="#33404a" stroke-width="1"/></pattern>
+    <pattern id="tape" width="40" height="40" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="40" height="40" fill="#d9b23a"/><rect width="20" height="40" fill="#1b160c" opacity=".85"/></pattern>
+    <pattern id="hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><path d="M0 0V6" stroke="var(--m-casing)" stroke-width="1" opacity=".55"/></pattern>
+    <pattern id="dmg" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(-30)"><path d="M0 0V5" stroke="var(--m-dmg)" stroke-width="1.4"/></pattern>
+    <pattern id="ripple" width="60" height="18" patternUnits="userSpaceOnUse"><rect width="60" height="18" fill="var(--m-sea)"/><path d="M4 9 q6 -4 12 0 t12 0" fill="none" stroke="var(--m-sea-2)" stroke-width="1"/><path d="M34 15 q6 -4 12 0" fill="none" stroke="var(--m-sea-2)" stroke-width="1"/></pattern>
+    <pattern id="trees" width="16" height="16" patternUnits="userSpaceOnUse"><rect width="16" height="16" fill="var(--m-park)"/><circle cx="4" cy="5" r="2" fill="none" stroke="#6f7a3e" stroke-width="1"/><circle cx="12" cy="12" r="2" fill="none" stroke="#6f7a3e" stroke-width="1"/></pattern>
+  </defs>
+</svg>
+
+<header class="top">
+  <div class="top-in">
+    <div class="brand"><b>VICTORIA ST. INQUEST</b><span>DOCKET 45/11 · 16 NOV 1945 <em id="sync" style="font-style:normal"></em></span></div>
+    <button class="chip8b" id="chip8b">FORM 8B</button>
+    <div class="clock"><b id="worldTime">20:00</b><span id="remain">120:00 left</span></div>
+  </div>
+</header>
+
+<main>
+  <!-- CASE -->
+  <section class="screen" id="s-case">
+    <div class="hero">
+      <div>
+        <p class="kicker">Case file 45/11 · Special emergency inquest</p>
+        <h1 class="title">The death of Francis Leong</h1>
+        <p class="lede">Found dead in his bolted darkroom at 17:50. A sergeant in custody. Two hours until the docket closes.</p>
+      </div>
+      <div class="hero-photo"><svg viewBox="0 0 100 120" id="heroPhoto"></svg><span class="stamp">Deceased</span><span>F. LEONG</span></div>
+    </div>
+    <div class="paper">
+      <div class="row" style="justify-content:space-between;align-items:flex-start;margin-bottom:6px">
+        <div><p class="kicker" id="phaseKicker">Phase 1 · 20:00 hrs</p><h3 id="phaseTitle">Front office breach</h3></div>
+        <span class="stamp" id="phaseStamp">Case open</span>
+      </div>
+      <p id="phaseText"></p>
+      <div class="row" id="phaseActions" style="margin-top:12px"></div>
+      <div class="next" id="nextUp"></div>
+    </div>
+    <div class="paper">
+      <p class="kicker">Commission findings</p>
+      <h3><span id="findCount">0</span> of 6 sealed</h3>
+      <div class="seals" id="seals"></div>
+      <ul class="feed" id="feed" style="margin-top:12px"></ul>
+    </div>
+    <details class="paper fold">
+      <summary><span class="kicker" style="display:block">16 Nov 1945</span><b>Reconstructed timeline</b></summary>
+      <ul class="tl" id="timeline" style="margin-top:10px"></ul>
+    </details>
+    <div class="row"><button class="btn small" id="briefBtn">Commission briefing</button><button class="btn ghost small" id="howBtn">How it works</button><button class="btn ghost small" id="histBtn">1942–1945 background</button></div>
+    <button class="officers" id="officersBtn">Officers only</button>
+  </section>
+
+  <!-- LEADS -->
+  <section class="screen" id="s-tasks" hidden>
+    <div><p class="kicker">Questions before the commission</p><h1 class="title">Leads</h1>
+      <p class="lede">The answers are somewhere in this building. When you're sure, record them here.</p></div>
+    <div class="tasks" id="taskList"></div>
+  </section>
+
+  <!-- MAP -->
+  <section class="screen" id="s-map" hidden>
+
+    <div><p class="kicker">Survey Dept. Straits Settlements · Sheet 4 · revised B.M.A. Nov 1945</p><h1 class="title">Singapore Town</h1>
+      <p class="lede">Drag to move, pinch to zoom. Tap a red pin for the provost's notes.</p></div>
+    <div class="mapwrap" id="mapwrap">
+      <svg id="map" role="img" aria-label="1945 survey map of Singapore town with case locations"></svg>
+      <div class="map-presets" id="presets">
+        <button data-preset="town" aria-pressed="false">Town</button>
+        <button data-preset="enclave" aria-pressed="true">Victoria St.</button>
+      </div>
+      <div class="map-ctl"><button id="zin" aria-label="Zoom in">+</button><button id="zout" aria-label="Zoom out">−</button></div>
+    </div>
+    <div class="layers" id="layers"></div>
+    <div><p class="kicker">Places on this map</p><div class="list" id="placeList"></div></div>
+  </section>
+
+  <!-- FILES -->
+  <section class="screen" id="s-files" hidden>
+    <div class="row" style="justify-content:space-between;align-items:flex-end">
+      <div><p class="kicker">Docket 45/11</p><h1 class="title" id="filesTitle">Evidence locker</h1></div>
+      <div class="seg" role="group" aria-label="Show"><button data-seg="pp" aria-pressed="true">People</button><button data-seg="ex" aria-pressed="false">On record</button></div>
+    </div>
+    <div class="chips" id="fileChips"></div>
+    <div class="cards" id="cards"></div>
+  </section>
+
+  <!-- VERDICT -->
+  <section class="screen" id="s-verdict" hidden>
+    <div id="v-locked" class="paper">
+      <span class="stamp">Withheld</span>
+      <h3 style="margin-top:12px">Form 8B is not yet produced</h3>
+      <p>Captain Campbell will produce Form 8B once every lead before the commission has been sealed.</p>
+    </div>
+    <div id="v-open" class="paper form8b" hidden>
+      <div style="text-align:center;border-bottom:2px solid var(--ink);padding-bottom:12px">
+        <p class="kicker" style="margin:0">British Military Administration (Singapore)</p>
+        <h3 style="font-size:1.4rem;margin:4px 0">Special Emergency Inquest Commission · Form 8B</h3>
+        <p class="typed" style="margin:0 auto;color:var(--ink-soft)">IN THE MATTER OF: THE DEATH OF FRANCIS LEONG</p>
+      </div>
+      <div class="part">
+        <p class="partno">PART I</p><h3>The commission's account</h3>
+        <p>Agree on these together. Anyone can fill them in and every phone sees the same answers. This is what the commission puts its name to.</p>
+        <div id="acct"></div>
+        <p class="typed" id="acctNote" style="color:var(--ink-soft)"></p>
+      </div>
+      <div class="part">
+        <p class="partno">PART II</p><h3>The verdict</h3>
+      <div class="voices">
+        <div class="voice a"><svg viewBox="0 0 100 120" data-portrait="officer"></svg><div><b>Capt. Arthur Campbell</b>Name the killer and the law takes its course. The rule of law is absolute.</div></div>
+        <div class="voice b"><svg viewBox="0 0 100 120" data-portrait="nurse"></svg><div><b>Sister Mei Lan</b>A public trial puts Leong's papers into the record, and the dead cannot answer them. Weigh what justice costs.</div></div>
+      </div>
+      <div class="vopt">
+        <div class="a"><h3>Verdict A · Wilful murder</h3><p style="margin:0" id="vAtext"></p></div>
+        <div class="b"><h3>Verdict B · Death by misadventure</h3><p style="margin:0">Francis Leong succumbed to an accidental accumulation of toxic darkroom vapours. Any intelligence found among his papers is remitted confidentially to the War Crimes Tribunal. No civilian indictment shall issue.</p></div>
+      </div>
+      <div class="scale"><span style="color:var(--stamp)">A <b id="tA">0</b></span><div class="beam"><i id="beamA" style="width:0"></i><u id="beamB" style="width:0"></u></div><span style="color:var(--ok)"><b id="tB">0</b> B</span></div>
+      <p class="kicker" style="margin-top:14px">Your endorsement · one per phone · you can change it until the docket is sealed</p>
+      <div class="cast" id="cast">
+        <button class="castA" data-cast="A">Sign for A</button>
+        <button class="castB" data-cast="B">Sign for B</button>
+      </div>
+      <p class="typed" id="castNote" style="color:var(--ink-soft);margin-top:8px"></p>
+      </div>
+      <p class="fb" id="fb8b" role="status"></p>
+      <p class="typed" id="sealWait" style="color:var(--ink-soft)"></p>
+      <div id="sealArea" style="margin-top:12px">
+        <button class="btn red" id="sealBtn">Seal &amp; file Form 8B</button>
+        <div class="confirm" id="sealConfirm" hidden>
+          <p style="margin-bottom:8px"><b>Seal the docket?</b> The account and verdict become final, and every phone gets the full story.</p>
+          <div class="row"><button class="btn red small" id="sealYes">Seal it</button><button class="btn ghost small" id="sealNo">Keep deliberating</button></div>
+        </div>
+      </div>
+      <div id="epilogue" hidden></div>
+    </div>
+  </section>
+
+  <!-- HOST -->
+  <section class="screen" id="s-host" hidden>
+    <div><p class="kicker">Officers' clipboard · live control</p><h1 class="title">Running the inquest</h1></div>
+    <div class="paper now-card" id="nowCard"></div>
+    <div class="paper">
+      <div class="row" style="justify-content:space-between"><h3 style="margin:0">Leads</h3><span class="typed" style="color:var(--ink-soft)" id="leadCount"></span></div>
+      <p class="typed" style="color:var(--ink-soft)">Each lead seals itself when players record the right answer. To help a stuck group, send a hint (it pops up on every phone) or seal it for them.</p>
+      <div id="leadCtl"></div>
+    </div>
+    <div class="paper">
+      <h3>Clock</h3>
+      <div class="row"><button class="btn" id="clockToggle">Start the clock</button><button class="btn ghost small" id="clockBack">−5 min</button><button class="btn ghost small" id="clockFwd">+5 min</button></div>
+    </div>
+    <details class="paper fold">
+      <summary><b>Manual phase control</b></summary>
+      <p class="typed" style="color:var(--ink-soft);margin-top:10px">Phases normally move on their own. Use these only to jump ahead or step back.</p>
+      <div id="phaseCtl"></div>
+    </details>
+    <details class="paper fold">
+      <summary><b>Reset between games</b></summary>
+      <div style="margin-top:10px"><button class="btn red small" id="resetBtn">Reset the whole game</button>
+      <div class="confirm" id="resetConfirm" hidden>
+        <p style="margin-bottom:8px"><b>Wipe phases, findings, hints, votes and the clock?</b> Every open screen returns to the start.</p>
+        <div class="row"><button class="btn red small" id="resetYes">Reset everything</button><button class="btn ghost small" id="resetNo">Cancel</button></div>
+      </div></div>
+    </details>
+    <p class="typed" style="color:var(--ui-soft);text-align:center">Answers, scripts and printable props are in your separate Host Pack.</p>
+  </section>
+</main>
+
+<nav class="nav" aria-label="Main">
+  <div class="nav-in">
+    <button data-nav="case" aria-current="page"><svg viewBox="0 0 24 24"><path d="M3 7h6l2 2h10v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z"/><path d="M3 7V5a1 1 0 0 1 1-1h5l2 2"/></svg>Case<span class="dot" id="dot-case"></span></button>
+    <button data-nav="tasks"><svg viewBox="0 0 24 24"><circle cx="10" cy="10" r="6"/><path d="M14.5 14.5L20 20"/></svg>Leads<span class="dot" id="dot-tasks"></span></button>
+    <button data-nav="places"><svg viewBox="0 0 24 24"><path d="M9 4L3 6v14l6-2 6 2 6-2V4l-6 2z"/><path d="M9 4v14M15 6v14"/></svg>Map</button>
+    <button data-nav="files"><svg viewBox="0 0 24 24"><rect x="5" y="3" width="12" height="16" rx="1"/><path d="M8 7h6M8 11h6M8 15h3"/><path d="M19 7v13a1 1 0 0 1-1 1H8"/></svg>Evidence<span class="dot" id="dot-files"></span></button>
+  </div>
+</nav>
+
+<div class="scrim" id="scrim"></div>
+<div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-label="Details"><div class="grab"></div><button class="x" id="sheetX" aria-label="Close">×</button><div id="sheetBody"></div></div>
+<div class="dispatch" id="dispatch" role="dialog" aria-modal="true" aria-label="Dispatch">
+  <div class="tele"><div class="hd"><span>B.M.A. SIGNALS · PRIORITY</span><span id="dTime">20:00 HRS</span></div>
+    <h2 id="dTitle"></h2><div class="tx" id="dText"></div><span class="stamp" id="dStamp">Received</span>
+    <div class="row" style="margin-top:14px"><button class="btn" id="dOk" style="background:var(--ink);border-color:var(--ink);color:var(--paper)">Noted</button></div>
+  </div>
+</div>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+(function(){
+"use strict";
+const $ = id => document.getElementById(id);
+const DURATION = 120*60*1000;
+
+/* ======================= DATA ======================= */
+const PHASES = [
+  {n:1, at:"20:00", name:"Front office breach", stamp:"Case open",
+   text:"The rear rooms are sealed under guard until Leong's key turns up. Everything you need for now is in the front office.",
+   dispatch:"COMMISSION CONVENED 2000 HRS. DECEASED FRANCIS LEONG FOUND 1750 IN BOLTED DARKROOM. SGT CHEN TECK NAM IN CUSTODY. REAR ROOMS SEALED PENDING RECOVERY OF KEY."},
+  {n:2, at:"20:35", name:"The sealed darkroom", stamp:"Unsealed",
+   text:"Captain Campbell has lifted the tape. The darkroom and courtyard are open. Everything in this building is evidence until proven otherwise.",
+   dispatch:"DISPATCH BOX OPENED. DARKROOM KEY RECOVERED. REAR STUDIO AND COURTYARD NOW OPEN TO COMMISSIONERS."},
+  {n:3, at:"21:30", name:"Form 8B deliberation", stamp:"Deliberate",
+   text:"Form 8B is on the table. Argue it out, then sign A or B on your phone. The officers seal the docket when the room is ready.",
+   dispatch:"FORENSIC PROCESSING CLOSED. FORM 8B PRODUCED. ALL COMMISSIONERS TO SIGN VERDICT A OR B. DOCKET CLOSES AT MIDNIGHT."}
+];
+const FINDINGS = [
+  {id:"lockbox", short:"Box", title:"Dispatch box opened", text:"Combination 2-9-6 from Mrs. Choy's specimen labels and the Botanic Gardens register. Inside: the key to the rear studio and darkroom, a radio intercept dated 10 October 1943, and a torn strip of a mortuary report."},
+  {id:"arun", short:"Tox", title:"Bitter almonds", text:"The scraping from the sink is reagent-grade potassium cyanide, issued only to three analytical laboratories in Singapore. Sgt. Chen's blade carries gun oil, Miss Song's handbag photographic fixer. The guard dog's bait carries chloral hydrate."},
+  {id:"farah", short:"Chen", title:"Campbell's theory", text:"The culvert was flooded from 17:15 to 20:30 and crushed to 180 mm: no one came up the drain. Sgt. Chen went to the gate meaning to kill Leong, but the dog was already asleep when he arrived, and he turned back. Someone got there first."},
+  {id:"shawn", short:"Vent", title:"A bolted door", text:"The poison was poured down the high vent from the ruined chapel annex. The vent's inner louvre can only be opened from inside, and it was open. The dog was fed drugged bait at five, from the dispensary's own chloral hydrate, by the person who always fed it: Connie Song."},
+  {id:"kabir", short:"Radio", title:"The night of the Double Tenth", text:"Decoded, the intercept reads DOUBLE TENTH INFORMER, sent under the callsign VICTORIA BIRD FIVE: Francis Leong. The gate log accounts for Maj. Vance. Dr. Pillay left Outram at 16:40 and is not seen again until he walks into No. 96 at 18:02."},
+  {id:"valerie", short:"Morgue", title:"Post-mortem 1943-M-1108", text:"Dr. Stanley died of injuries from interrogation, not heart failure. The true notes are in Dr. Pillay's hand. Leong forced the false certificate and was blackmailing Pillay with forged ledgers naming Stanley and Choy as collaborators."}
+];
+
+/* Leads: open questions. Solved with the physical props; the app only records answers. */
+const PORTRAIT_OPTS = {chen:"Sgt. Chen", connie:"Connie Song", pillay:"Dr. Pillay", vance:"Maj. Vance", leong:"F. Leong", tanaka:"Lt. Tanaka", stanley:"Dr. Stanley"};
+const TASKS = [
+  { id:"lockbox", n:1, art:"box", title:"Leong's dispatch box", phase:1,
+    story:"The clerk kept a locked steel box on his desk. The provost believes the darkroom key is inside. Leong was not a man who trusted his memory, nor anyone else's.",
+    q:"What is the combination?",
+    hints:[["Sister Mei Lan","Leong collected things that didn't belong to him. Look at what in this office has nothing to do with a dispensary."],["Sister Mei Lan","Mrs. Choy taught nature study. She filed everything alphabetically, and she always signed off with the last digit."],["Sister Mei Lan","Three envelopes, three wheels. Each leaf has a registry number in the Gardens' index."]],
+    fields:[{key:"combo", type:"dial", q:"Combination"}],
+    ok:a=>a.combo==="296" },
+  { id:"arun", n:2, art:"strip1", title:"Bitter almonds", phase:2,
+    story:"The sink where Leong fell smells faintly of bitter almonds. The provost swabbed the soldier's knife and the studio girl's handbag, and scraped the dog's half-eaten dinner.",
+    q:"What killed him, and who could have got hold of it?",
+    hints:[["Clerk","Ink and residue behave differently in water. Some move, some stay, some separate."],["Sister Mei Lan","Bitter almonds mean one thing to a chemist. The chart lists two kinds of it."],["Sister Mei Lan","Read the small print under the chart. Who is allowed the better grade?"]],
+    fields:[{key:"poison", type:"text", q:"What killed Francis Leong?", ph:"substance"},{key:"grade", type:"choice", q:"Which grade?", options:["Commercial grade","Reagent (laboratory) grade"]},{key:"bait", type:"text", q:"What was in the dog's bait?", ph:"substance"}],
+    ok:a=>/cyanide/i.test(a.poison||"") && a.grade==="Reagent (laboratory) grade" && /chloral/i.test(a.bait||"") },
+  { id:"farah", n:3, art:"blueprint", title:"Campbell's theory", phase:2,
+    story:"Captain Campbell has his man: a soldier with a motive, a freshly sharpened knife, mud to the knees, and a notebook that reads like a confession. He thinks Chen came up through the drain.",
+    q:"Did Sgt. Chen kill Francis Leong? Prove it either way.",
+    hints:[["Captain Campbell","He came up that drain at low tide. Prove me wrong."],["Sister Mei Lan","What happened to that pipe in 1942, and what was the sea doing tonight?"],["Sister Mei Lan","Have you read the whole of his notebook? Both pages?"]],
+    fields:[{key:"could", type:"choice", q:"Did Sgt. Chen kill him?", options:["Yes","No"]},{key:"gap", type:"text", q:"The narrowest opening in the drain (mm)", ph:"millimetres"},{key:"gate", type:"choice", q:"What did Chen find at the courtyard gate?", options:["The gate padlocked","The dog asleep","Leong in the yard","A light in the darkroom"]}],
+    ok:a=>a.could==="No" && parseFloat(String(a.gap||"").replace(/[^0-9.]/g,""))===180 && a.gate==="The dog asleep" },
+  { id:"shawn", n:4, art:"burrs", title:"A bolted door", phase:2,
+    story:"The darkroom was bolted from the inside, the window painted shut, the drain flooded. The guard dog in the courtyard never barked. Yet someone put poison in that sink.",
+    q:"How did it get in, and who helped from inside?",
+    hints:[["Clerk","Something fell from above. Look at the floor beneath the walls, not the door."],["Sister Mei Lan","Read the provost's note on the vent. Which side of the louvre is the catch on?"],["Sister Mei Lan","Who feeds that dog at five o'clock?"]],
+    fields:[{key:"route", type:"choice", q:"How did the poison get into the darkroom?", options:["Through the front door","Through the window","Up through the storm drain","Down the high vent"]},{key:"helper", type:"suspect", q:"Who helped from inside No. 96?", options:["chen","connie","vance","pillay"]}],
+    ok:a=>a.route==="Down the high vent" && a.helper==="connie" },
+  { id:"kabir", n:5, art:"slip", title:"The night of the Double Tenth", phase:2,
+    story:"Among Leong's things: a pencilled radio intercept dated 10 October 1943, the night the Kempeitai began their arrests. Somewhere, someone kept the key. And the provost's log of who went where tonight.",
+    q:"What does the message say, and whose afternoon does the log leave unexplained?",
+    hints:[["Clerk","Signals officers kept their keys in plain sight, in tins no one would look twice at."],["Clerk","Sixteen letters in a square. Read it the way you'd read a page."],["Sister Mei Lan","Who in that log left somewhere at twenty to five and isn't seen again for over an hour?"]],
+    fields:[{key:"msg", type:"text", q:"The message", ph:"plain text"},{key:"gap", type:"suspect", q:"Whose afternoon does the log leave unexplained?", options:["chen","connie","vance","pillay"]}],
+    ok:a=>String(a.msg||"").toUpperCase().replace(/[^A-Z]/g,"").startsWith("DOUBLETENTHINFOR") && a.gap==="pillay" },
+  { id:"valerie", n:6, art:"torn", title:"Post-mortem 1943-M-1108", phase:2,
+    story:"A mortuary record for Dr. Charles Stanley, torn into pieces and scattered. One piece was in Leong's notebook. The rest are elsewhere.",
+    q:"Who wrote the true finding, and how did Dr. Stanley die?",
+    hints:[["Clerk","A record torn in three. One piece was locked away; one travelled with a doctor."],["Sister Mei Lan","The top of the page is what the public was told. Read to the bottom."],["Sister Mei Lan","Compare the handwriting with anything else written by the people in this case."]],
+    fields:[{key:"hand", type:"suspect", q:"Whose hand wrote the bottom section?", options:["leong","tanaka","pillay","stanley"]},{key:"cause", type:"choice", q:"Cause of death", options:["Heart failure","Interrogation injuries","Drowning","Fever"]}],
+    ok:a=>a.hand==="pillay" && a.cause==="Interrogation injuries" }
+];
+const EXHIBITS = [
+  {no:"E-01", spot:"provost", phase:1, art:"doc", title:"Statement of Maj. Edward Vance", obj:"Typed statement, signed", found:"Taken at the scene, 18:05", why:"First on the scene. Forced the darkroom latch and reported the smell of bitter almonds.", by:"kabir", f:"Harbour transit log puts his jeep leaving Keppel drydock at 17:28. He could not have been here earlier."},
+  {no:"E-02", spot:"provost", phase:1, art:"report", title:"Provost arrest report: Sgt. Chen", obj:"Carbon copy, B.M.A. Form P-3", found:"Stamford Canal outfall, 18:20", why:"Chen was found with a combat knife, muddied to the knees. Charge pending: entry via the storm culvert.", by:"farah", f:"Entry by culvert was physically impossible. The charge cannot stand."},
+  {no:"E-03", spot:"desk", phase:1, art:"envelope", title:"Mrs. Choy's nature-study folio", obj:"School envelope, pressed leaves A, B, C · 1939", found:"Leong's desk drawer", why:"Why would a supply clerk keep a schoolteacher's leaf folio from before the war?", by:"lockbox", f:"The leaves encode the dispatch box combination."},
+  {no:"E-04", spot:"desk", phase:1, art:"index", title:"Botanic Gardens Herbarium Index", obj:"Tea-stained index half-sheet · 1939", found:"Tucked inside E-03", why:"A registry of species and accession numbers from the Straits Settlements Botanic Gardens.", by:"lockbox", f:"Cross-referenced against E-03 to open the dispatch box."},
+  {no:"E-05", spot:"desk", phase:1, art:"box", title:"Steel dispatch box", obj:"Strongbox with a three-wheel brass padlock", found:"Chained to the front desk", why:"Leong's private box. The darkroom key is believed to be inside.", by:"lockbox", f:"Opened at 2-9-6. Contents logged as E-06, E-07 and E-13."},
+  {no:"E-12", spot:"desk", phase:1, art:"torn", title:"Autopsy Fragment I", obj:"Torn strip of Outram Post-Mortem 1943-M-1108", found:"Leong's front-desk notebook", why:"The top of a mortuary record for Dr. Charles Stanley, signed by Leong as coroner's clerk.", by:"valerie", f:"The coerced public finding: heart failure."},
+  {no:"E-06", spot:"desk", phase:2, art:"key", title:"Brass mortise key", obj:"Key tagged REAR STUDIO & DARKROOM", found:"Inside E-05", why:"The only key to the rear room.", by:null},
+  {no:"E-07", spot:"desk", phase:2, art:"slip", title:"Intercept slip BMA-FE-9921", obj:"Pencilled radio intercept · 10 Oct 1943", found:"Inside E-05", why:"Why does a municipal clerk hold a military radio intercept from the night of the Double Tenth?", by:"kabir", f:"Decrypts to DOUBLE TENTH INFORMER. Leong was the Kempeitai's source."},
+  {no:"E-13", spot:"desk", phase:2, art:"torn", title:"Autopsy Fragment II", obj:"Torn middle strip, same record", found:"Inside E-05", why:"Custody and escort section, marked RESTRICTED.", by:"valerie", f:"Stanley came straight from the Kempeitai cells at Stamford Road."},
+  {no:"E-14", spot:"provost", phase:2, art:"torn", title:"Autopsy Fragment III", obj:"Torn lower strip, handwritten", found:"Dr. Pillay's medical satchel", why:"Dr. Pillay was called to certify Leong's death. His satchel was retained by the provost detail.", by:"valerie", f:"Pillay's own clinical notes: torture, and Leong's blackmail."},
+  {no:"E-09", spot:"provost", phase:2, art:"mapsheet", title:"Sector 4 Urban Survey Map", obj:"B.M.A. survey sheet with MP checkpoint logs", found:"Provost Marshal's office", why:"Shows the Victoria St. / Bras Basah enclave and tonight's checkpoint entries.", by:"kabir", f:"Clears Maj. Vance and Connie Song. Marks the unpatrolled church ruins behind the dispensary."},
+  {no:"E-10", spot:"sink", phase:2, art:"strip1", title:"Exhibit A: sink drain scraping", obj:"Filter strip, pre-dotted", found:"Stoneware sink, darkroom", why:"Residue from where Leong fell. Smells of bitter almonds.", by:"arun", f:"Reagent-grade potassium cyanide: laboratory stock, not the commercial kind."},
+    {no:"E-11", spot:"bench", phase:2, art:"strips", title:"Exhibits B, C, D: swabs", obj:"Filter strips: Chen's blade, Miss Song's handbag latch, the dog's bait", found:"Taken by the provost", why:"Compared against Exhibit A in water chromatography.", by:"arun", f:"Gun oil, photographic fixer, and chloral hydrate. None carries cyanide."},
+  {no:"E-08", spot:"shelf", phase:2, art:"tin", title:"Signals tin REC-295", obj:"Metal tea tin with a 4×4 matrix card", found:"Darkroom shelf, behind fixer bottles", why:"Marked B.M.A. SIGNALS CORPS. Hidden among photographic chemicals.", by:"kabir", f:"The matrix card is the key to E-07."},
+  {no:"E-18", spot:"shelf", phase:2, art:"manifest", title:"Sinwa Godown freight manifest", obj:"Wharf No. 4 consignment sheet, Telok Ayer", found:"Leong's darkroom files", why:"Municipal stores Leong signed for: acid, canine serum, cinchona bark, veterinary sedative.", by:"shawn", f:"Forged serum line, diverted cinchona, and the source of the sedative."},
+  {no:"E-21", spot:"vent", phase:2, art:"grit", title:"Plaster grit", obj:"Fallen plaster and dust", found:"Darkroom floor, beneath the high flue", why:"Fresh debris below a vent no one has opened in years.", by:"shawn", f:"Disturbed when the poison was poured down the flue."},
+    {no:"E-19", spot:"kennel", phase:2, art:"bait", title:"Exhibit W-1: kennel bait", obj:"Treated bait in an evidence bag", found:"Beside the mastiff's kennel", why:"The guard dog was found asleep and could not be roused.", by:"shawn", f:"Drugged with the dispensary's own chloral hydrate and fed at five by the person who always fed the dog."},
+  {no:"E-20", spot:"wall", phase:2, art:"burrs", title:"Exhibit W-2: masonry burrs", obj:"Love-grass burrs and dry mortar lichen", found:"Rear wall, beneath the darkroom's exterior flue", why:"Snagged on old brickwork two metres off the ground.", by:"shawn", f:"From the church annex roof. The killer came over the ruins to the flue."},
+  {no:"E-15", spot:"culvert", phase:2, art:"blueprint", title:"P.W.D. culvert drawing", obj:"PWD/STAM/1938-C4 with two clear overlays", found:"Municipal drawing office", why:"The Stamford Canal storm culvert runs beneath the dispensary at chainage 0+110.", by:"farah", f:"Flooded at +2.80 m RL and crushed to 180 mm. Impassable."},
+  {no:"E-16", spot:"culvert", phase:2, art:"gauge", title:"Sgt. Chen clearance gauge", obj:"Card gauge, 450 mm", found:"Prepared by the P.W.D.", why:"Minimum torso width for an infantryman of Chen's build.", by:"farah", f:"Will not pass the squeezed bore."},
+  {no:"E-17", spot:"culvert", phase:2, art:"soil", title:"Soil samples 1 and 2", obj:"Two dishes: culvert ch. 0+110 and Chen's boots", found:"Culvert borehole; Chen's uniform", why:"Campbell says Chen came up through the drain.", by:"farah", f:"Chen's boots carry surface ditch silt. No marine clay."},
+  {no:"E-23", spot:"provost", phase:1, art:"doc", title:"Sgt. Chen's notebook", obj:"Two pencilled pages and a folded scrap", found:"Impounded on arrest, 18:20", why:"Captain Campbell calls it a confession.", by:"farah", f:"Page two: the dog was already asleep when Chen reached the gate, and he turned back."},
+  {no:"E-24", spot:"provost", phase:2, art:"report", title:"Outram Road Gaol roster", obj:"Guard detail and incident book", found:"Provost file on Sgt. Chen", why:"Chen guarded the Kempeitai prisoners.", by:"farah", f:"Tanaka told Chen who had named his sister: a clerk on Victoria Street."},
+  {no:"E-25", spot:"vent", phase:2, art:"doc", title:"Provost notes at the scene", obj:"Typed notes, 18:00–19:30", found:"Clipboard by the darkroom door", why:"The provost's record of the room as found.", by:"shawn", f:"The vent's inner louvre was open, and its catch is on the inside."},
+  {no:"E-22", spot:null, phase:3, art:"form", title:"B.M.A. Inquest Form 8B", obj:"Verdict sheet for six signatures", found:"Produced by Capt. Campbell", why:"The binding verdict of this commission.", by:null}
+];
+const EX = Object.fromEntries(EXHIBITS.map(e=>[e.no,e]));
+
+const SPOTS = [
+  {id:"provost", x:212, y:318, room:"office", label:"Provost table", phase:1, note:"Statements, reports and impounded effects, laid out by the provost detail."},
+  {id:"desk", x:262, y:296, room:"office", label:"Leong's desk", phase:1, note:"Ledgers, a notebook and a steel dispatch box chained to the leg."},
+  {id:"sink", x:337, y:286, room:"dark", label:"Stoneware sink", phase:2, note:"Where Leong was found. The basin still smells faintly of bitter almonds."},
+  {id:"shelf", x:404, y:246, room:"dark", label:"Chemical shelf", phase:2, note:"Fixer, developer, acetic acid, and a file box of Leong's papers."},
+  {id:"bench", x:410, y:318, room:"dark", label:"Forensic bench", phase:2, note:"Where the provost laid out swabs for comparison."},
+  {id:"vent", x:446, y:232, room:"dark", label:"High flue", phase:2, note:"A ventilation flue high on the back wall. Grit on the floor below."},
+  {id:"wall", x:482, y:270, room:"yard", label:"Rear wall", phase:2, note:"Old brick under the exterior mouth of the flue."},
+  {id:"kennel", x:515, y:318, room:"yard", label:"Kennel", phase:2, note:"The guard mastiff, found in a stupor."},
+  {id:"culvert", x:300, y:470, room:"under", label:"Storm culvert", phase:2, note:"The P.W.D. Stamford culvert, 900 mm bore, beneath the building."},
+  {id:"ruins", x:740, y:240, room:"ruins", label:"Church annex ruins", phase:2, note:"Bomb rubble from 1942, overgrown with love-grass. Unpatrolled. It rises almost to the dispensary's roofline."}
+];
+
+const PEOPLE = [
+  {id:"leong", grp:"Deceased", name:"Francis Leong", role:"Municipal supply clerk", look:"fedora",
+    bio:"Ran requisitions for municipal stores through the Occupation and kept his post when the British returned. Ran a photo studio on the side. Many people owed him favours. Some feared him.",
+    known:[{t:"Found dead in his own darkroom, door bolted from inside."},{t:"The Kempeitai's informer on the night of the Double Tenth.",need:"kabir"},{t:"He gave up Sgt. Chen's sister, too.",need:"farah"},{t:"Blackmailing Dr. Pillay with forged ledgers against Stanley and Choy.",need:"valerie"}],
+    status:()=>has("kabir")?["INFORMER","red"]:["DECEASED","mute"]},
+  {id:"chen", grp:"Persons of interest", name:"Sgt. Chen Teck Nam", role:"Detained at the canal outfall", look:"sidecap",
+    bio:"A soldier with a freshly honed knife and mud to the knees, found fifty yards from a murder. He refuses to explain himself. Captain Campbell wants him charged tonight.",
+    known:[{t:"A notebook was found on him."},{t:"His blade carries gun oil, nothing else.",need:"arun"},{t:"His sister died in Kempeitai custody. Leong named her.",need:"farah"},{t:"He went to Leong's gate to kill him, and turned back. The dog was already asleep.",need:"farah"}],
+    status:()=>has("farah")?["CLEARED","ok"]:["ACCUSED","warn"]},
+  {id:"vance", grp:"Persons of interest", name:"Maj. Edward Vance", role:"B.M.A. officer · found the body", look:"officer2",
+    bio:"Gathering municipal evidence for the war crimes trials. He came for Leong's clearance files and found a corpse.",
+    known:[{t:"Says he drove straight from the Keppel Harbour drydock."},{t:"Harbour log: left Keppel at 17:28.",need:"kabir"}],
+    status:()=>has("kabir")?["CLEARED","ok"]:["UNVERIFIED","warn"]},
+  {id:"connie", grp:"Persons of interest", name:"Connie Song", role:"Studio and dispensary assistant", look:"waves",
+    bio:"Eighteen. Works in Leong's studio and darkroom and minds the dispensary. Left at five for the pictures; stopped after curfew on her way home.",
+    known:[{t:"Her handbag carries photographic fixer, nothing else.",need:"arun"},{t:"She fed the dog at five, and only she could have opened the vent from inside.",need:"shawn"}],
+    status:()=>has("shawn")?["HELPED","red"]:["UNVERIFIED","warn"]},
+  {id:"pillay", grp:"Persons of interest", name:"Dr. K. S. Pillay", role:"Pathologist, Outram Road Hospital", look:"doctor",
+    bio:"Kept the hospital's pathology service running through the Occupation. Called to Victoria Street tonight to certify Leong's death. His satchel was retained by the provost detail.",
+    known:[{t:"Arrived at 18:02, on foot."},{t:"Left Outram at 16:40 “on a private call”.",need:"kabir"},{t:"Leong was blackmailing him.",need:"valerie"}],
+    status:()=>(has("kabir")&&has("valerie"))?["IMPLICATED","red"]:["ATTENDING","mute"]},
+  {id:"stanley", grp:"The Occupation", name:"Dr. Charles Stanley", role:"Physician · died in custody, 1943", look:"glasses",
+    bio:"Arrested in the Double Tenth sweep. His death certificate, filed at Outram Road, gives the cause as heart failure.",
+    known:[{t:"Delivered to the mortuary straight from the Stamford Road cells.",need:"valerie"},{t:"Actually died of injuries from interrogation.",need:"valerie"}],
+    status:()=>["DECEASED","mute"]},
+  {id:"choy", grp:"The Occupation", name:"Elizabeth Choy", role:"Teacher · Double Tenth survivor", look:"bun",
+    bio:"Ran a hospital canteen that smuggled help to internees. Arrested and tortured in the Double Tenth, she gave up no one. Before the war she taught nature study.",
+    known:[{t:"Her 1939 leaf folio was found in Leong's desk."},{t:"Leong gave her name to the Kempeitai.",need:"kabir"}],
+    status:()=>["SURVIVOR","mute"]},
+  {id:"tanaka", grp:"The Occupation", name:"Lt. Tanaka", role:"Kempeitai officer · Outram Road Gaol", look:"shadow",
+    bio:"Held at Outram Road Gaol awaiting trial, guarded by B.M.A. volunteers. Named in Occupation-era custody records.",
+    known:[{t:"Escorted Dr. Stanley's body to Outram Road.",need:"valerie"},{t:"Told Sgt. Chen who had named his sister.",need:"farah"}],
+    status:()=>["AWAITING TRIAL","mute"]},
+  {id:"campbell", grp:"Officers of the inquest", name:"Capt. Arthur Campbell", role:"B.M.A. Civil Affairs · presiding", look:"officer",
+    bio:"Procedure, hierarchy, accountability. He believes the law is the only thing standing between Singapore and chaos.", known:[], status:()=>["HOST","mute"]},
+  {id:"meilan", grp:"Officers of the inquest", name:"Sister Mei Lan", role:"Civilian health attaché", look:"nurse",
+    bio:"Former Outram surgical assistant. Volunteered in the canteen alongside Elizabeth Choy. She has seen what the Occupation did to the people forced to survive it.", known:[], status:()=>["HOST","mute"]}
+];
+const PP = Object.fromEntries(PEOPLE.map(p=>[p.id,p]));
+
+
+/* map places (u along coast to NE, v inland to NW) */
+const PLACES = [
+  {id:"disp", n:1, u:240, v:180, name:"Victoria Dispensary & Photo Studio", sub:"96 Victoria Street", desc:"Two-storey shophouse. Front dispensary, rear darkroom, walled courtyard. The scene of the death.", ex:["E-05","E-10","E-21"], people:["leong"]},
+  {id:"ruins", n:2, u:190, v:155, name:"Church annex ruins", sub:"Convent of the Holy Infant Jesus grounds", desc:"Bombed in February 1942 and never cleared. Locals keep away from it.", ex:["E-20"], people:[], need:null},
+  {id:"outfall", n:3, u:150, v:-6, name:"Stamford Canal outfall", sub:"Esplanade sea wall", desc:"Where the storm culvert under Stamford Road meets the sea. Sgt. Chen was detained here at 18:20.", ex:["E-02","E-15","E-17"], people:["chen"]},
+  {id:"check", n:4, u:260, v:300, name:"MP Checkpoint 1", sub:"Bras Basah Road", desc:"Military police post logging curfew breaches. Connie Song was stopped here.", ex:["E-09"], people:["connie"]},
+  {id:"kemp", n:5, u:150, v:500, name:"Former Kempeitai cells", sub:"Stamford Road", desc:"The East District headquarters of the Kempeitai during the Occupation. Dr. Stanley was held and interrogated here in 1943.", ex:["E-13"], people:["stanley","tanaka"]},
+  {id:"outram", n:6, u:-600, v:340, name:"Outram Road General Hospital", sub:"Outram Road", desc:"Mortuary and pathology department. Dr. Pillay's post, and where Leong's body lies tonight.", ex:["E-12","E-14","E-11"], people:["pillay"]},
+  {id:"keppel", n:7, u:-870, v:-40, name:"Keppel Harbour drydock", sub:"King's Dock", desc:"Where Maj. Vance says he spent the afternoon. The harbour master logs every vehicle at the gate.", ex:["E-01"], people:["vance"]},
+  {id:"sinwa", n:8, u:-380, v:22, name:"Sinwa Godown", sub:"Wharf No. 4, Telok Ayer", desc:"Municipal stores warehouse. Leong's requisitions for serum, cinchona and sedatives passed through here.", ex:["E-18"], people:[]}
+];
+
+/* ======================= STATE & SYNC ======================= */
+function initial(){ return {v:3, phase:1, found:{lockbox:0,arun:0,farah:0,shawn:0,kabir:0,valerie:0}, filed:{}, votes:{},
+  sealed:{verdict:"",at:0,atElapsed:0,a:0,b:0}, clock:{running:false,startedAt:0,elapsed:0}, hints:{}, account:{}, event:{id:"",kind:"",title:"",text:"",at:0}}; }
+const isObj = x => x && typeof x==="object" && !Array.isArray(x);
+function merge(a,b){ const o=Object.assign({},a); for(const k in b){ o[k]=(isObj(b[k])&&isObj(a?.[k]))?merge(a[k],b[k]):b[k]; } return o; }
+const normalize = d => merge(initial(), d||{});
+const LS = { get(k,d){ try{ const v=localStorage.getItem(k); return v==null?d:v; }catch(e){ return d; } }, set(k,v){ try{ localStorage.setItem(k,v); }catch(e){} } };
+
+let S = initial();
+try{ const s=LS.get("vsi3-state",null); if(s) S=normalize(JSON.parse(s)); }catch(e){}
+let ref=null, docExists=false, readOnly=false, chain=Promise.resolve();
+const bootAt = Date.now();
+const saveLocal = () => LS.set("vsi3-state", JSON.stringify(S));
+const setSync = t => { $("sync").textContent = t ? "· "+t : ""; };
+
+function commit(patch){
+  S = merge(S, patch); saveLocal(); renderAll();
+  if(!ref || readOnly) return;
+  chain = chain.then(async ()=>{
+    try{ if(docExists) await ref.update(patch); else { await ref.set(S); docExists=true; } }
+    catch(e){
+      if(e && e.code==="invalid_argument" && docExists){ try{ await ref.set(S); return; }catch(e2){ e=e2; } }
+      if(e && e.code==="invalid_argument"){ readOnly=true; setSync("VIEW ONLY"); toast("This screen can view but not save."); }
+      else setSync("OFFLINE");
+    }
+  });
+}
+function replaceAll(next){ S=next; saveLocal(); renderAll(); if(!ref||readOnly) return; chain=chain.then(()=>ref.set(next).then(()=>{docExists=true;}).catch(()=>setSync("OFFLINE"))); }
+
+const has = id => !!S.found[id];
+const nFound = () => FINDINGS.filter(f=>has(f.id)).length;
+const elapsed = () => { const c=S.clock; return Math.max(0,(c.elapsed||0)+(c.running?Date.now()-(c.startedAt||Date.now()):0)); };
+const wt = ms => { const m=20*60+Math.floor(Math.min(ms,DURATION)/60000); return String(Math.floor(m/60)%24).padStart(2,"0")+":"+String(m%60).padStart(2,"0"); };
+const now = () => wt(elapsed());
+const uid = () => Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+const exOpen = e => e.phase <= S.phase;
+
+let DEV = LS.get("vsi3-dev",""); if(!DEV){ DEV="d"+Math.random().toString(36).slice(2,10); LS.set("vsi3-dev",DEV); }
+let hostOn = LS.get("vsi3-host","")==="1";
+const isHost = () => hostOn;
+
+/* ======================= ART ======================= */
+function lines(x,y,w,n,gap,col){ let s=""; for(let i=0;i<n;i++){ const ww = w*(0.6+((i*37)%40)/100); s+=`<rect x="${x}" y="${y+i*gap}" width="${ww.toFixed(0)}" height="2.2" fill="${col||'#6b6450'}" opacity=".75"/>`; } return s; }
+function art(kind){
+  const bg = `<rect width="160" height="110" fill="var(--paper-2)"/><rect width="160" height="110" fill="url(#sepia)" opacity=".35"/>`;
+  let g="";
+  switch(kind){
+    case "doc": g=`<g transform="rotate(-5 80 55)"><rect x="44" y="10" width="74" height="92" fill="#f6efd9" stroke="#b9aa80"/>${lines(52,22,58,9,8)}<path d="M84 90 c6 -8 14 -2 22 -6" stroke="var(--type)" stroke-width="1.4" fill="none"/></g>`; break;
+    case "report": g=`<g transform="rotate(4 80 55)"><rect x="40" y="12" width="78" height="90" fill="#f0e2c4" stroke="#b9aa80"/><rect x="40" y="12" width="78" height="12" fill="#c9b78c"/>${lines(48,32,60,7,8)}<rect x="74" y="74" width="38" height="18" fill="none" stroke="var(--stamp)" stroke-width="2" transform="rotate(-10 93 83)"/><text x="80" y="88" font-family="Courier Prime" font-size="9" fill="var(--stamp)" transform="rotate(-10 93 83)">P-3</text></g>`; break;
+    case "envelope": g=`<g transform="rotate(-3 80 55)"><path d="M58 22 C 72 -6, 112 4, 104 36 C 98 52, 72 50, 58 22Z" fill="var(--leaf)"/><path d="M60 24 C 76 26, 92 30, 102 34" stroke="#3d5524" stroke-width="1.4" fill="none"/><rect x="30" y="34" width="100" height="64" fill="var(--kraft)" stroke="#8a6a3e"/><path d="M30 34 L80 70 L130 34" fill="none" stroke="#8a6a3e" stroke-width="1.4"/><text x="38" y="92" font-family="Courier Prime" font-size="9" fill="#4a3620">ST. NATURE STUDY · 1939</text><text x="112" y="56" font-family="Stardos Stencil" font-size="14" fill="#4a3620">A</text></g>`; break;
+    case "index": g=`<g transform="rotate(3 80 55)"><rect x="26" y="18" width="110" height="76" fill="#efe1bd" stroke="#a89466"/><rect x="26" y="18" width="110" height="12" fill="#cdb98a"/><text x="32" y="27" font-family="Courier Prime" font-size="7" fill="#3e3420">HERBARIUM INDEX 1939</text>${[38,48,58,68,78].map(y=>`<path d="M30 ${y}H132" stroke="#b39f70" stroke-width=".8"/>`).join("")}<path d="M74 30V90M106 30V90" stroke="#b39f70" stroke-width=".8"/><circle cx="118" cy="76" r="12" fill="#a77d43" opacity=".25"/></g>`; break;
+    case "box": g=`<rect x="28" y="34" width="104" height="58" rx="3" fill="url(#metal)" stroke="#2c3133"/><rect x="28" y="34" width="104" height="14" fill="#5c6366" stroke="#2c3133"/><rect x="34" y="40" width="92" height="2" fill="#80878a"/><path d="M72 58 v-10 a8 8 0 0 1 16 0 v10" stroke="var(--brass-k)" stroke-width="4" fill="none"/><rect x="66" y="58" width="28" height="22" rx="2" fill="var(--brass-k)" stroke="#7a5d1e"/>${[70,78,86].map(x=>`<rect x="${x}" y="64" width="6" height="10" fill="#e9d7a0" stroke="#7a5d1e" stroke-width=".6"/>`).join("")}<path d="M28 88 Q 10 92 4 104" stroke="#555" stroke-width="2" stroke-dasharray="3 2" fill="none"/>`; break;
+    case "key": g=`<g transform="rotate(-18 80 55)"><circle cx="46" cy="56" r="15" fill="none" stroke="var(--brass-k)" stroke-width="7"/><rect x="58" y="52" width="66" height="8" fill="var(--brass-k)"/><rect x="108" y="60" width="6" height="12" fill="var(--brass-k)"/><rect x="118" y="60" width="6" height="16" fill="var(--brass-k)"/></g><rect x="92" y="18" width="44" height="22" fill="#f3e6c2" stroke="#a89466" transform="rotate(8 114 29)"/><text x="96" y="32" font-family="Courier Prime" font-size="6" fill="#3e3420" transform="rotate(8 114 29)">DARKROOM</text><path d="M60 46 Q 80 30 96 28" stroke="#8a7a52" fill="none"/>`; break;
+    case "slip": g=`<g transform="rotate(-6 80 55)"><rect x="18" y="38" width="124" height="34" fill="#f6efd9" stroke="#b9aa80"/><text x="24" y="52" font-family="Courier Prime" font-size="8" fill="#3e3420">BMA-FE-9921  10.X.43</text><text x="24" y="65" font-family="Courier Prime" font-size="9" letter-spacing="2" fill="var(--type)">V-I-C-T-O-R-I-A / B-I-R-D</text></g>`; break;
+    case "tin": g=`<rect x="48" y="26" width="64" height="70" fill="#5f6b3e" stroke="#2f3620"/><ellipse cx="80" cy="26" rx="32" ry="8" fill="#76844c" stroke="#2f3620"/><ellipse cx="80" cy="96" rx="32" ry="8" fill="#4a5430" stroke="#2f3620"/><rect x="48" y="48" width="64" height="24" fill="#e9dcb4"/><text x="80" y="58" text-anchor="middle" font-family="Stardos Stencil" font-size="8" fill="#2f3620">B.M.A. SIGNALS</text><text x="80" y="68" text-anchor="middle" font-family="Courier Prime" font-size="8" fill="#2f3620">REC-295</text>`; break;
+    case "mapsheet": g=`<g transform="rotate(-4 80 55)"><rect x="22" y="16" width="116" height="80" fill="#eadfbf" stroke="#a89466"/><path d="M60 16V96M100 16V96" stroke="#c7b78c"/><path d="M28 70 L70 40 L134 64" stroke="#6f6346" stroke-width="3" fill="none"/><path d="M40 92 L52 20" stroke="#6f6346" stroke-width="3" fill="none"/><path d="M30 86 Q 60 80 70 92 T 136 84" fill="#a7bfc2" opacity=".8"/><circle cx="84" cy="48" r="4" fill="var(--stamp)"/><path d="M104 28l8 8m0-8l-8 8" stroke="var(--stamp)" stroke-width="2"/></g>`; break;
+    case "strip1": g=`<rect x="70" y="10" width="22" height="88" fill="#fbf7ec" stroke="#b9aa80"/><path d="M70 82H92" stroke="#888" stroke-dasharray="2 2"/><circle cx="81" cy="82" r="4" fill="#222"/><path d="M58 92 h46 l-4 14 h-38z" fill="#a9c7d6" opacity=".5" stroke="#7a8e98"/>`; break;
+    case "strips": g=[40,66,92].map((x,i)=>`<rect x="${x}" y="12" width="20" height="84" fill="#fbf7ec" stroke="#b9aa80"/><path d="M${x} 80H${x+20}" stroke="#888" stroke-dasharray="2 2"/><circle cx="${x+10}" cy="80" r="4" fill="${i===1?'#2d4f9a':'#222'}"/><text x="${x+10}" y="24" text-anchor="middle" font-family="Courier Prime" font-size="9" fill="#3e3420">${"BCD"[i]}</text>`).join(""); break;
+    case "torn": g=`<g transform="rotate(-3 80 55)"><path d="M18 30 L142 30 L142 74 L132 80 L122 72 L110 82 L98 72 L86 80 L74 72 L62 82 L50 72 L38 80 L26 72 L18 78 Z" fill="#f3e6c2" stroke="#b9aa80"/>${lines(26,38,96,4,8)}<path d="M28 68 c10 -6 20 4 30 -2 s 18 4 26 -2" stroke="var(--type)" stroke-width="1.3" fill="none"/></g>`; break;
+    case "blueprint": g=`<rect x="16" y="12" width="128" height="86" fill="var(--bp)"/><path d="M16 32H144M16 52H144M16 72H144M48 12V98M80 12V98M112 12V98" stroke="#5f7fbf" stroke-width=".6"/><circle cx="80" cy="58" r="26" fill="none" stroke="#e8eefc" stroke-width="2"/><path d="M50 58H110M80 28V88" stroke="#e8eefc" stroke-width=".8" stroke-dasharray="3 2"/><text x="22" y="94" font-family="Courier Prime" font-size="7" fill="#e8eefc">PWD/STAM/1938-C4</text><text x="98" y="24" font-family="Courier Prime" font-size="7" fill="#e8eefc">Ø 900</text>`; break;
+    case "gauge": g=`<rect x="14" y="44" width="132" height="26" fill="#e3d2a4" stroke="#8a7a52"/>${Array.from({length:23},(_,i)=>`<path d="M${18+i*5.6} 44v${i%5===0?10:5}" stroke="#3e3420"/>`).join("")}<text x="80" y="66" text-anchor="middle" font-family="Stardos Stencil" font-size="11" fill="#3e3420">450 mm · SGT CHEN</text>`; break;
+    case "soil": g=`<ellipse cx="52" cy="66" rx="34" ry="14" fill="#d8d3c4" stroke="#8d8774"/><ellipse cx="52" cy="62" rx="26" ry="9" fill="#4d5a63"/><ellipse cx="112" cy="66" rx="34" ry="14" fill="#d8d3c4" stroke="#8d8774"/><ellipse cx="112" cy="62" rx="26" ry="9" fill="#8a5534"/><circle cx="104" cy="60" r="1.6" fill="#c69a64"/><circle cx="118" cy="63" r="1.2" fill="#c69a64"/><text x="52" y="94" text-anchor="middle" font-family="Courier Prime" font-size="8" fill="#3e3420">No. 1</text><text x="112" y="94" text-anchor="middle" font-family="Courier Prime" font-size="8" fill="#3e3420">No. 2</text>`; break;
+    case "manifest": g=`<g transform="rotate(3 80 55)"><rect x="34" y="8" width="92" height="96" fill="#f6efd9" stroke="#b9aa80"/><text x="40" y="20" font-family="Stardos Stencil" font-size="8" fill="#3e3420">SINWA GODOWN</text>${[28,40,52,64,76].map(y=>`<path d="M38 ${y}H122" stroke="#b9aa80" stroke-width=".8"/>`).join("")}<path d="M64 28V88M100 28V88" stroke="#b9aa80" stroke-width=".8"/>${lines(68,32,26,5,12,'#5a5444')}<path d="M100 46 L122 50" stroke="var(--stamp)" stroke-width="1.6"/></g>`; break;
+    case "bait": g=`<rect x="36" y="18" width="88" height="80" rx="4" fill="rgba(255,255,255,.35)" stroke="#9aa2a4"/><rect x="36" y="18" width="88" height="8" fill="#c9cfd1" opacity=".8"/><path d="M58 70 C 56 54, 80 46, 98 54 C 112 62, 102 82, 84 80 C 70 82, 60 80, 58 70Z" fill="#7a3a26"/><path d="M66 64 C 76 60, 90 62, 96 68" stroke="#a65a3e" fill="none"/><rect x="88" y="30" width="32" height="14" fill="#f3e6c2"/><text x="91" y="40" font-family="Courier Prime" font-size="7" fill="#3e3420">W-1</text>`; break;
+    case "burrs": g=`<rect x="36" y="18" width="88" height="80" rx="4" fill="rgba(255,255,255,.35)" stroke="#9aa2a4"/><rect x="36" y="18" width="88" height="8" fill="#c9cfd1" opacity=".8"/>${[[60,60],[72,72],[86,58],[96,76],[68,84],[100,62]].map(([x,y])=>`<g transform="translate(${x} ${y})"><circle r="3" fill="#8a7a3e"/>${[0,45,90,135].map(a=>`<path d="M-5 0H5" stroke="#6d5f2a" transform="rotate(${a})"/>`).join("")}</g>`).join("")}<path d="M50 88 q8 -10 18 -2" stroke="#9aa0a0" fill="none"/><rect x="88" y="30" width="32" height="14" fill="#f3e6c2"/><text x="91" y="40" font-family="Courier Prime" font-size="7" fill="#3e3420">W-2</text>`; break;
+    case "grit": g=`<rect x="56" y="10" width="48" height="28" fill="#5a5144" stroke="#2c2a26"/>${[16,22,28,34].map(y=>`<path d="M60 ${y}H100" stroke="#2c2a26" stroke-width="2"/>`).join("")}<path d="M30 100 Q 80 60 130 100Z" fill="#d6cdb6"/><circle cx="70" cy="86" r="2" fill="#bdb39a"/><circle cx="92" cy="90" r="3" fill="#bdb39a"/><path d="M80 40 l-2 20 M86 44 l2 18 M74 46 l-4 14" stroke="#cfc6ae" stroke-dasharray="2 3"/>`; break;
+    case "form": g=`<rect x="34" y="6" width="92" height="98" fill="#f6efd9" stroke="#b9aa80"/><rect x="34" y="6" width="92" height="14" fill="var(--ink)"/><text x="80" y="16" text-anchor="middle" font-family="Stardos Stencil" font-size="8" fill="#f6efd9">FORM 8B</text>${[34,46,58,70,82,94].map(y=>`<path d="M42 ${y}H96" stroke="#8a7a52" stroke-width=".8"/>`).join("")}<circle cx="110" cy="88" r="11" fill="#a0261d"/>`; break;
+  }
+  return `<svg viewBox="0 0 160 110" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">${bg}<g filter="url(#grain)">${g}</g></svg>`;
+}
+
+function portrait(look, label){
+  const sil = "#2a2620";
+  let hat="", hair="", extra="";
+  const head = `<ellipse cx="50" cy="56" rx="16" ry="20" fill="${sil}"/>`;
+  switch(look){
+    case "fedora": hat=`<path d="M26 42 Q50 34 74 42 L70 44 Q50 39 30 44Z" fill="${sil}"/><path d="M34 42 Q36 24 50 24 Q64 24 66 42Z" fill="${sil}"/><path d="M35 37 H65" stroke="#5a4a32" stroke-width="2.5"/>`; extra=`<path d="M40 92 L50 104 L60 92" fill="#d9ccaa"/>`; break;
+    case "sidecap": hat=`<path d="M34 40 Q50 28 68 38 L66 42 Q50 38 34 42Z" fill="#3c4630"/>`; extra=`<path d="M30 96 l8 -4 M70 96 l-8 -4" stroke="#5a6844" stroke-width="3"/>`; break;
+    case "officer": case "officer2": hat=`<path d="M30 40 Q50 22 70 40Z" fill="#3a4130"/><path d="M28 40 H72 L68 45 H34Z" fill="#1d201a"/><rect x="45" y="30" width="10" height="5" fill="var(--brass-k)"/>`; extra=`<path d="M38 94 L50 102 L62 94" fill="#6e6a4a"/>${look==="officer2"?`<path d="M42 66 q8 4 16 0" stroke="#5a4a32" stroke-width="3" fill="none"/>`:""}`; break;
+    case "waves": hair=`<path d="M32 58 Q30 32 50 32 Q70 32 68 58 Q72 70 64 76 Q66 60 60 48 Q50 42 40 48 Q34 60 36 76 Q28 70 32 58Z" fill="#1a1712"/>`; extra=`<circle cx="50" cy="96" r="2.5" fill="#e9dcb8"/>`; break;
+    case "bun": hair=`<circle cx="50" cy="32" r="9" fill="#1a1712"/><path d="M34 54 Q34 36 50 36 Q66 36 66 54 Q60 44 50 44 Q40 44 34 54Z" fill="#1a1712"/>`; break;
+    case "nurse": hat=`<path d="M30 46 Q30 30 50 30 Q70 30 70 46 L74 72 Q66 60 66 50 Q50 44 34 50 Q34 60 26 72Z" fill="#f2ede0"/><path d="M45 36 h10 M50 31 v10" stroke="var(--stamp)" stroke-width="2.5"/>`; break;
+    case "doctor": hair=`<path d="M34 50 Q36 38 50 38 Q64 38 66 50 Q60 44 50 44 Q40 44 34 50Z" fill="#1a1712"/>`; extra=`<circle cx="43" cy="56" r="5" fill="none" stroke="#c9bfa4" stroke-width="1.4"/><circle cx="57" cy="56" r="5" fill="none" stroke="#c9bfa4" stroke-width="1.4"/><path d="M48 56h4" stroke="#c9bfa4" stroke-width="1.4"/><path d="M44 90 L50 104 L56 90" fill="#e9dcb8"/><path d="M48 92 h4 v10 h-4z" fill="#5a3a2a"/>`; break;
+    case "glasses": hair=`<path d="M34 52 Q34 36 50 36 Q66 36 66 52 Q58 42 50 42 Q42 42 34 52Z" fill="#1a1712"/>`; extra=`<circle cx="43" cy="57" r="5" fill="none" stroke="#c9bfa4" stroke-width="1.2"/><circle cx="57" cy="57" r="5" fill="none" stroke="#c9bfa4" stroke-width="1.2"/>`; break;
+    case "shadow": hat=`<path d="M30 40 Q50 22 70 40Z" fill="#14120e"/><path d="M28 40 H72 L68 45 H34Z" fill="#0b0a08"/>`; extra=`<rect x="0" y="0" width="100" height="120" fill="#0b0a08" opacity=".25"/><text x="50" y="66" text-anchor="middle" font-family="Stardos Stencil" font-size="20" fill="#8a7a52">?</text>`; break;
+    case "m1": hair=`<path d="M34 50 Q34 34 50 34 Q66 34 66 50 Q62 40 50 41 Q38 40 34 50Z" fill="#1a1712"/>`; break;
+    case "m2": hair=`<path d="M33 54 Q32 32 52 33 Q68 34 67 52 Q64 42 54 40 Q42 40 33 54Z" fill="#1a1712"/>`; extra=`<path d="M40 94 L50 100 L60 94" fill="#d9ccaa"/>`; break;
+    case "m3": hair=`<path d="M34 50 Q36 34 50 34 Q64 34 66 50 L64 46 Q50 36 36 46Z" fill="#1a1712"/>`; extra=`<circle cx="43" cy="56" r="4.6" fill="none" stroke="#c9bfa4" stroke-width="1.2"/><circle cx="57" cy="56" r="4.6" fill="none" stroke="#c9bfa4" stroke-width="1.2"/>`; break;
+    case "m4": hat=`<path d="M30 42 Q50 34 70 42 L66 44 Q50 40 34 44Z" fill="${sil}"/><path d="M36 42 Q38 28 50 28 Q62 28 64 42Z" fill="#4a3d2a"/>`; break;
+    case "w1": hair=`<path d="M32 60 Q30 34 50 34 Q70 34 68 60 L66 70 Q62 50 50 46 Q38 50 34 70Z" fill="#1a1712"/>`; break;
+    case "w2": hat=`<path d="M30 54 Q30 32 50 32 Q70 32 70 54 L72 84 Q60 74 62 56 Q50 46 38 56 Q40 74 28 84Z" fill="#4a3a52"/>`; break;
+    case "host": hat=`<path d="M30 40 Q50 22 70 40Z" fill="#3a4130"/><path d="M28 40 H72 L68 45 H34Z" fill="#1d201a"/>`; break;
+    case "watch": extra=`<text x="50" y="66" text-anchor="middle" font-family="Stardos Stencil" font-size="18" fill="#c9bfa4">·</text>`; break;
+  }
+  return `<svg viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect width="100" height="120" fill="url(#sepia)"/>
+    <rect y="0" width="100" height="120" fill="none" stroke="#8f7c56" stroke-width="2"/>
+    <g filter="url(#grain)">${hair}<path d="M12 120 C 14 96, 30 86, 50 86 C 70 86, 86 96, 88 120 Z" fill="${sil}"/><rect x="44" y="72" width="12" height="16" fill="${sil}"/>${head}${hat}${extra}</g>
+    ${label?`<rect x="18" y="104" width="64" height="12" fill="#1d1b17"/><text x="50" y="113" text-anchor="middle" font-family="Courier Prime" font-size="7" fill="#e9dcb8">${label}</text>`:""}</svg>`;
+}
+
+/* ======================= UI HELPERS ======================= */
+const pill = (t,c) => `<span class="pill ${c}">${t}</span>`;
+function toast(t){ const el=$("toast"); el.textContent=t; el.classList.add("on"); clearTimeout(toast._t); toast._t=setTimeout(()=>el.classList.remove("on"),2400); }
+let sheetReturn=null;
+let sheetOpenedAt=0;
+function openSheet(html, label){
+  curTask = null; sheetOpenedAt=Date.now();
+  $("sheetBody").innerHTML = html; $("sheet").setAttribute("aria-label", label||"Details");
+  $("scrim").classList.add("on"); $("sheet").classList.add("on"); $("sheet").scrollTop=0;
+  sheetReturn = document.activeElement; setTimeout(()=>$("sheetX").focus(),50);
+}
+function closeSheet(){ curTask=null; $("scrim").classList.remove("on"); $("sheet").classList.remove("on"); if(sheetReturn&&sheetReturn.focus) sheetReturn.focus(); }
+$("scrim").addEventListener("click", ()=>{ if(Date.now()-sheetOpenedAt>450) closeSheet(); }); $("sheetX").addEventListener("click", closeSheet);
+document.addEventListener("keydown", e=>{ if(e.key==="Escape"){ closeSheet(); closeDispatch(); } });
+
+/* ======================= NAV ======================= */
+let screen = LS.get("vsi3-screen","case");
+const SCREENS = ["case","tasks","map","files","verdict","host"];
+if(!SCREENS.includes(screen)) screen="case";
+let lastPlace = LS.get("vsi3-place","scene");
+function go(s){
+  if($("sheet").classList.contains("on")) closeSheet();
+  if(s==="host" && !isHost()) s="case";
+  if(s==="places"||s==="scene") s="map";
+  screen=s; LS.set("vsi3-screen",s);
+  SCREENS.forEach(k=>$("s-"+k).hidden = k!==s);
+  const navKey = s==="map"?"places":(s==="verdict"||s==="host")?"case":s;
+  document.querySelectorAll(".nav button").forEach(b=>b.setAttribute("aria-current", b.dataset.nav===navKey ? "page" : "false"));
+  if(s==="tasks") seenDot("tasks");
+  if(s==="map") requestAnimationFrame(()=>{ sizeMap(); });
+  if(s==="files") seenDot("files");
+  if(s==="case") seenDot("case");
+  renderDots(); renderVerdict();
+  window.scrollTo({top:0});
+}
+document.querySelectorAll(".nav button").forEach(b=>b.addEventListener("click",()=>go(b.dataset.nav)));
+document.addEventListener("click", e=>{ const g=e.target.closest("[data-goto]"); if(g){ closeSheet(); go(g.dataset.goto); } });
+$("chip8b").addEventListener("click",()=>go("verdict"));
+function seenDot(k){ LS.set("vsi3-seen-"+k, String(stamp())); const d=$("dot-"+k); if(d) d.classList.remove("on"); }
+function stamp(){ return S.phase*100 + nFound(); }
+function renderDots(){ ["case","tasks","files"].forEach(k=>{ const d=$("dot-"+k); if(d) d.classList.toggle("on", +LS.get("vsi3-seen-"+k,"0") < stamp() && screen!==k); }); }
+
+/* ======================= OFFICERS ======================= */
+const HOST_CODE = "CAMPBELL";
+$("officersBtn").addEventListener("click", ()=>{
+  if(isHost()){ go("host"); return; }
+  openSheet(`<p class="kicker">Officers of the inquest</p><h2>Host clipboard</h2>
+    <p>For Captain Campbell and Sister Mei Lan. It holds the answers, so commissioners should look away.</p>
+    <div class="fld"><label for="hostCode">Officer's code</label><input id="hostCode" autocomplete="off" autocapitalize="characters"></div>
+    <button class="btn" id="hostGo" style="background:var(--ink);border-color:var(--ink);color:var(--paper)">Open clipboard</button><p class="fb" id="hostFb"></p>`, "Officers");
+  const tryIt=()=>{ if($("hostCode").value.trim().toUpperCase()===HOST_CODE){ hostOn=true; LS.set("vsi3-host","1"); renderAll(); go("host"); } else $("hostFb").textContent="That code isn't right."; };
+  $("hostGo").addEventListener("click", tryIt); $("hostCode").addEventListener("keydown", e=>{ if(e.key==="Enter") tryIt(); });
+});
+
+/* ======================= TOP / CLOCK ======================= */
+function tick(){
+  const e=Math.min(elapsed(),DURATION), r=DURATION-e;
+  $("worldTime").textContent = wt(e);
+  $("remain").textContent = String(Math.floor(r/60000)).padStart(2,"0")+":"+String(Math.floor((r%60000)/1000)).padStart(2,"0")+(S.clock.running?" left":" paused");
+  $("remain").classList.toggle("paused", !S.clock.running);
+}
+setInterval(tick, 1000);
+
+/* ======================= CASE ======================= */
+$("heroPhoto").outerHTML = portrait("fedora").replace("<svg ", '<svg id="heroPhoto" ');
+function renderCase(){
+  const p = PHASES[S.phase-1];
+  $("phaseKicker").textContent = `Phase ${p.n} of 3 · ${p.at} hrs`;
+  $("phaseTitle").textContent = p.name; $("phaseStamp").textContent = S.sealed.verdict ? "Sealed" : p.stamp;
+  $("phaseText").textContent = S.sealed.verdict ? `Form 8B has been sealed: Verdict ${S.sealed.verdict}. The epilogue is on the Form 8B page.` : p.text;
+  const openN = TASKS.filter(t=>t.phase<=S.phase && !has(t.id)).length;
+  $("phaseActions").innerHTML = (S.phase>=3 ? `<button class="btn red" data-goto="verdict">Open Form 8B</button>` : `<button class="btn" data-goto="tasks">${openN} open lead${openN===1?"":"s"}</button>`)
+    + (isHost() ? `<button class="btn small red" data-goto="host">Host clipboard</button>` : "");
+  const sealed2 = TASKS.filter(t=>t.phase===2 && has(t.id)).length;
+  $("nextUp").innerHTML = S.sealed.verdict ? "" :
+    S.phase===1 ? `<b>WHAT OPENS NEXT</b>The rear rooms, and five more leads, open as soon as Leong's box is opened and the finding is entered, on paper with Captain Campbell or under Leads.`
+    : S.phase===2 ? `<b>WHAT OPENS NEXT</b>Form 8B arrives when every lead is sealed. ${sealed2} of 5 rear-room leads sealed.<div class="pbar"><i style="width:${sealed2/5*100}%"></i></div>`
+    : `<b>WHAT HAPPENS NOW</b>Sign A or B on your phone. You can change your mind until the officers seal the docket.`;
+  $("findCount").textContent = nFound();
+  $("seals").innerHTML = FINDINGS.map(f=>`<span class="seal ${has(f.id)?"on":""}" title="${f.title}">${has(f.id)?f.short.toUpperCase():f.short}</span>`).join("");
+  const filed = FINDINGS.filter(f=>has(f.id)).sort((a,b)=>S.found[b.id]-S.found[a.id]);
+  $("feed").innerHTML = filed.length ? filed.map(f=>`<li><small>${S.filed[f.id]||""} HRS · ${f.title.toUpperCase()}</small>${f.text}</li>`).join("")
+    : `<li style="border:0;padding:0;color:var(--ink-soft)">Nothing sealed yet.</li>`;
+  const tl = [
+    {t:"17:00", x:"The guard dog is fed, and falls into a stupor.", show:has("shawn")},
+    {t:"17:15", x:"Sgt. Chen reaches the courtyard gate, and turns back.", show:has("farah")},
+    {t:"17:15", x:"Spring tide floods the Stamford culvert.", show:has("farah")},
+    {t:"17:28", x:"Maj. Vance's jeep leaves Keppel drydock.", show:has("kabir")},
+    {t:"17:50", x:"Vance forces the darkroom latch. Leong is dead.", show:true},
+    {t:"18:02", x:"Dr. Pillay arrives to certify the death.", show:true},
+    {t:"18:20", x:"Sgt. Chen detained at the canal outfall.", show:true},
+    {t:"18:45", x:"Body removed to Outram Road Mortuary.", show:true},
+    {t:"17:41", x:"A patrol passes a soldier writing on the sea wall.", show:has("farah")},
+    {t:"19:21", x:"Connie Song stopped at Bras Basah Road.", show:true},
+    {t:"19:25", x:"High tide peaks at +2.80 m RL.", show:has("farah")},
+    {t:"20:00", x:"The commission convenes.", show:true}
+  ];
+  $("timeline").innerHTML = tl.map(r=> r.show ? `<li class="${["17:00","17:15","17:28","19:21","19:25"].includes(r.t)?"new":""}"><time>${r.t}</time><i class="nd"></i><span>${r.x}</span></li>`
+    : `<li class="gap"><time>··:··</time><i class="nd"></i><span>Gap in the record</span></li>`).join("");
+}
+const PRIMER=[
+ ["Where you are","Singapore, Friday 16 November 1945. Three months ago the Japanese flag came down after three and a half years of occupation. The British are back, ruling through a British Military Administration: curfews, ration cards, military police on the corners, and a city full of bomb damage and old grudges. Everyone made compromises to survive the war. Now everyone is asking who went too far."],
+ ["Why it matters","Early next year a British military court will try officers of the Kempeitai, the Japanese military police, for the Double Tenth: the arrests of October 1943, when dozens of internees and civilians were taken for months of interrogation and fifteen of them died. Evidence is being gathered all over the city. Tonight one of the men holding that evidence is dead."],
+ ["What happened tonight","At 17:50 Major Edward Vance came to the Victoria Dispensary & Photo Studio, 96 Victoria Street, to collect municipal files from the clerk Francis Leong. The darkroom at the back was bolted from the inside. Vance smelled bitter almonds, forced the door and found Leong dead over the sink. At 18:20 military police detained Sergeant Chen Teck Nam fifty yards away at the Stamford Canal outfall, muddy to the knees and carrying a knife. Captain Campbell believes Chen came up through the storm drain beneath the building."],
+ ["Who you are","You have been sworn in tonight as Special Commissioners under emergency warrant. You may examine every room, paper, object and sample in this building. Nothing is assigned to anyone. Follow what interests you, compare notes, and work together."],
+ ["How the inquest works","The rear rooms stay sealed until Leong's key is found. It is believed to be in the locked box on his desk.\nWhen you can prove something, write it on your Findings Report and bring it to Captain Campbell. If it stands up, he will stamp it and enter it into the record.\nSister Mei Lan will help if you are stuck, but every hint she gives, she gives to the whole room.\nYour phones can carry the commission's notebook if you want it. It is optional. Everything you need is on paper, in this room.\nNo one leaves before the docket is sealed. There is a curfew."],
+ ["What you must decide","Before midnight the commission signs Form 8B: who killed Francis Leong, how, and why, and what verdict the law should record. Be warned. In 1945 the truth and justice are not always the same thing."]];
+$("briefBtn").addEventListener("click", ()=>openSheet(`<p class="kicker">British Military Administration · Docket 45/11</p><h2>Briefing for Special Commissioners</h2>${PRIMER.map(([h,b])=>`<p class="kicker" style="margin-top:14px">${h}</p>${b.split("\n").map(x=>`<p>${x}</p>`).join("")}`).join("")}<p style="text-align:right;font-family:var(--f-type);font-size:.8rem;color:var(--ink-soft)">A. Campbell, Capt. · Presiding Officer</p>`, "Commission briefing"));
+$("howBtn").addEventListener("click", ()=>openSheet(`<p class="kicker">How it works</p><h2>The room is the case file</h2>
+  <p>Everything you need is physically here: papers, objects, samples, a locked box. Handle all of it. Nobody is assigned anything. Follow whatever catches your eye, and pull others in when you get stuck.</p>
+  <p><b>On paper:</b> when you can prove something, write it on your Findings Report and take it to Captain Campbell. If it holds up, he stamps it and hands you the finding.</p>
+  <p><b>On this phone (optional):</b> Leads holds the same questions. Record an answer there and, if it holds up, every phone hears about it. Map shows the town in 1945, and Evidence fills in as findings are established.</p>
+  <p class="kicker" style="margin-top:14px">How the evening unlocks</p>
+  <ol class="steps"><li><span><b>Front office.</b> Leong's locked box is the only way forward. The rear rooms are taped off.</span></li><li><span><b>Rear rooms.</b> Open the box and the darkroom and courtyard open, with five more findings to prove.</span></li><li><span><b>Form 8B.</b> Prove all six and the verdict form arrives. Then the room decides.</span></li></ol>`, "How it works"));
+$("histBtn").addEventListener("click", ()=>openSheet(`<p class="kicker">Background for commissioners</p><h2>Singapore, three months after the surrender</h2>
+  <p>The Japanese flag came down over Singapore in September 1945. The British Military Administration runs the island under martial authority: curfews, ration cards, provost patrols, and streets of bombed-out shophouses. Nearly everyone made compromises to survive the Occupation, and now everyone is asking who collaborated.</p>
+  <p>The B.M.A. is assembling war crimes cases against the Kempeitai, the Japanese military police. The most notorious is the <em>Double Tenth</em>, named for 10 October 1943.</p>
+  <ul class="tl" style="margin:14px 0">
+    <li><time>1942</time><i class="nd"></i><span><b>February.</b> Singapore falls and is renamed Syonan-to. The Occupation lasts three and a half years.</span></li>
+    <li><time>1943</time><i class="nd"></i><span><b>September.</b> A commando raid sinks Japanese ships in the harbour. The Kempeitai blame civilians and Changi internees.</span></li>
+    <li><time>1943</time><i class="nd"></i><span><b>10 October.</b> The Double Tenth. Mass arrests, months of interrogation and torture. Several die in custody.</span></li>
+    <li><time>1943</time><i class="nd"></i><span><b>Elizabeth Choy</b>, whose hospital canteen smuggled help to internees, is arrested and held for around 200 days. She gives up no one.</span></li>
+    <li><time>1945</time><i class="nd"></i><span><b>September.</b> Japan surrenders. The B.M.A. takes control.</span></li>
+    <li class="new"><time>1945</time><i class="nd"></i><span><b>16 November.</b> In the story: Francis Leong is found dead on Victoria Street.</span></li>
+  </ul>
+  <p style="font-size:.9rem;color:var(--ink-soft)">This is historical fiction. Real people and events frame the story; the crime, Dr. Stanley's dates and several characters are invented for the game.</p>`, "Background"));
+
+const seenSpots = new Set();
+
+/* ======================= EXHIBIT / PERSON DETAIL ======================= */
+function openExhibit(no){
+  const e=EX[no]; if(!e) return;
+  if(!exOpen(e)){ toast(`${no} is sealed until phase ${e.phase}.`); return; }
+  const done = e.by && has(e.by);
+  const sp = SPOTS.find(s=>s.id===e.spot);
+  openSheet(`<p class="kicker">Exhibit ${e.no} · physical object in the room</p><h2>${e.title}</h2>
+    <div class="bigart">${art(e.art)}</div>
+    <dl><dt>OBJECT</dt><dd>${e.obj}</dd><dt>FOUND</dt><dd>${e.found}</dd><dt>STATUS</dt><dd>${done?pill("EXAMINED","ok"):pill("ON THE TABLE","warn")}</dd></dl>
+    <p>${e.why}</p>
+    ${done?`<div class="finding"><b>COMMISSION FINDING</b>${e.f}</div>`:`<p style="color:var(--ink-soft);font-size:.92rem">The object itself is somewhere in this building.</p>`}
+`, e.title);
+}
+function openPerson(id){
+  const p=PP[id]; if(!p) return; const [st,cls]=p.status();
+  const known = p.known.filter(k=>!k.need||has(k.need));
+  const linked = PLACES.filter(pl=>pl.people.includes(id));
+  openSheet(`<div style="display:grid;grid-template-columns:110px 1fr;gap:16px;align-items:start">
+      <div style="transform:rotate(-2deg);background:#fff;padding:5px;box-shadow:0 4px 10px rgba(0,0,0,.3)">${portrait(p.look)}</div>
+      <div><p class="kicker">${p.grp}</p><h2>${p.name}</h2><p style="font-family:var(--f-type);font-size:.82rem;color:var(--ink-soft);margin-bottom:6px">${p.role}</p>${pill(st,cls)}</div></div>
+    <p style="margin-top:14px">${p.bio}</p>
+    ${known.length?`<p class="kicker" style="margin-top:10px">What the commission knows</p><ul style="margin:0;padding-left:18px">${known.map(k=>`<li style="${k.need?'color:var(--type)':''}">${k.t}</li>`).join("")}</ul>`:""}
+    ${linked.length?`<p class="kicker" style="margin-top:14px">On the map</p><div class="row">${linked.map(l=>`<button class="btn small ghost" data-mapto="${l.id}">${l.n} · ${l.name}</button>`).join("")}</div>`:""}`, p.name);
+}
+document.addEventListener("click", e=>{
+  const x=e.target.closest("[data-ex]"); if(x){ openExhibit(x.dataset.ex); return; }
+  const p=e.target.closest("[data-person]"); if(p){ openPerson(p.dataset.person); return; }
+  const m=e.target.closest("[data-mapto]"); if(m){ closeSheet(); go("map"); const pl=PLACES.find(q=>q.id===m.dataset.mapto); if(pl) flyTo(pl.u,pl.v,520); }
+});
+
+/* ======================= LEADS ======================= */
+const drafts = {}; TASKS.forEach(t=>drafts[t.id]={});
+const tries = {};
+let curTask = null, curSig = "";
+const tState = t => has(t.id) ? "done" : (t.phase<=S.phase ? "open" : "locked");
+function taskRow(t){
+  const st=tState(t);
+  const label = st==="done" ? `Sealed at ${S.filed[t.id]||""} hrs` : st==="locked" ? "Opens when Leong's box is opened" : t.q;
+  return `<button class="task ${st}" data-task="${t.id}">${st==="locked"?art("form"):art(t.art)}<span><b>${st==="locked"?"Sealed lead":t.title}</b><small>${label}</small></span>
+    <span>${st==="done"?pill("SEALED","ok"):st==="locked"?pill("LATER","mute"):pill("OPEN","warn")}</span></button>`;
+}
+function renderTasks(){
+  $("taskList").innerHTML = TASKS.map(taskRow).join("");
+  if(curTask && $("sheet").classList.contains("on")){ const sig=taskSig(curTask); if(sig!==curSig) renderTaskSheet(curTask); }
+}
+const taskSig = id => [S.phase, has(id), S.hints[id]||0].join("|");
+function spotSVG(sel){
+  const z=(id,shape,label,lx,ly)=>`<g class="zone" data-spot-pick="${id}" role="button" tabindex="0" aria-label="${label}" aria-pressed="${sel===id}">${shape}<text x="${lx}" y="${ly}" text-anchor="middle">${label}</text></g>`;
+  return `<svg viewBox="0 0 400 260" aria-label="Tap where the poison came in">
+    <rect width="400" height="260" fill="#0b1222"/>
+    <rect y="170" width="400" height="90" fill="#4a321f"/><rect y="214" width="400" height="26" fill="#0e1214"/>
+    <polygon points="30,70 160,30 290,70" fill="#7a3b26"/>
+    <rect x="34" y="70" width="252" height="100" fill="#2a241b" stroke="#000"/>
+    <rect x="34" y="70" width="252" height="40" fill="#3a3226"/>
+    <rect x="160" y="110" width="126" height="60" fill="#3a0f0c"/>
+    <rect x="286" y="70" width="8" height="100" fill="#8c7a56"/>
+    <rect x="294" y="164" width="106" height="6" fill="#5a5144"/>
+    <path d="M330 170 L330 120 L360 104 L400 116 L400 170Z" fill="#6d6450"/>
+    <text x="96" y="160" text-anchor="middle" font-family="Courier Prime" font-size="11" fill="#c9bfa4">OFFICE</text>
+    <text x="222" y="160" text-anchor="middle" font-family="Courier Prime" font-size="11" fill="#d9a69a">DARKROOM</text>
+    <text x="345" y="160" text-anchor="middle" font-family="Courier Prime" font-size="10" fill="#c9bfa4">YARD</text>
+    ${z("door",`<rect x="24" y="118" width="26" height="52" rx="3"/>`,"Front door",44,190)}
+    ${z("window",`<rect x="80" y="78" width="60" height="26" rx="3"/>`,"Upstairs window",110,96)}
+    ${z("flue",`<circle cx="276" cy="118" r="14"/>`,"High vent",276,98)}
+    ${z("drain",`<rect x="180" y="208" width="84" height="38" rx="3"/>`,"Storm drain",222,232)}
+  </svg>`;
+}
+function fieldHTML(t,f){
+  const d = drafts[t.id], fid=`f-${t.id}-${f.key}`;
+  if(f.type==="dial"){ const v=(d.combo||"000").split("");
+    return `<div class="fld"><span class="q">${f.q}</span><div class="dials">${[0,1,2].map(i=>`<div class="dial"><button type="button" data-dial="${i}" data-step="1" aria-label="Wheel ${i+1} up">▲</button><output id="dial-${i}">${v[i]}</output><button type="button" data-dial="${i}" data-step="-1" aria-label="Wheel ${i+1} down">▼</button></div>`).join("")}</div></div>`; }
+  if(f.type==="text") return `<div class="fld"><label for="${fid}">${f.q}</label><input id="${fid}" data-fk="${f.key}" autocomplete="off" autocapitalize="characters" placeholder="${f.ph||""}" value="${(d[f.key]||"").replace(/"/g,"&quot;")}"></div>`;
+  if(f.type==="spot") return `<div class="fld"><span class="q">${f.q}</span><div class="spotpick" data-fk="${f.key}">${spotSVG(d[f.key])}</div></div>`;
+  if(f.type==="suspect"||f.type==="suspects"){ const sel = f.type==="suspects" ? (d[f.key]||[]) : [d[f.key]];
+    return `<div class="fld"><span class="q" id="${fid}">${f.q}</span><div class="suspects" role="group" aria-labelledby="${fid}">${f.options.map(o=>`<button type="button" class="opt" data-fk="${f.key}" data-multi="${f.type==="suspects"?1:0}" data-v="${o}" aria-pressed="${sel.includes(o)}">${portrait(PP[o].look)}${PORTRAIT_OPTS[o]}</button>`).join("")}</div></div>`; }
+  const sel = [d[f.key]];
+  return `<div class="fld"><span class="q" id="${fid}">${f.q}</span><div class="opts" role="group" aria-labelledby="${fid}">${f.options.map(o=>`<button type="button" class="opt" data-fk="${f.key}" data-multi="0" data-v="${o}" aria-pressed="${sel.includes(o)}">${o}</button>`).join("")}</div></div>`;
+}
+function renderTaskSheet(id){
+  const t=TASKS.find(x=>x.id===id); if(!t) return; curTask=id; curSig=taskSig(id);
+  const st=tState(t), f=FINDINGS.find(x=>x.id===id), nh=S.hints[id]||0;
+  const body = st==="locked"
+    ? `<p class="kicker">Sealed lead</p><h2>Behind the provost tape</h2><p>This question concerns the rear of the building. It opens on every phone the moment someone records the combination to Leong\'s dispatch box.</p><button class="btn" data-goto="tasks" style="background:var(--ink);border-color:var(--ink);color:var(--paper)">Back to the open lead</button>`
+    : `<p class="kicker">Lead</p><h2>${t.title}</h2>
+    <p>${t.story}</p>
+    <p class="lead-q">${t.q}</p>
+    ${st==="done" ? `<div class="finding"><b>FINDING SEALED · ${S.filed[id]||""} HRS</b>${f.text}</div>` : `
+    <div class="answer"><h3>Record the commission's answer</h3><p class="typed" style="color:var(--ink-soft);margin-top:-4px">Or write it on your paper Findings Report and take it to Captain Campbell. Either way works.</p>${t.fields.map(fl=>fieldHTML(t,fl)).join("")}
+      <button class="btn" id="submitTask" style="background:var(--ink);border-color:var(--ink);color:var(--paper);width:100%">Seal this finding</button>
+      <p class="fb" id="taskFb" role="status"></p></div>`}
+    ${st!=="done" || nh ? `<details class="fold" style="margin-top:14px" ${nh?"open":""}><summary><b style="font-size:1rem">Hints${nh?` · ${nh} of 3 open`:""}</b></summary>
+      <div class="hintbox" style="margin-top:10px">${t.hints.slice(0,nh).map(h=>`<div class="hint"><span>${h[0].toUpperCase()}</span>${h[1]}</div>`).join("")}</div>
+      ${nh<3&&st!=="done"?`<p style="font-size:.9rem;color:var(--ink-soft)">Opening a hint opens it on every phone.</p><button class="btn ghost small" id="hintBtn" style="color:var(--ink);border-color:var(--ink-soft)">Open hint ${nh+1}</button>`:""}</details>` : ""}`;
+  if($("sheet").classList.contains("on") && curTask===id) $("sheetBody").innerHTML = body; else { openSheet(body, t.title); curTask=id; curSig=taskSig(id); }
+}
+function openTask(id){ curTask=id; $("sheet").classList.remove("on"); renderTaskSheet(id); }
+$("sheetBody").addEventListener("click", e=>{
+  if(!curTask) return; const t=TASKS.find(x=>x.id===curTask); if(!t) return;
+  const dl=e.target.closest("[data-dial]");
+  if(dl){ const i=+dl.dataset.dial, v=(drafts[t.id].combo||"000").split(""); v[i]=String((+v[i]+(+dl.dataset.step)+10)%10); drafts[t.id].combo=v.join(""); $("dial-"+i).textContent=v[i]; return; }
+  const sp=e.target.closest("[data-spot-pick]");
+  if(sp){ const wrap=sp.closest(".spotpick"); drafts[t.id][wrap.dataset.fk]=sp.dataset.spotPick; wrap.querySelectorAll("[data-spot-pick]").forEach(z=>z.setAttribute("aria-pressed",String(z===sp))); return; }
+  const op=e.target.closest(".opt[data-fk]");
+  if(op){ const k=op.dataset.fk; if(op.dataset.multi==="1"){ const s=new Set(drafts[t.id][k]||[]); s.has(op.dataset.v)?s.delete(op.dataset.v):s.add(op.dataset.v); drafts[t.id][k]=[...s]; op.setAttribute("aria-pressed",String(s.has(op.dataset.v))); }
+    else { drafts[t.id][k]=op.dataset.v; op.parentElement.querySelectorAll(".opt").forEach(b=>b.setAttribute("aria-pressed",String(b===op))); } return; }
+  if(e.target.closest("#hintBtn")){ commit({hints:{[t.id]:Math.min(3,(S.hints[t.id]||0)+1)}}); return; }
+  if(e.target.closest("#submitTask")){
+    const a=drafts[t.id], fb=$("taskFb");
+    const missing = t.fields.some(f=> f.type==="dial" ? false : f.type==="suspects" ? !(a[f.key]||[]).length : !String(a[f.key]||"").trim());
+    if(missing){ fb.textContent="Answer every part first."; return; }
+    if(!t.ok(a)){ tries[t.id]=(tries[t.id]||0)+1; fb.textContent = "The commission isn't convinced. Something here doesn't hold up." + (tries[t.id]>=2 && (S.hints[t.id]||0)<3 ? " A hint might help." : ""); return; }
+    sealTask(t.id);
+  }
+});
+$("sheetBody").addEventListener("keydown", e=>{ const sp=e.target.closest&&e.target.closest("[data-spot-pick]"); if(sp&&(e.key==="Enter"||e.key===" ")){ e.preventDefault(); sp.dispatchEvent(new MouseEvent("click",{bubbles:true})); } });
+$("sheetBody").addEventListener("input", e=>{ const i=e.target.closest("input[data-fk]"); if(i&&curTask) drafts[curTask][i.dataset.fk]=i.value; });
+$("taskList").addEventListener("click", e=>{ const b=e.target.closest("[data-task]"); if(b) openTask(b.dataset.task); });
+function sealTask(id){
+  const f=FINDINGS.find(x=>x.id===id);
+  const after = Object.assign({}, S.found, {[id]:Date.now()});
+  const all = FINDINGS.every(x=>after[x.id]);
+  let text = f.text.toUpperCase();
+  const patch = {found:{[id]:Date.now()}, filed:{[id]:now()}};
+  if(id==="lockbox" && S.phase<2){ patch.phase=2; text += "\n\n"+PHASES[1].dispatch; }
+  if(all && S.phase<3){ patch.phase=3; text += "\n\n"+PHASES[2].dispatch; }
+  patch.event = {id:uid(), kind: patch.phase===3?"phase":"finding", title:`Finding sealed · ${f.title}`, text, at:Date.now()};
+  commit(patch);
+}
+
+/* ======================= FILES ======================= */
+let seg = LS.get("vsi3-seg2","pp"), fchip = LS.get("vsi3-fchip","All");
+document.querySelectorAll("[data-seg]").forEach(b=>b.addEventListener("click",()=>{ seg=b.dataset.seg; fchip="All"; LS.set("vsi3-seg2",seg); renderFiles(); }));
+$("fileChips").addEventListener("click", e=>{ const c=e.target.closest("[data-fc]"); if(!c) return; fchip=c.dataset.fc; LS.set("vsi3-fchip",fchip); renderFiles(); });
+const ROOMLBL = {provost:"Front office", desk:"Front office", sink:"Darkroom", shelf:"Darkroom", bench:"Darkroom", vent:"Darkroom", wall:"Courtyard", kennel:"Courtyard", culvert:"Below ground"};
+function renderFiles(){
+  document.querySelectorAll("[data-seg]").forEach(b=>b.setAttribute("aria-pressed", String(b.dataset.seg===seg)));
+  $("filesTitle").textContent = seg==="ex" ? "On the record" : "Persons in the case";
+  if(seg==="ex"){
+    $("fileChips").innerHTML = "";
+    const list = EXHIBITS.filter(e=> e.by && has(e.by));
+    $("cards").innerHTML = list.length ? list.map(e=>`<button class="card" data-ex="${e.no}"><div class="art">${art(e.art)}</div><div class="meta"><span class="no">${e.no}</span>${pill("ESTABLISHED","ok")}</div><b>${e.title}</b><small>${e.found}</small></button>`).join("")
+      : `<div class="paper" style="grid-column:1/-1"><h3>Nothing on the record yet</h3><p style="margin:0">The evidence is in the room, not on your phone. Exhibits are entered here once the commission has proved what they mean.</p></div>`;
+  } else {
+    const groups=["All","Persons of interest","Deceased","The Occupation","Officers of the inquest"];
+    $("fileChips").innerHTML = groups.map(c=>`<button class="chip" data-fc="${c}" aria-pressed="${c===fchip}">${c==="All"?"Everyone":c}</button>`).join("");
+    const list = PEOPLE.filter(p=>fchip==="All"||p.grp===fchip);
+    $("cards").innerHTML = list.map(p=>{ const [st,cls]=p.status(); const nn=p.known.filter(k=>k.need&&has(k.need)).length;
+      return `<button class="card person" data-person="${p.id}"><div class="art">${portrait(p.look)}</div><div class="meta"><small>${p.grp}</small>${pill(st,cls)}</div><b>${p.name}</b><small>${p.role}${nn?` · ${nn} new fact${nn>1?"s":""}`:""}</small></button>`; }).join("");
+  }
+}
+
+window.addEventListener("resize", ()=>sizeMap());
+/* ======================= MAP ======================= */
+const TH=-32*Math.PI/180, CT=Math.cos(TH), ST=Math.sin(TH);
+const P = (u,v) => { const x0=u, y0=-v; return [x0*CT - y0*ST, x0*ST + y0*CT]; };
+const L = (u,v) => `${u},${-v}`;
+function road(points, w, name, cls){ const d="M"+points.map(([u,v])=>L(u,v)).join(" L"); return `<path d="${d}" stroke="var(--m-casing)" stroke-width="${w+3}" fill="none" stroke-linecap="square"/><path d="${d}" stroke="var(--m-road)" stroke-width="${w}" fill="none" stroke-linecap="square" data-n="${name||""}"/>`; }
+function label(u,v,txt,size,rot,cls,extra){ return `<text x="${u}" y="${-v}" font-size="${size}" text-anchor="middle" dominant-baseline="middle" class="${cls||""}" ${rot?`transform="rotate(${rot} ${u} ${-v})"`:""} ${extra||""}>${txt}</text>`; }
+let rnd=7; const R=()=>{ rnd=(rnd*9301+49297)%233280; return rnd/233280; };
+function buildMap(){
+  const longN = [["BEACH ROAD",40,150,900],["NORTH BRIDGE ROAD",120,-150,900],["VICTORIA STREET",200,120,900],["QUEEN STREET",270,120,800],["WATERLOO STREET",330,120,800],["BENCOOLEN STREET",390,130,800],["PRINSEP STREET",460,150,760]];
+  const crossN = [["COLEMAN ST.",0,10,300],["STAMFORD ROAD",150,-5,560],["BRAS BASAH ROAD",260,30,620],["MIDDLE ROAD",380,30,560],["ROCHOR ROAD",560,30,600],["ARAB STREET",740,40,420],["HILL ST.",-100,60,330]];
+  const longS = [["TELOK AYER ST.",40,-650,-220],["SOUTH BRIDGE ROAD",130,-650,-190],["NEW BRIDGE ROAD",210,-600,-230]];
+  const crossS = [["CROSS ST.",-300,20,250],["TANJONG PAGAR RD.",-560,20,240],["MAXWELL RD.",-440,20,220]];
+  let s = "";
+  // sea + coast
+  const coast = [[-1300,-110],[-950,-80],[-880,-15],[-800,-10],[-620,-4],[-500,0],[-200,0],[-170,-2],[0,-4],[150,-6],[300,-2],[600,0],[900,4],[1300,20]];
+  s += `<rect x="-1600" y="-1400" width="3200" height="2800" fill="var(--m-paper)"/>`;
+  s += `<path d="M${coast.map(([u,v])=>L(u,v)).join(" L")} L1300,600 L-1300,600Z" fill="url(#ripple)"/>`;
+  [24,60,110].forEach((o,i)=>{ s+=`<path d="M${coast.map(([u,v])=>L(u,v-o)).join(" L")}" fill="none" stroke="var(--m-sea-2)" stroke-width="${1.2-i*.3}" stroke-dasharray="${i?"6 6":""}" opacity=".8"/>`; });
+  s += `<path d="M${coast.map(([u,v])=>L(u,v)).join(" L")}" fill="none" stroke="var(--m-ink)" stroke-width="2"/>`;
+  // beach foreshore
+  s += `<path d="M${L(150,-6)} L${L(900,4)} L${L(900,34)} L${L(150,34)}Z" fill="var(--m-sand)"/>`;
+  // islands
+  s += `<path d="M${[[-1300,-260],[-1100,-210],[-900,-215],[-760,-250],[-700,-300],[-760,-360],[-1000,-380],[-1300,-370]].map(([u,v])=>L(u,v)).join(" L")}Z" fill="var(--m-paper)" stroke="var(--m-ink)" stroke-width="1.6"/>`;
+  s += `<path d="M${[[-820,-150],[-740,-130],[-670,-150],[-690,-190],[-790,-195]].map(([u,v])=>L(u,v)).join(" L")}Z" fill="var(--m-paper)" stroke="var(--m-ink)" stroke-width="1.6"/>`;
+  s += label(-1000,-300,"BLAKANG MATI",18,0,"sc") + label(-745,-165,"P. BRANI",11,0,"sc");
+  s += label(-650,-90,"K E P P E L &#160; H A R B O U R",20,0,"water") + label(300,-140,"S I N G A P O R E &#160; R O A D S",26,0,"water") + label(-40,-60,"Inner Roads",14,0,"water lod2");
+  // river
+  const river=[[-280,760],[-300,560],[-270,430],[-240,300],[-215,180],[-195,80],[-180,0]];
+  s += `<path d="M${river.map(([u,v])=>L(u,v)).join(" L")}" stroke="var(--m-ink)" stroke-width="34" fill="none" stroke-linejoin="round"/><path d="M${river.map(([u,v])=>L(u,v)).join(" L")}" stroke="var(--m-sea)" stroke-width="30" fill="none" stroke-linejoin="round"/>`;
+  s += label(-250,380,"Singapore River",14,-80,"water");
+  // parks
+  s += `<rect x="0" y="${-110}" width="150" height="102" fill="url(#trees)" stroke="var(--m-ink)" stroke-width="1"/>` + label(75,58,"THE PADANG",12,0,"sc");
+  s += `<rect x="8" y="${-195}" width="134" height="70" fill="var(--m-park)" stroke="var(--m-ink)" stroke-width="1"/><path d="M${L(40,160)} H${120} M${L(80,182)} V${-138}" stroke="var(--m-ink)" stroke-width="6"/>` + label(75,145,"St. Andrew's Cath.",10,0,"lod2");
+  // hills
+  const hill=(cu,cv,rx,ry,name)=>{ let h=`<ellipse cx="${cu}" cy="${-cv}" rx="${rx}" ry="${ry}" fill="url(#trees)" stroke="var(--m-ink)" stroke-width="1"/>`;
+    for(let i=0;i<64;i++){ const a=i/64*Math.PI*2; const x1=cu+Math.cos(a)*rx*.92, y1=-cv+Math.sin(a)*ry*.92, x2=cu+Math.cos(a)*rx*.62, y2=-cv+Math.sin(a)*ry*.62; h+=`<path d="M${x1.toFixed(1)} ${y1.toFixed(1)} L${x2.toFixed(1)} ${y2.toFixed(1)}" stroke="var(--m-hill)" stroke-width="1.2"/>`; }
+    return h + label(cu,cv,name,14,0,"sc"); };
+  s += hill(-40,420,120,84,"FORT CANNING") + hill(-470,290,60,44,"PEARL'S HILL");
+  // blocks north
+  const vb=[[40,120],[120,200],[200,270],[270,330],[330,390],[390,460]], ub=[[150,260],[260,380],[380,560],[560,740],[740,880]];
+  const blocks=[]; vb.forEach(([v0,v1])=>ub.forEach(([u0,u1])=>blocks.push([u0,u1,v0,v1])));
+  [[-100,0,120,200],[-100,0,200,300],[0,150,200,300]].forEach(b=>blocks.push(b));
+  // south
+  [[40,130],[130,210]].forEach(([v0,v1])=>[[-650,-560],[-560,-440],[-440,-300],[-300,-230]].forEach(([u0,u1])=>blocks.push([u0,u1,v0,v1])));
+  let fp="";
+  blocks.forEach(([u0,u1,v0,v1])=>{
+    const special = (u0===150&&v0===120) || (u0===150&&v0===40);
+    s += `<rect x="${u0+6}" y="${-(v1-6)}" width="${u1-u0-12}" height="${v1-v0-12}" fill="var(--m-block)" stroke="var(--m-casing)" stroke-width=".8"/>`;
+    s += `<rect class="lod1" x="${u0+6}" y="${-(v1-6)}" width="${u1-u0-12}" height="${v1-v0-12}" fill="url(#hatch)"/>`;
+    if(special) return;
+    // shophouse lots on both long frontages
+    [[v1-6,-1],[v0+6,1]].forEach(([vf,dir])=>{ let u=u0+8; while(u<u1-10){ const w=8+Math.floor(R()*6), d=14+Math.floor(R()*10); const ww=Math.min(w,u1-8-u);
+      const y = dir<0 ? -vf : -(vf+d); fp+=`<rect x="${u}" y="${y}" width="${ww-1}" height="${d}" fill="var(--m-bldg)" stroke="var(--m-casing)" stroke-width=".5"/>`; u+=w; } });
+  });
+  s += `<g class="lod2">${fp}</g>`;
+  // CHIJMES block (ruins) + Raffles
+  s += `<rect x="156" y="${-194}" width="98" height="68" fill="var(--m-block)"/><rect x="156" y="${-194}" width="98" height="68" fill="url(#dmg)" opacity=".7"/>`;
+  s += `<path d="M${L(170,135)} L${L(170,175)} L${L(215,175)} L${L(215,135)}Z M${L(185,175)} L${L(185,188)} L${L(200,188)} L${L(200,175)}" fill="none" stroke="var(--m-dmg)" stroke-width="2.4"/>`;
+  s += label(205,140,"Convent &amp; Chapel (ruined)",7.5,0,"lod2") + label(205,160,"C.H.I.J.",11,0,"sc lod1");
+  s += `<rect x="228" y="${-196}" width="24" height="34" fill="var(--stamp)" stroke="var(--m-ink)" stroke-width="1"/>`;
+  s += label(240,206,"No. 96",7,0,"lod3");
+  s += `<path d="M${L(165,105)} H245 V${-55} H165Z M${L(185,105)} V${-60}" fill="var(--m-bldg)" stroke="var(--m-ink)" stroke-width="1"/>` + label(205,80,"RAFFLES HOTEL",9,0,"sc");
+  // roads (draw after blocks)
+  longN.concat(longS).forEach(([n,v,u0,u1])=>{ s+=road([[u0,v],[u1,v]], n.includes("ROAD")?10:7, n); });
+  crossN.concat(crossS).forEach(([n,u,v0,v1])=>{ s+=road([[u,v0],[u,v1]], n.includes("ROAD")?10:7, n); });
+  s += road([[-190,125],[-150,120]],10,"Elgin Br.") + road([[-60,10],[-150,10]],8,"") + road([[-150,10],[150,10]],8,"CONNAUGHT DRIVE");
+  s += road([[-950,30],[-650,30],[-560,20]],10,"KEPPEL ROAD") + road([[-560,240],[-640,420],[-720,560]],10,"OUTRAM ROAD") + road([[150,560],[100,700]],10,"") + road([[260,620],[300,760]],9,"");
+  // labels for streets
+  longN.concat(longS).forEach(([n,v,u0,u1])=>{ s+=label(u0+(u1-u0)*0.62, v, n, 9.5, 0, "st"); s+=label(u0+(u1-u0)*0.2, v, n, 6.5, 0, "st lod2"); });
+  crossN.concat(crossS).forEach(([n,u,v0,v1])=>{ s+=label(u, v0+(v1-v0)*0.55, n, 9.5, -90, "st"); });
+  s += label(-800,40,"KEPPEL ROAD",9.5,0,"st") + label(-640,420,"OUTRAM ROAD",9.5,-62,"st") + label(0,10,"CONNAUGHT DR.",7,0,"st lod2");
+  // canal under Stamford Rd
+  s += `<path d="M${L(150,700)} L${L(150,-8)}" stroke="var(--m-sea-2)" stroke-width="3" stroke-dasharray="7 5" fill="none"/>` + label(165,620,"Stamford Canal",9,-90,"water lod2");
+  // docks south-west
+  for(let i=0;i<7;i++){ const u=-940+i*46; s+=`<rect x="${u}" y="${8}" width="30" height="20" fill="var(--m-paper)" stroke="var(--m-ink)" stroke-width="1"/>`; s+=`<rect class="lod2" x="${u+2}" y="${-30}" width="30" height="20" fill="var(--m-bldg)" stroke="var(--m-casing)" stroke-width=".6"/>`; }
+  s += `<rect x="-900" y="${10}" width="54" height="56" fill="var(--m-sea)" stroke="var(--m-ink)" stroke-width="1.6"/>` + label(-873,-80,"King's Dock",9,0,"lod2");
+  s += label(-760,60,"TANJONG PAGAR DOCKS",11,0,"sc");
+  // railway
+  const rail=[[-610,60],[-680,250],[-730,500],[-770,760]];
+  s += `<path d="M${rail.map(([u,v])=>L(u,v)).join(" L")}" stroke="var(--m-ink)" stroke-width="3" fill="none"/><path d="M${rail.map(([u,v])=>L(u,v)).join(" L")}" stroke="var(--m-paper)" stroke-width="1.4" stroke-dasharray="6 6" fill="none"/>`;
+  s += `<rect x="-640" y="${-80}" width="60" height="18" fill="var(--m-bldg)" stroke="var(--m-ink)"/>` + label(-610,95,"Rly. Stn.",8,0,"lod2") + label(-735,420,"F.M.S. RAILWAY",9,-80,"sc");
+  // hospital compound
+  s += `<rect x="-660" y="${-390}" width="120" height="90" fill="var(--m-park)" stroke="var(--m-ink)" stroke-width="1.2"/>`;
+  for(let i=0;i<4;i++) s+=`<rect x="${-650+i*28}" y="${-378}" width="16" height="60" fill="var(--m-bldg)" stroke="var(--m-casing)" stroke-width=".8"/>`;
+  s += label(-600,290,"GENERAL HOSPITAL",9,0,"sc");
+  // YMCA
+  s += `<rect x="160" y="${-512}" width="26" height="22" fill="var(--m-bldg)" stroke="var(--m-ink)" stroke-width="1"/>` + label(173,525,"Y.M.C.A.",7,0,"lod2");
+  // district names
+  s += label(500,240,"ROCHOR",22,0,"sc") + label(-450,120,"CHINATOWN",22,0,"sc") + label(-150,600,"RIVER VALLEY",14,0,"sc") + label(700,560,"KAMPONG GLAM",16,0,"sc");
+  // bomb damage 1942 (layer)
+  return s;
+}
+function mapOverlay(){
+  const dmg=[[205,160,26],[330,300,18],[-380,110,22],[-700,30,30],[600,150,20],[-150,240,16]];
+  const showDmg = mapLayers.dmg, showAlibi = mapLayers.alibi && has("kabir"), showDrain = mapLayers.drain && has("farah");
+  let s="";
+  if(showDmg) s += dmg.map(([u,v,r])=>{ const [x,y]=P(u,v); return `<circle cx="${x}" cy="${y}" r="${r}" fill="url(#dmg)" stroke="var(--m-dmg)" stroke-width="1.2" stroke-dasharray="3 2" opacity=".9"/>`; }).join("");
+  if(showAlibi){
+    const route=[[-870,-30],[-650,30],[-560,40],[-300,130],[-190,125],[-150,120],[120,200],[230,200]].map(([u,v])=>P(u,v));
+    s += `<path d="M${route.map(p=>p.join(",")).join(" L")}" fill="none" stroke="#2b3a6b" stroke-width="4" stroke-dasharray="10 6"><animate attributeName="stroke-dashoffset" from="32" to="0" dur="1s" repeatCount="indefinite"/></path>`;
+    const [a,b]=P(-700,0); s += `<text x="${a}" y="${b+28}" font-size="13" font-family="Courier Prime" fill="#2b3a6b" style="paint-order:stroke" stroke="var(--m-paper)" stroke-width="4">Vance · departs 17:28</text>`;
+    const [c,d]=P(270,320); s += `<text x="${c+16}" y="${d}" font-size="13" font-family="Courier Prime" fill="#2b3a6b" style="paint-order:stroke" stroke="var(--m-paper)" stroke-width="4">Connie Song · held 19:21</text>`;
+  }
+  if(showDrain){ const [x,y]=P(150,90); s+=`<g transform="translate(${x} ${y})"><path d="M-10 -10 L10 10 M10 -10 L-10 10" stroke="var(--stamp)" stroke-width="4"/></g><text x="${x+14}" y="${y+4}" font-size="12" font-family="Courier Prime" fill="var(--stamp)" style="paint-order:stroke" stroke="var(--m-paper)" stroke-width="4">Culvert impassable</text>`; }
+  return s;
+}
+function mapFrame(){
+  // cartouche, scale, compass at world positions (unrotated)
+  const [tx,ty]=P(-1050,640);
+  const [sx,sy]=P(700,-260);
+  const [nx,ny]=P(900,520);
+  return `<g transform="translate(${tx} ${ty})"><rect x="0" y="0" width="330" height="96" fill="var(--m-paper)" stroke="var(--m-ink)" stroke-width="2"/><rect x="5" y="5" width="320" height="86" fill="none" stroke="var(--m-ink)" stroke-width=".8"/>
+    <text x="165" y="32" text-anchor="middle" font-size="22" class="sc">Singapore Town</text>
+    <text x="165" y="52" text-anchor="middle" font-size="11" font-style="italic">Survey Department, Straits Settlements · Sheet 4</text>
+    <text x="165" y="70" text-anchor="middle" font-size="10">Revised by B.M.A. Civil Affairs Branch, November 1945</text>
+    <text x="165" y="84" text-anchor="middle" font-size="9" font-family="Courier Prime">RESTRICTED · DOCKET 45/11</text></g>
+    <g transform="translate(${sx} ${sy})"><rect x="0" y="0" width="80" height="8" fill="var(--m-ink)"/><rect x="80" y="0" width="80" height="8" fill="var(--m-paper)" stroke="var(--m-ink)"/><rect x="160" y="0" width="80" height="8" fill="var(--m-ink)"/>
+    <text x="0" y="24" font-size="11">0</text><text x="120" y="24" font-size="11" text-anchor="middle">¼</text><text x="240" y="24" font-size="11" text-anchor="end">½ mile</text></g>
+    <g transform="translate(${nx} ${ny})"><circle r="40" fill="none" stroke="var(--m-ink)" stroke-width="1"/><circle r="34" fill="none" stroke="var(--m-ink)" stroke-width=".6"/>
+    <path d="M0 -46 L9 0 L0 10 L-9 0Z" fill="var(--m-ink)"/><path d="M0 46 L9 0 L-9 0Z" fill="none" stroke="var(--m-ink)"/><text y="-52" text-anchor="middle" font-size="16" class="sc">N</text></g>`;
+}
+function pinsSvg(){
+  const k = cam.w / Math.max(1,$("map").clientWidth);
+  return PLACES.map(p=>{ const [x,y]=P(p.u,p.v); return `<g class="pin" data-pin="${p.id}" transform="translate(${x} ${y}) scale(${k})" tabindex="0" role="button" aria-label="${p.name}">
+    <circle class="halo" r="18" cy="-20"/><path d="M0 0 C -12 -16, -14 -22, -14 -28 a14 14 0 1 1 28 0 c0 6 -2 12 -14 28Z" fill="var(--stamp)" stroke="#5a120e" stroke-width="1.5"/>
+    <text y="-24" text-anchor="middle" font-size="15" font-family="Courier Prime" font-weight="700" fill="#fff" style="fill:#fff">${p.n}</text></g>`; }).join("");
+}
+let mapLayers = {dmg:true, alibi:true, drain:true};
+const cam = {x:0,y:0,w:900,h:600};
+function initCam(){ const [x,y]=P(240,180); cam.w=640; cam.x=x; cam.y=y; }
+initCam();
+function applyCam(){
+  const svg=$("map"); const W=svg.clientWidth||800, H=svg.clientHeight||500; cam.h = cam.w*H/W;
+  svg.setAttribute("viewBox", `${cam.x-cam.w/2} ${cam.y-cam.h/2} ${cam.w} ${cam.h}`);
+  svg.classList.toggle("z2", cam.w<1100); svg.classList.toggle("z3", cam.w<520);
+  $("mapPins").innerHTML = pinsSvg();
+  document.querySelectorAll("[data-preset]").forEach(b=>b.setAttribute("aria-pressed", String(b.dataset.preset===(cam.w>1200?"town":cam.w<800?"enclave":""))));
+}
+function sizeMap(){ if(!$("s-map").hidden) applyCam(); }
+$("map").innerHTML = `<g transform="rotate(${TH*180/Math.PI})" filter="url(#grain)">${buildMap()}</g><g id="mapOv"></g><g>${mapFrame()}</g><g id="mapPins"></g>`;
+function renderMap(){ $("mapOv").innerHTML = mapOverlay();
+  $("placeList").innerHTML = PLACES.map(p=>`<button class="li placebtn" data-place="${p.id}"><span class="pnum">${p.n}</span><span><b>${p.name}</b><small>${p.sub}</small></span></button>`).join("");
+  $("layers").innerHTML = [
+    {k:"dmg",t:"1942 bomb damage",ok:true},
+    {k:"alibi",t:"Alibi routes",ok:has("kabir")},
+    {k:"drain",t:"Culvert finding",ok:has("farah")}
+  ].map(l=>`<button class="toggle" data-layer="${l.k}" aria-pressed="${l.ok&&mapLayers[l.k]}" ${l.ok?"":"disabled"}><i></i>${l.t}${l.ok?"":" · after its finding"}</button>`).join("");
+  applyCam(); }
+$("layers").addEventListener("click", e=>{ const b=e.target.closest("[data-layer]"); if(!b||b.disabled) return; mapLayers[b.dataset.layer]=!mapLayers[b.dataset.layer]; renderMap(); });
+function flyTo(u,v,w){ const [x,y]=P(u,v); const from={...cam}, to={x,y,w}; const t0=performance.now();
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const step=t=>{ const k=reduce?1:Math.min(1,(t-t0)/600), e=1-Math.pow(1-k,3); cam.x=from.x+(to.x-from.x)*e; cam.y=from.y+(to.y-from.y)*e; cam.w=from.w+(to.w-from.w)*e; applyCam(); if(k<1) requestAnimationFrame(step); };
+  requestAnimationFrame(step); }
+$("presets").addEventListener("click", e=>{ const b=e.target.closest("[data-preset]"); if(!b) return; b.dataset.preset==="town" ? flyTo(-260,200,2200) : flyTo(240,180,520); });
+const zoomBy = f => { cam.w = Math.max(180, Math.min(2800, cam.w*f)); applyCam(); };
+$("zin").addEventListener("click",()=>zoomBy(.7)); $("zout").addEventListener("click",()=>zoomBy(1/.7));
+(function panzoom(){
+  const svg=$("map"); const pts=new Map(); let moved=0, lastDist=0;
+  let start=null, multi=false;
+  svg.addEventListener("pointerdown", e=>{ pts.set(e.pointerId,{x:e.clientX,y:e.clientY}); if(pts.size===1){ start={x:e.clientX,y:e.clientY,t:Date.now()}; multi=false; } else multi=true;
+    try{ svg.setPointerCapture(e.pointerId); }catch(_){}
+    moved=0; if(pts.size===2){ const [a,b]=[...pts.values()]; lastDist=Math.hypot(a.x-b.x,a.y-b.y); } svg.classList.add("drag"); });
+  svg.addEventListener("pointermove", e=>{ if(!pts.has(e.pointerId)) return; const p=pts.get(e.pointerId); const dx=e.clientX-p.x, dy=e.clientY-p.y; p.x=e.clientX; p.y=e.clientY;
+    const k = cam.w/svg.clientWidth;
+    if(pts.size===1){ cam.x-=dx*k; cam.y-=dy*k; moved+=Math.abs(dx)+Math.abs(dy); applyCam(); }
+    else if(pts.size===2){ const [a,b]=[...pts.values()]; const d=Math.hypot(a.x-b.x,a.y-b.y); if(lastDist){ cam.w=Math.max(180,Math.min(2800,cam.w*lastDist/d)); applyCam(); } lastDist=d; moved+=10; } });
+  const up = e=>{ pts.delete(e.pointerId); if(pts.size<2) lastDist=0; if(!pts.size) svg.classList.remove("drag"); };
+  const pinAt=(x,y)=>{ const el=document.elementFromPoint(x,y); const pin=el&&el.closest&&el.closest("[data-pin]"); if(pin) return pin.dataset.pin;
+    // forgiving hit test for fingers: nearest pin within 28px
+    let best=null,bd=28; document.querySelectorAll("#mapPins [data-pin]").forEach(g=>{ const r=g.getBoundingClientRect(); const d=Math.hypot(x-(r.left+r.width/2), y-(r.top+r.height*.4)); if(d<bd){bd=d;best=g.dataset.pin;} }); return best; };
+  svg.addEventListener("pointerup", e=>{ const wasTap = start && !multi && Math.hypot(e.clientX-start.x,e.clientY-start.y)<14 && Date.now()-start.t<700; up(e);
+    if(wasTap){ const id=pinAt(e.clientX,e.clientY); if(id) openPlace(id); } if(!pts.size) start=null; });
+  svg.addEventListener("pointercancel", up);
+  svg.addEventListener("wheel", e=>{ e.preventDefault(); const r=svg.getBoundingClientRect(); const mx=(e.clientX-r.left)/r.width, my=(e.clientY-r.top)/r.height;
+    const wx=cam.x-cam.w/2+mx*cam.w, wy=cam.y-cam.h/2+my*cam.h; const f=e.deltaY>0?1.12:1/1.12; const nw=Math.max(180,Math.min(2800,cam.w*f)); const nh=nw*cam.h/cam.w;
+    cam.x = wx-(mx-.5)*nw; cam.y = wy-(my-.5)*nh; cam.w=nw; applyCam(); }, {passive:false});
+  svg.addEventListener("keydown", e=>{ const pin=e.target.closest&&e.target.closest("[data-pin]"); if(pin&&(e.key==="Enter"||e.key===" ")){ e.preventDefault(); openPlace(pin.dataset.pin); } });
+})();
+document.addEventListener("click", e=>{ const b=e.target.closest("[data-place]"); if(b) openPlace(b.dataset.place); });
+function openPlace(id){
+  const p=PLACES.find(x=>x.id===id); if(!p) return;
+  const ex=p.ex.map(n=>EX[n]).filter(e=>e&&e.by&&has(e.by));
+  const ppl=p.people.map(i=>PP[i]);
+  let note="";
+  if(id==="keppel"&&has("kabir")) note="Harbour log: Maj. Vance's jeep through the gate at 17:28.";
+  if(id==="check"&&has("kabir")) note="Checkpoint log: Connie Song detained for curfew breach at 19:21.";
+  if(id==="outfall"&&has("farah")) note="Chen's mud is surface ditch silt from beside the outfall. He never came out of the drain.";
+  if(id==="ruins"&&has("shawn")) note="The killer's approach: over this rubble to the darkroom's exterior flue.";
+  if(id==="outram"&&has("arun")) note="One of only three places in Singapore that hold reagent-grade cyanide.";
+  openSheet(`<p class="kicker">Map ref. ${p.n} · ${p.sub}</p><h2>${p.name}</h2><p>${p.desc}</p>
+    ${note?`<div class="finding" style="margin-bottom:12px"><b>COMMISSION FINDING</b>${note}</div>`:""}
+    ${ppl.length?`<p class="kicker">People linked here</p><div class="list" style="margin-bottom:12px">${ppl.map(q=>`<button class="li" data-person="${q.id}">${portrait(q.look)}<span><b>${q.name}</b><small>${q.role}</small></span></button>`).join("")}</div>`:""}
+    ${ex.length?`<p class="kicker">Related exhibits</p><div class="list">${ex.map(exRow).join("")}</div>`:""}
+    <div class="row" style="margin-top:12px"><button class="btn small" id="zoomHere" style="background:var(--ink);border-color:var(--ink);color:var(--paper)">Zoom in here</button></div>`, p.name);
+  $("zoomHere").addEventListener("click",()=>{ closeSheet(); flyTo(p.u,p.v,320); });
+}
+
+/* ======================= VERDICT ======================= */
+const tally=()=>{ let a=0,b=0; Object.values(S.votes||{}).forEach(v=>{ if(v==="A")a++; else if(v==="B")b++; }); return {a,b}; };
+document.querySelectorAll("[data-portrait]").forEach(el=>{ el.outerHTML = portrait(el.dataset.portrait); });
+const ACCUSED = [
+  {id:"chen", name:"Sgt. Chen Teck Nam", look:"sidecap", vA:"Sgt. Chen Teck Nam entered No. 96 and poisoned the deceased. He is referred for immediate court-martial under B.M.A. law."},
+  {id:"connie", name:"Connie Song", look:"waves", vA:"Miss Connie Song poisoned the deceased in his darkroom. She is referred for immediate arrest and trial under B.M.A. law."},
+  {id:"vance", name:"Maj. Edward Vance", look:"officer2", vA:"Maj. Edward Vance poisoned the deceased before raising the alarm. He is referred for immediate court-martial under B.M.A. law."},
+  {id:"pillay", name:"Dr. K. S. Pillay", look:"doctor", vA:"Dr. K. S. Pillay wilfully introduced reagent-grade potassium cyanide into the darkroom ventilation flue. He is referred for immediate arrest and capital court-martial under B.M.A. law."},
+  {id:"unknown", name:"Person unknown", look:"watch", vA:"Francis Leong was wilfully murdered by a person or persons unknown. The provost is directed to continue its inquiry."}
+];
+const ACCT = [
+  {k:"who", q:"Who killed Francis Leong?", type:"who"},
+  {k:"how", q:"How did the poison reach him?", type:"opt", options:[["drain","Up through the storm drain"],["door","Through the front of the shop and the door"],["vent","Down the darkroom vent, from the church ruins"],["self","He took it himself"]], right:"vent",
+     truth:"Down the darkroom's high vent, poured from the roof of the ruined church annex behind No. 96. The drain was flooded and crushed, the door bolted from inside, the window painted shut."},
+  {k:"why", q:"Why?", type:"opt", options:[["blackmail","To stop Leong's blackmail and his forged ledgers"],["market","A quarrel over black-market medicine"],["revenge","Revenge for a sister who died in custody"],["robbery","Robbery"],["love","A lovers' quarrel"]], right:"blackmail",
+     truth:"To stop Leong's blackmail, and to stop his forged ledgers, which branded Dr. Stanley and Elizabeth Choy as willing collaborators, from reaching the War Crimes Tribunal."},
+  {k:"leong", q:"Who was Francis Leong, really?", type:"opt", options:[["informer","The Kempeitai's informer in the Double Tenth"],["clerk","An honest clerk caught up in other people's crimes"],["dealer","A black marketeer and nothing more"]], right:"informer",
+     truth:"The Kempeitai's paid informer. On the night of 10 October 1943 he gave them the names of Dr. Stanley and Elizabeth Choy, and later Sgt. Chen's sister. The black market was only his sideline."},
+  {k:"helper", q:"Did anyone help? Who?", type:"helper", options:[["connie","Connie Song"],["chen","Sgt. Chen"],["vance","Maj. Vance"],["none","No one"]], right:"connie",
+     truth:"Connie Song. She fed the dog its drugged bait at five and opened the vent's inner louvre from inside before she left."}
+];
+const acct = () => S.account||{};
+const acctDone = a => ACCT.every(q=>a[q.k]);
+const accusedOf = id => ACCUSED.find(x=>x.id===id);
+function acctHTML(locked){
+  const a=acct();
+  return ACCT.map(q=>{
+    if(q.type==="who") return `<div class="fld"><span class="q">${q.q}</span><div class="suspects">${ACCUSED.map(x=>`<button type="button" class="opt" data-acct="who" data-v="${x.id}" aria-pressed="${a.who===x.id}" ${locked?"disabled":""}>${portrait(x.look)}${x.name}</button>`).join("")}</div></div>`;
+    if(q.type==="helper") return `<div class="fld"><span class="q">${q.q}</span><div class="suspects">${q.options.map(([v,l])=>`<button type="button" class="opt" data-acct="helper" data-v="${v}" aria-pressed="${a.helper===v}" ${locked?"disabled":""}>${portrait(v==="none"?"watch":PP[v].look)}${l}</button>`).join("")}</div></div>`;
+    return `<div class="fld"><span class="q">${q.q}</span><div class="opts">${q.options.map(([v,l])=>`<button type="button" class="opt" data-acct="${q.k}" data-v="${v}" aria-pressed="${a[q.k]===v}" ${locked?"disabled":""}>${l}</button>`).join("")}</div></div>`;
+  }).join("");
+}
+$("acct").addEventListener("click", e=>{ const b=e.target.closest("[data-acct]"); if(!b||b.disabled||S.sealed.verdict) return; commit({account:{[b.dataset.acct]:b.dataset.v}}); });
+
+/* ---------- the truth ---------- */
+const TRUTH = `
+<h4>Syonan-to, 1942</h4>
+<p>When Singapore fell, Francis Leong kept his job. Within a year he was coroner's clerk at Outram Road Hospital and a paid informer for the Kempeitai. His radio callsign was VICTORIA BIRD FIVE.</p>
+<h4>The Double Tenth, October 1943</h4>
+<p>On the night of 10 October Leong gave the Kempeitai two names: Dr. Charles Stanley, and Elizabeth Choy. In the weeks that followed he gave them more, among them a young canteen nurse called Chen Hui Min. She died in the Stamford Road cells. Stanley died there too, on 28 October. The pathologist on duty, Dr. K. S. Pillay, wrote down what had really been done to him. On Tanaka's order Leong certified "heart failure" at the top of the same page, and kept a copy.</p>
+<h4>Liberation, 1945</h4>
+<p>The British came back and Leong kept his job again. With the war crimes trials coming, he forged ledgers in his darkroom showing Stanley and Choy as willing collaborators, and had his assistant, Connie Song, develop the prints. Then he sent her to Outram with a note for Pillay: five hundred dollars, or the ledgers go to the Tribunal. Connie had been one of Mrs. Choy's pupils. She broke down in Pillay's office, and between them they made a plan.</p>
+<h4>The soldier</h4>
+<p>In October, Sergeant Chen Teck Nam was guarding Kempeitai prisoners at Outram Road Gaol when Lieutenant Tanaka taunted him through the bars: his sister had been sold to them by a clerk on Victoria Street. Chen watched No. 96 for three weeks. On 16 November he sharpened his knife and went to the courtyard gate. He could not do it. He walked down to the sea wall and wrote to his dead sister instead.</p>
+<h4>16 November 1945</h4>
+<ul class="tl">
+  <li><time>16:40</time><i class="nd"></i><span>Pillay signs out of Outram "on a private call", with reagent-grade cyanide from his laboratory.</span></li>
+  <li><time>17:00</time><i class="nd"></i><span>Connie, who has already opened the vent's inner louvre, feeds the dog food laced with the dispensary's chloral hydrate and leaves for the pictures.</span></li>
+  <li><time>17:10</time><i class="nd"></i><span>Pillay, on the roof of the ruined chapel annex, pours the cyanide down the vent into the sink's acid bath. Leong dies within minutes.</span></li>
+  <li><time>17:15</time><i class="nd"></i><span>Chen reaches the gate with his knife. The dog is asleep. He sees someone on the ruins, thinks it a looter, and turns back. Leong has been dead for five minutes.</span></li>
+  <li><time>17:50</time><i class="nd"></i><span>Major Vance arrives from Keppel Harbour and forces the door.</span></li>
+  <li><time>18:02</time><i class="nd"></i><span>Pillay walks in, grass seeds in his trouser turn-ups, to certify the death he caused.</span></li>
+  <li><time>18:20</time><i class="nd"></i><span>Chen is arrested at the sea wall, notebook in his pocket.</span></li>
+</ul>
+<h4>Why</h4>
+<p>Two men had the same reason to want Francis Leong dead. Chen stood at the gate and chose the law. Pillay chose poison, to keep a forger's lies out of the Tribunal and protect a woman who had given up no one under torture, and he pulled an eighteen-year-old in with him. The question this commission had to answer was never only who. It was what justice should look like after the Occupation.</p>`;
+
+/* ---------- endings ---------- */
+const ENDINGS=[
+ {k:"Verdict A · Dr. Pillay",t:"The rule of law",p:["At 23:15 British military police arrest Dr. K. S. Pillay in the Outram mortuary, where he is finishing his notes for the night. He offers no resistance. He asks only that the torn post-mortem be kept safe.","His court-martial in January 1946 is short, and he does not contest your evidence. But a court must hear a motive, so Leong's forged ledgers are read into the record. For a few weeks the newspapers print the names of Dr. Stanley and Elizabeth Choy beside the word “collaborator”. The death sentence is commuted to life after a petition signed by four hundred Outram nurses and patients."],ys:"Connie Song is charged as an accessory. Pillay tells the court she did only what he asked, and she serves eighteen months. Sergeant Chen visits her once, and says nothing about the gate.",no:"Nobody asks who fed the dog or opened the louvre. Connie Song leaves the studio the following week and is never questioned.",l:"Pillay is released in 1953 and leaves Singapore for good. Captain Campbell keeps a copy of Form 8B in his desk until he retires. Under his signature he has pencilled one word: “Right?”"},
+ {k:"Verdict B · the commission knows",t:"The silent pact",p:["Form 8B is filed under a ruling of accidental chemical asphyxiation. Captain Campbell signs it last, and slowly. At 23:40 Sister Mei Lan burns Leong's forged ledgers in the darkroom sink, the same sink, while the commissioners watch.","The intercept and the reassembled post-mortem travel to the War Crimes Tribunal in a sealed pouch. In March 1946 they help convict the men who ran the interrogations at Stamford Road. Dr. Pillay returns to Outram the next morning and works there for thirty more years."],ys:"Connie Song is never mentioned in any record. In 1947 she wins a teaching scholarship. Her referee is Elizabeth Choy.",no:"Nobody ever asks who fed the dog. Connie Song carries her part of it alone for the rest of her life.",l:"Eighty years on, docket 45/11 is opened in the archives. Inside are Form 8B, the commissioners' signatures, and a slip in Pillay's handwriting: “Thank you.”"},
+ {k:"Verdict A · Sgt. Chen",t:"The wrong man",p:["Sergeant Chen Teck Nam is charged with murder at 23:15. Captain Campbell reads the first page of his notebook aloud at the court-martial. Nobody turns to the second.","Chen will not defend himself. He says only that he went to that gate meaning to kill Francis Leong, and that is true. He is convicted in December 1945."],ys:"Connie Song gives evidence for the defence and breaks down in the witness box. The court does not understand what she is trying to tell them.",no:"Connie Song reads about the trial in the newspaper and says nothing.",l:"The night before the sentence is carried out, Dr. Pillay walks into the Provost Marshal's office and confesses. Chen is released at dawn. He was standing at Leong's gate five minutes after Leong died, and he turned back. Form 8B is corrected in red ink."},
+ {k:"Verdict A · the wrong suspect",t:"The charge that fell",p:["The provost makes the arrest at 23:15. The charge lasts four days. The gate logs and the commission's own papers show that the accused could not have poured the poison, and the case collapses in front of the Provost Marshal.","Captain Campbell is reassigned to Penang. Docket 45/11 is marked “open, no further action”. Leong's papers, forged ledgers and all, are boxed and sent to the Tribunal registry unread. In February 1946 a registry clerk hands the ledgers to the Kempeitai's defence counsel."],ys:"If it was Connie Song you charged, you were closer than you knew. She kept the secret the whole four days.",no:"Dr. Pillay is never questioned.",l:"Years later a researcher reading the trial papers recognises the forgeries for what they are, and wonders who wanted Francis Leong dead."},
+ {k:"Verdict A · person unknown",t:"Persons unknown",p:["Form 8B records wilful murder by a person or persons unknown. Sergeant Chen is released at midnight and the provost opens a new file. In December Special Branch takes it over. They are thorough.","In January 1946 a detective asks which laboratories hold reagent-grade cyanide, and who at Outram signed out early on 16 November. By then Dr. Pillay has resigned. He sails for Madras on 2 February and is never extradited."],ys:"Special Branch interview Connie Song twice. She says she fed the dog as she always did. They believe her.",no:"Nobody thinks to ask the studio girl anything.",l:"The file stays open for forty years. It is closed in 1986, when word arrives from Madras that an old doctor has died. Among his papers is a torn mortuary record."},
+ {k:"Verdict B · without the truth",t:"Closed, not solved",p:["Form 8B records death by misadventure. It is the kindest verdict, reached for the wrong reasons: the commission never established who killed Francis Leong, or why. Sergeant Chen is released at midnight.","Leong's papers are boxed as a dead clerk's effects. Before the box is sealed, Sister Mei Lan quietly takes the ledgers out. She does not say why. Dr. Pillay attends Leong's funeral. He is the only mourner."],ys:"Connie Song, whom you named, is never troubled again. She becomes a teacher, like the woman whose leaves she once collected.",no:"Connie Song, whom nobody named, becomes a teacher, like the woman whose leaves she once collected.",l:"The truth surfaces only in 1985, when Pillay's daughter finds his diary. The entry for 16 November 1945 has one line: “They did not ask.”"}
+];
+function ending(acc, v){
+  const who=acc.who; let i;
+  if(who==="pillay") i = v==="A"?0:1;
+  else if(v==="B") i=5;
+  else i = who==="chen"?2:who==="unknown"?4:3;
+  const e=ENDINGS[i];
+  return {k:e.k, t:e.t, p:[...e.p, acc.helper==="connie"?e.ys:e.no], later:e.l};
+}
+function scoreRows(a){
+  const rows=[];
+  const whoRight=a.who==="pillay";
+  rows.push({ok:whoRight, q:"Who killed Francis Leong?", you:accusedOf(a.who)?.name||"—", truth:"Dr. K. S. Pillay, pathologist at Outram Road Hospital."});
+  ACCT.slice(1).forEach(q=>{ const opt=(q.options||[]).find(o=>o[0]===a[q.k]); rows.push({ok:a[q.k]===q.right, q:q.q, you:opt?opt[1]:"—", truth:q.truth}); });
+  return rows;
+}
+const VERDICT_LINE = n => n===5?"The commission saw everything.":n===4?"Close. One thread slipped through.":n>=2?"Part of the truth.":"The truth slipped past the commission.";
+function renderReveal(){
+  const a=S.sealed.acct||{}, v=S.sealed.verdict, rows=scoreRows(a), n=rows.filter(r=>r.ok).length, e=ending(a,v);
+  return `<div class="wax">DOCKET<br>SEALED<br>${v}</div>
+  <div class="reveal">
+    <div class="score"><p class="kicker">The commission's account, checked against the truth</p><div class="big">${n} of 5 · ${VERDICT_LINE(n)}</div>
+      ${rows.map(r=>`<div class="srow ${r.ok?"y":"n"}"><i>${r.ok?"✓":"✗"}</i><div><b>${r.q.toUpperCase()}</b><p>You said: ${r.you}</p>${r.ok?"":`<p><em>In truth:</em> ${r.truth}</p>`}</div></div>`).join("")}
+    </div>
+    <div class="ending"><p class="kicker">What happened next · ${e.k} · ${S.sealed.a}–${S.sealed.b}</p><h3>${e.t}</h3>${e.p.map(x=>`<p>${x}</p>`).join("")}<p class="later">${e.later}</p></div>
+    <details class="fold truth" open><summary><span class="kicker" style="display:block">The whole story</span><b>What really happened</b></summary>${TRUTH}</details>
+    <p class="hist"><b>History and fiction.</b> The Japanese Occupation, the Double Tenth arrests of October 1943, Elizabeth Choy's imprisonment, the British Military Administration and the 1946 Double Tenth war crimes trial are real. Francis Leong, Dr. Pillay, Dr. Charles Stanley (inspired by internees who died in custody), the other suspects and everything at 96 Victoria Street are invented for this game. The ledgers that slander Elizabeth Choy are fiction too; she was honoured for her courage after the war.</p>
+  </div>`;
+}
+function renderVerdict(){
+  const open=S.phase>=3, sealed=!!S.sealed.verdict;
+  $("chip8b").classList.toggle("on", open && !sealed && screen!=="verdict");
+  $("v-locked").hidden=open; $("v-open").hidden=!open;
+  if(!open) return;
+  const a=acct(), acc=accusedOf(a.who);
+  if(!sealed){ $("acct").innerHTML = acctHTML(false);
+    const left=ACCT.filter(q=>!a[q.k]).length; if(!left && /Part I/.test($("fb8b").textContent)) $("fb8b").textContent=""; $("acctNote").textContent = left ? `${left} of 5 still to agree.` : "The account is complete. You can still change it until the docket is sealed."; }
+  else { $("acct").innerHTML = acctHTML(true); $("acctNote").textContent=""; }
+  $("vAtext").textContent = acc ? acc.vA : "Wilful murder by the person the commission names in Part I.";
+  const mine=S.votes[DEV]||"";
+  document.querySelectorAll("[data-cast]").forEach(b=>{ b.setAttribute("aria-pressed",String(mine===b.dataset.cast)); b.disabled=sealed; });
+  const t=tally(), n=Math.max(1,t.a+t.b);
+  $("castNote").textContent = sealed ? "" : mine ? `This phone signed for Verdict ${mine}. ${t.a+t.b} signature${t.a+t.b===1?"":"s"} so far.` : `${t.a+t.b} signature${t.a+t.b===1?"":"s"} so far.`;
+  $("tA").textContent=t.a; $("tB").textContent=t.b; $("beamA").style.width=(t.a/n*100)+"%"; $("beamB").style.width=(t.b/n*100)+"%";
+  $("sealBtn").hidden = !isHost();
+  $("sealWait").textContent = (!isHost() && !sealed) ? "When the account is agreed and the votes are in, the officers will seal the docket. Every phone then gets the full story." : "";
+  $("sealArea").hidden=sealed;
+  const ep=$("epilogue"); ep.hidden=!sealed;
+  const key = sealed ? S.sealed.verdict+"|"+JSON.stringify(S.sealed.acct||{}) : "";
+  if(sealed && ep.dataset.v!==key){ ep.dataset.v=key; ep.innerHTML=renderReveal(); }
+}
+$("cast").addEventListener("click", e=>{ const b=e.target.closest("[data-cast]"); if(!b||b.disabled||S.sealed.verdict) return; const v=b.dataset.cast; commit({votes:{[DEV]: S.votes[DEV]===v?"":v}}); });
+$("sealBtn").addEventListener("click",()=>{ const t=tally(), fb=$("fb8b");
+  if(!acctDone(acct())){ fb.textContent="Part I isn't finished. The commission must agree all five answers first."; return; }
+  if(t.a+t.b===0){ fb.textContent="No one has signed yet."; return; }
+  if(t.a===t.b){ fb.textContent="The commission is tied. Deliberate until one verdict holds a majority."; return; }
+  fb.textContent=""; $("sealConfirm").hidden=false; });
+$("sealNo").addEventListener("click",()=>$("sealConfirm").hidden=true);
+$("sealYes").addEventListener("click",()=>{ const t=tally(), v=t.a>t.b?"A":"B"; $("sealConfirm").hidden=true; const a=Object.assign({},acct());
+  const e=ending(a,v);
+  commit({sealed:{verdict:v,at:Date.now(),atElapsed:Math.min(elapsed(),DURATION),a:t.a,b:t.b,acct:a}, event:{id:uid(),kind:"seal",title:`Form 8B sealed · ${e.t}`,text:`THE COMMISSION HAS RULED ${t.a} TO ${t.b} FOR VERDICT ${v}. DOCKET 45/11 IS CLOSED AT ${now()} HRS.\n\nOPEN FORM 8B FOR THE WHOLE STORY.`,at:Date.now()}}); });
+
+/* ======================= HOST ======================= */
+function hostStage(){
+  if(S.sealed.verdict) return {k:"done"};
+  if(S.phase===1) return {k:"box"};
+  if(S.phase===2) return {k:"leads"};
+  return {k:"vote"};
+}
+function renderHost(){
+  $("clockToggle").textContent = S.clock.running?"Pause the clock":(elapsed()>0?"Resume the clock":"Start the clock");
+  const st=hostStage(), open2=TASKS.filter(t=>t.phase===2), left=open2.filter(t=>!has(t.id)).length, t=tally();
+  const step=(n,label,cur)=>`<div class="hstep ${cur?"cur":n<cur?"":""}"><i>${n}</i><span>${label}</span></div>`;
+  const track=`<div class="htrack">${[["1","Front office"],["2","Rear rooms"],["3","Form 8B"]].map(([n,l])=>`<div class="hstep ${+n<S.phase||st.k==="done"?"done":+n===S.phase?"cur":""}"><i>${+n<S.phase||st.k==="done"?"✓":n}</i><span>${l}</span></div>`).join("")}</div>`;
+  let body="";
+  if(st.k==="box") body=`<p class="kicker">Now · Phase 1</p><h3>Waiting for the dispatch box</h3>
+    <p>Players can only work the front office. The other five leads show as "opens when the box is opened".</p>
+    <ol class="hdo"><li><b>Unlocks automatically</b> when anyone records the combination in Leads. Every phone, yours included, gets a dispatch.</li><li><b>Then you:</b> lift the provost tape (or bring out the rear-room props box) and let them in.</li><li><b>Stuck by 20:20?</b> Send hint 2 for the box below.</li></ol>
+    <button class="btn red" id="hostAdvance">They've opened the box · unlock the rear rooms</button>`;
+  else if(st.k==="leads") body=`<p class="kicker">Now · Phase 2</p><h3>${left} of ${open2.length} rear-room leads still open</h3>
+    <div class="hbar"><i style="width:${(open2.length-left)/open2.length*100}%"></i></div>
+    <ol class="hdo"><li><b>Unlocks automatically:</b> Form 8B opens on every phone when the last lead is sealed.</li><li><b>Meanwhile:</b> circulate. Campbell pushes his case against Chen; Mei Lan nudges whoever is stuck.</li><li><b>Running late?</b> Seal leads for them below, or skip straight to the vote.</li></ol>
+    <button class="btn red" id="hostAdvance">Skip ahead · produce Form 8B now</button>`;
+  else if(st.k==="vote") body=`<p class="kicker">Now · Phase 3</p><h3>The commission is voting</h3>
+    <p class="typed" style="font-size:1rem">Verdict A: <b>${t.a}</b> · Verdict B: <b>${t.b}</b></p>
+    <ol class="hdo"><li><b>You:</b> Campbell argues for A, Mei Lan for B. Let them debate.</li><li><b>Everyone signs</b> A or B on their own phone and can change their mind.</li><li><b>When the room is ready</b>, seal the docket. Only officers can.</li></ol>
+    <button class="btn red" data-goto="verdict">Go to Form 8B to seal</button>`;
+  else body=`<p class="kicker">Docket sealed</p><h3>Verdict ${S.sealed.verdict} · ${S.sealed.a}–${S.sealed.b}</h3><p>The epilogue is on every phone. Read it aloud.</p><button class="btn" data-goto="verdict">Show the epilogue</button>`;
+  $("nowCard").innerHTML = track + body;
+  $("leadCount").textContent = `${FINDINGS.filter(f=>has(f.id)).length} of 6 sealed`;
+  $("leadCtl").innerHTML = TASKS.map(tk=>{ const sealed=has(tk.id), locked=tk.phase>S.phase, nh=S.hints[tk.id]||0;
+    return `<div class="lrow ${sealed?"ok":""}"><div><b>${tk.title}</b><small>${sealed?"Sealed "+(S.filed[tk.id]||"")+" hrs":locked?"Not open yet":"Open"} · hints ${nh}/3</small></div>
+      <div class="row" style="gap:6px;justify-content:flex-end">${!sealed&&!locked&&nh<3?`<button class="btn ghost small" data-hint="${tk.id}">Send hint ${nh+1}</button>`:""}<button class="btn small ${sealed?"ghost":""}" data-find="${tk.id}">${sealed?"Unseal":"Seal for them"}</button></div></div>`; }).join("");
+  $("phaseCtl").innerHTML = PHASES.map(p=>`<div class="ctl-row"><div><b>Phase ${p.n} · ${p.name}</b><small>${p.at} hrs</small></div>${S.phase===p.n?pill("CURRENT","ok"):`<button class="btn small ${p.n<S.phase?"ghost":""}" data-phase="${p.n}">${p.n<S.phase?"Go back":"Release"}</button>`}</div>`).join("");
+}
+document.addEventListener("click", e=>{
+  if(e.target.closest("#hostAdvance")){ const st=hostStage();
+    if(st.k==="box"){ if(!has("lockbox")) sealTask("lockbox"); else commit({phase:2, event:{id:uid(),kind:"phase",title:"Phase 2 · "+PHASES[1].name,text:PHASES[1].dispatch,at:Date.now()}}); }
+    else if(st.k==="leads"){ commit({phase:3, event:{id:uid(),kind:"phase",title:"Phase 3 · "+PHASES[2].name,text:PHASES[2].dispatch,at:Date.now()}}); }
+    return; }
+  const h=e.target.closest("[data-hint]"); if(h){ const tk=TASKS.find(x=>x.id===h.dataset.hint); const n=Math.min(3,(S.hints[tk.id]||0)+1); const hint=tk.hints[n-1];
+    commit({hints:{[tk.id]:n}, event:{id:uid(),kind:"hint",title:`${hint[0]} · on "${tk.title}"`,text:hint[1],at:Date.now()}}); toast("Hint sent to every phone."); return; }
+});
+$("phaseCtl").addEventListener("click", e=>{ const b=e.target.closest("[data-phase]"); if(!b) return; const n=+b.dataset.phase, p=PHASES[n-1];
+  commit({phase:n, event:{id:uid(),kind:"phase",title:`Phase ${n} · ${p.name}`,text:p.dispatch,at:Date.now()}}); });
+$("leadCtl").addEventListener("click", e=>{ const b=e.target.closest("[data-find]"); if(!b) return; const id=b.dataset.find;
+  if(has(id)){ commit({found:{[id]:0}}); toast("Lead unsealed."); return; }
+  sealTask(id); });
+$("clockToggle").addEventListener("click",()=>{ const c=S.clock; if(c.running) commit({clock:{running:false,elapsed:elapsed(),startedAt:0}}); else commit({clock:{running:true,startedAt:Date.now(),elapsed:c.elapsed||0}}); });
+const shift=ms=>commit({clock:{elapsed:Math.max(0,Math.min(DURATION,elapsed()+ms)),startedAt:Date.now(),running:S.clock.running}});
+$("clockBack").addEventListener("click",()=>shift(-5*60000)); $("clockFwd").addEventListener("click",()=>shift(5*60000));
+$("resetBtn").addEventListener("click",()=>$("resetConfirm").hidden=false);
+$("resetNo").addEventListener("click",()=>$("resetConfirm").hidden=true);
+$("resetYes").addEventListener("click",()=>{ $("resetConfirm").hidden=true; seenSpots.clear(); LS.set("vsi3-spots","[]"); $("epilogue").dataset.v=""; replaceAll(initial()); toast("Game reset."); });
+
+/* ======================= DISPATCH OVERLAY ======================= */
+let typing=null;
+function showDispatch(ev){
+  $("dTitle").textContent=ev.title; $("dTime").textContent=now()+" HRS"; $("dStamp").classList.remove("in");
+  const el=$("dText"); el.textContent=""; $("dispatch").classList.add("on");
+  const txt=ev.text||""; const reduce=window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  clearInterval(typing);
+  if(reduce){ el.textContent=txt; $("dStamp").classList.add("in"); }
+  else { let i=0; typing=setInterval(()=>{ i+=2; el.textContent=txt.slice(0,i); if(i>=txt.length){ clearInterval(typing); $("dStamp").classList.add("in"); } }, 18); }
+  setTimeout(()=>$("dOk").focus(),60);
+}
+function closeDispatch(){ $("dispatch").classList.remove("on"); clearInterval(typing); }
+$("dOk").addEventListener("click", ()=>{ closeDispatch(); const k=S.event.kind; if(k==="phase"&&S.phase===3) go("verdict"); else if(k==="seal") go("verdict"); });
+function checkEvent(){
+  const ev=S.event; if(!ev||!ev.id) return;
+  if(LS.get("vsi3-ev","")===ev.id) return;
+  LS.set("vsi3-ev", ev.id);
+  if(ev.at > bootAt-4000) showDispatch(ev);
+}
+
+/* ======================= RENDER ======================= */
+function renderAll(){
+  renderCase(); renderTasks(); renderFiles(); renderMap(); renderVerdict(); renderHost(); renderDots(); tick(); checkEvent();
+  $("officersBtn").textContent = isHost() ? "Officers · open clipboard" : "Officers only";
+}
+renderAll(); go(screen);
+
+
+/* ======================= SHARED SYNC ======================= */
+(async function(){
+  if(!window.claude||!window.claude.use){ setSync("THIS SCREEN ONLY"); return; }
+  let db=null; try{ db=await window.claude.use("db"); }catch(e){}
+  if(!db){ setSync("THIS SCREEN ONLY"); return; }
+  try{ const u=await window.claude.use("user"); if(u&&u.can&&(await u.can("data.write"))===false) readOnly=true; }catch(e){}
+  ref=db.doc("inquest/game");
+  setSync(readOnly?"LIVE · VIEW ONLY":"LIVE");
+  ref.onSnapshot(snap=>{ docExists=snap.exists; if(!snap.exists) return; S=normalize(snap.data()); saveLocal(); renderAll(); },
+    ()=>{ setSync("OFFLINE"); ref=null; });
+})();
+})();
+</script>
