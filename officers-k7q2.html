@@ -1604,7 +1604,7 @@ async function joinRoom(code, create){
 }
 function leaveRoom(){ ROOM=null; ref=null; clearInterval(pollT); LS.set("vsi3-room",""); setSync(""); S=initial(); saveLocal(); renderAll(); showGate(true); }
 const newCode = () => { const A="ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; let c=""; const r=crypto.getRandomValues(new Uint32Array(5)); for(const n of r) c+=A[n%A.length]; return c; };
-function guestLink(code){ const u=new URL(location.href); u.search=""; u.hash=""; u.pathname=u.pathname.replace(/[^/]*$/,""); u.searchParams.set("room",code); return u.toString(); }
+function guestLink(){ const u=new URL(location.href); u.search=""; u.hash=""; u.pathname=u.pathname.replace(/[^/]*$/,""); return u.toString(); }
 function showGate(on, msg){
   const g=$("gate"); g.classList.toggle("on",!!on);
   [...document.body.children].forEach(el=>{ if(el!==g && el.tagName!=="SCRIPT") el.inert=!!on; });
@@ -1646,11 +1646,11 @@ function renderRoomCard(){
   if(!ROOM){ el.innerHTML=`<p class="kicker">Commission code</p><h3>No shared game yet</h3><p>Start a commission and give guests its code. Every phone on the code shares one case.</p><button class="btn red" id="rcNew">Start a new commission</button> <button class="btn" id="rcJoin" style="margin-top:8px">Join an existing code</button>`;
     $("rcNew").addEventListener("click",async()=>{ try{ let r; for(let i=0;i<5;i++){ r=await joinRoom(newCode(),true); if(r!=="taken") break; } if(r==="ok") toast("New commission "+ROOM+" opened."); else toast("Couldn't open a commission."); }catch(e){ toast("Can't reach the server. Check you're online."); } });
     $("rcJoin").addEventListener("click",()=>showGate(true)); return; }
-  const link=guestLink(ROOM);
-  el.innerHTML=`<p class="kicker">Commission code · give this to every guest</p>
+  const link=guestLink();
+  el.innerHTML=`<p class="kicker">Commission code · guests type this to join</p>
     <div style="font-family:'Stardos Stencil',monospace;font-size:44px;letter-spacing:.18em;line-height:1.1;margin:4px 0 6px" id="rcCode">${ROOM}</div>
     <p class="typed" style="color:var(--ink-soft);word-break:break-all;margin:0 0 10px">${link}</p>
-    <button class="btn" id="rcCopy">Copy guest link</button> <button class="btn" id="rcLeave" style="margin-top:8px;background:transparent">Leave commission</button>`;
+    <button class="btn" id="rcCopy">Copy guest link (without code)</button> <button class="btn" id="rcLeave" style="margin-top:8px;background:transparent">Leave commission</button>`;
   $("rcCopy").addEventListener("click",async()=>{ try{ await navigator.clipboard.writeText(link); toast("Guest link copied."); }catch(e){ toast("Copy failed. Read out the code instead."); } });
   $("rcLeave").addEventListener("click",openRoomSheet);
 }
@@ -1668,16 +1668,7 @@ function renderRoomCard(){
     }
   }
   roomMode=true; showGate(true); renderAll();
-  const urlCode=cleanCode(new URLSearchParams(location.search).get("room"));
-  const saved=urlCode||cleanCode(LS.get("vsi3-room",""));
-  if(saved){
-    setSync("JOINING "+saved+"…");
-    $("gateCode").value=saved; $("gateFb").textContent="Joining commission "+saved+"…";
-    try{ const r=await joinRoom(saved,false); if(r==="ok"){ if(urlCode) history.replaceState(null,"",location.pathname); showGate(false); return; } }
-    catch(e){ if(!urlCode && LS.get("vsi3-room","")===saved){ setSync("CODE "+saved+" · OFFLINE"); ROOM=saved; ref=roomRef(saved); docExists=true; startPolling(); showGate(false); return; } $("gateFb").textContent="Can't reach the commission. Check this phone is online, then tap Join."; return; }
-    $("gateFb").textContent="No commission with code "+saved+". Check it with the officers.";
-    LS.set("vsi3-room","");
-  }
+  if(new URLSearchParams(location.search).has("room")) history.replaceState(null,"",location.pathname);
   setSync("");
   showGate(true);
 })();
