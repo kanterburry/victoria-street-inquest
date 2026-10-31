@@ -268,9 +268,9 @@ main{max-width:1080px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-le
 @keyframes hapulse{50%{background:#d9a43c}}
 .task.pending{box-shadow:inset 0 0 0 2px #b58a2a,0 6px 16px rgba(0,0,0,.4)}
 .stampq{border:2px solid #b58a2a;border-radius:10px;padding:12px;margin:0 0 12px;background:rgba(181,138,42,.08)}
-.stampq dl{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:4px 10px;margin:8px 0;font-size:.92rem}
+.stampq dl{display:grid;grid-template-columns:minmax(0,1fr);gap:2px;margin:8px 0;font-size:.95rem}
 .stampq dt{color:var(--ink-soft);font-family:var(--f-type);font-size:.75rem}
-.stampq dd{margin:0;font-weight:600}
+.stampq dd{margin:0 0 6px;font-weight:600;white-space:pre-wrap;overflow-wrap:anywhere}
 .stampq .row{gap:8px;flex-wrap:wrap}
 .returned{border-left:3px solid var(--stamp);padding:6px 10px;margin:0 0 12px;background:rgba(163,36,27,.06)}
 .task .num{font-family:var(--f-type);font-size:.68rem;letter-spacing:.12em;color:var(--ink-soft)}
@@ -660,37 +660,37 @@ const TASKS = [
     q:"What is the combination?",
     hints:[["Sister Mei Lan", "Leong collected things that had nothing to do with a dispensary. What in this office doesn't belong here?"], ["Sister Mei Lan", "Mrs. Choy's note says she logged her specimens “in the usual way”. The Gardens kept an index. Match each leaf to its row."], ["Sister Mei Lan", "Three envelopes, three wheels. Take the last digit of each accession number, in the order A, B, C."]], last:"A is the creeping fig, SS-BG-1042, so 2. B is the sea almond, 3389, so 9. C is the penaga laut, 3376, so 6. The box opens at 2-9-6.",
     fields:[{key:"combo", type:"dial", q:"Combination"}],
-    ok:a=>a.combo==="296" },
+    ok:a=>a.combo==="296", must:["2-9-6, and they show you the padlock open."], holes:["“Show me. Open it in front of me.”", "“Why those three digits, and why in that order?”"] },
   { id:"arun", n:2, art:"strip1", title:"Bitter almonds", phase:2,
     story:"The sink where Leong fell smells faintly of bitter almonds. The provost swabbed the soldier's knife and the studio girl's handbag, and scraped the dog's half-eaten dinner.",
-    q:"What killed him, and who could have got hold of it?",
+    q:"What killed him, and who could have got hold of it? What do the swabs and the bait show?",
     hints:[["Sister Mei Lan", "Water treats inks and residues differently. Some move, some stay put, some split in two. Run every strip."], ["Sister Mei Lan", "What does a chemist think of when someone says bitter almonds? The chart shows two kinds of it."], ["Sister Mei Lan", "Read the small print under the chart. Who is allowed the better grade? And look at what was in the dog's dinner."]], last:"Strip A, the sink, matches profile 7: potassium cyanide, reagent grade, held only by three laboratories, Outram among them. Strip D, the bait, is chloral hydrate. Chen's knife shows gun oil and Connie's handbag photographic fixer.",
-    fields:[{key:"poison", type:"text", q:"What killed Francis Leong?", ph:"substance"},{key:"grade", type:"choice", q:"Which grade?", options:["Commercial grade","Reagent (laboratory) grade"]},{key:"bait", type:"text", q:"What was in the dog's bait?", ph:"substance"}],
-    ok:a=>/cyanide/i.test(a.poison||"") && a.grade==="Reagent (laboratory) grade" && /chloral/i.test(a.bait||"") },
+    fields:[{key:"finding", type:"long", q:"The commission's finding", ph:"In your own words. Say what you can prove, and which evidence shows it."}],
+    ok:a=>String(a.finding||"").trim().length>=12, must:["Potassium cyanide, from the sink (strip A).", "Reagent (laboratory) grade, which only three laboratories hold, Outram among them. Not the commercial kind sold for plating.", "The bait (strip D) carries chloral hydrate: the dog was drugged.", "Chen's knife (B) and Connie's handbag (C) carry no cyanide."], holes:["“Cyanide is sold for electroplating all over Singapore. Why couldn't this be shop stuff?”", "“Which strip matches the sink, and which profile on the chart exactly?”", "“So the dog was asleep. With what, and where would anyone get it?”", "“Campbell says Chen's knife is the weapon. What does its strip say?”"] },
   { id:"farah", n:3, art:"blueprint", title:"Campbell's theory", phase:2,
     story:"Captain Campbell has his man: a soldier with a motive, a freshly sharpened knife, mud to the knees, and a notebook that reads like a confession. He thinks Chen came up through the drain.",
-    q:"Did Sgt. Chen kill Francis Leong? Prove it either way.",
+    q:"Did Sgt. Chen do it? Prove it either way.",
     hints:[["Captain Campbell", "He came up that drain at low tide. Prove me wrong."], ["Sister Mei Lan", "What happened to that pipe in 1942, and what was the sea doing tonight? Lay the overlays on the drawing."], ["Sister Mei Lan", "Try the gauge in the gap. Then read the whole of Chen's notebook. Both pages."]], last:"Overlay 2: the pipe was crushed to 180 mm, and the 450 mm gauge won't pass. Overlay 1: the tide flooded the culvert from 17:15. Page two of the notebook: the dog was already asleep at the gate, and he turned back.",
-    fields:[{key:"could", type:"choice", q:"Did Sgt. Chen kill him?", options:["Yes","No"]},{key:"gap", type:"text", q:"The narrowest opening in the drain (mm)", ph:"millimetres"},{key:"gate", type:"choice", q:"What did Chen find at the courtyard gate?", options:["The gate padlocked","The dog asleep","Leong in the yard","A light in the darkroom"]}],
-    ok:a=>a.could==="No" && parseFloat(String(a.gap||"").replace(/[^0-9.]/g,""))===180 && a.gate==="The dog asleep" },
+    fields:[{key:"finding", type:"long", q:"The commission's finding", ph:"In your own words. Say what you can prove, and which evidence shows it."}],
+    ok:a=>String(a.finding||"").trim().length>=12, must:["No.", "The drain was impassable: crushed in 1942 to a 180 mm gap (the 450 mm gauge won't pass) and flooded by the tide from 17:15.", "Page two of his notebook: the dog was already asleep when he reached the gate, and he turned back. Someone got there first."], holes:["(Campbell) “Motive, a knife, mud to the knees, and a notebook that reads like a confession. What more do you want?”", "“So he went through at low tide, before the water came up.” (The crushed pipe rules that out whatever the tide.)", "“Then where did the mud come from?” (The soil dishes: ditch silt, no marine clay.)", "“He wrote that he went there to kill him. Have you read the whole letter?”"] },
   { id:"shawn", n:4, art:"burrs", title:"A bolted door", phase:2,
     story:"The darkroom was bolted from the inside, the window painted shut, the drain flooded. The guard dog in the courtyard never barked. Yet someone put poison in that sink.",
-    q:"How did it get in, and who helped from inside?",
+    q:"How did the poison get in, and who helped from inside?",
     hints:[["Sister Mei Lan", "The dog never barked. When doesn't a guard dog bark?"], ["Sister Mei Lan", "Look at the floor under the walls, not at the door. Then read the provost's note on the vent: which side is the catch on?"], ["Sister Mei Lan", "Someone opened that louvre from inside before five. Who was inside then, and who feeds the dog at five?"]], last:"The poison came down the high vent from the chapel ruins. Connie Song opened the louvre from inside and fed the dog the drugged bait before she left at five.",
-    fields:[{key:"route", type:"choice", q:"How did the poison get into the darkroom?", options:["Through the front door","Through the window","Up through the storm drain","Down the high vent"]},{key:"helper", type:"suspect", q:"Who helped from inside No. 96?", options:["chen","connie","vance","pillay"]}],
-    ok:a=>a.route==="Down the high vent" && a.helper==="connie" },
+    fields:[{key:"finding", type:"long", q:"The commission's finding", ph:"In your own words. Say what you can prove, and which evidence shows it."}],
+    ok:a=>String(a.finding||"").trim().length>=12, must:["Poured down the high vent from the ruined chapel roof: grit on the floor under the vent, burrs and mortar on the wall below its outer mouth.", "The vent's inner louvre was open and its catch is on the inside, so someone inside opened it beforehand.", "Connie Song: she feeds the dog at five, minds the dispensary's chloral hydrate, and left for a show she had booked that morning."], holes:["“Maybe that louvre has been open for weeks.” (The scene notes: dust disturbed today.)", "“Why not Leong himself? It's his room.” (Would he drug his own guard dog?)", "“So Connie poured the poison?” (Her handbag is clean and she was at the pictures: she helped, someone else poured.)", "“The door was bolted. Show me how anything got past it.”"] },
   { id:"kabir", n:5, art:"slip", title:"The night of the Double Tenth", phase:2,
     story:"Among Leong's things: a pencilled radio intercept dated 10 October 1943, the night the Kempeitai began their arrests. Somewhere, someone kept the key. And the provost's log of who went where tonight.",
-    q:"What does the message say, and whose afternoon does the log leave unexplained?",
+    q:"What does the intercept say? Whose movements does the log explain, and whose does it not?",
     hints:[["Sister Mei Lan", "Signals men kept their keys in plain sight, in tins no one would look at twice."], ["Sister Mei Lan", "Sixteen letters in a square. Row first, then column, the way you read a page."], ["Sister Mei Lan", "Now the checkpoint log. Who left somewhere at twenty to five and isn't seen again until after six?"]], last:"The slip reads DOUBLE TENTH INFORMER, sent as VICTORIA BIRD FIVE: Leong. The log clears Vance (out of Keppel at 17:28). Dr. Pillay left Outram at 16:40 and is unaccounted for until 18:02.",
-    fields:[{key:"msg", type:"text", q:"The message", ph:"plain text"},{key:"gap", type:"suspect", q:"Whose afternoon does the log leave unexplained?", options:["chen","connie","vance","pillay"]}],
-    ok:a=>String(a.msg||"").toUpperCase().replace(/[^A-Z]/g,"").startsWith("DOUBLETENTHINFOR") && a.gap==="pillay" },
+    fields:[{key:"finding", type:"long", q:"The commission's finding", ph:"In your own words. Say what you can prove, and which evidence shows it."}],
+    ok:a=>String(a.finding||"").trim().length>=12, must:["DOUBLE TENTH INFORMER, sent as VICTORIA BIRD FIVE: Leong was the Kempeitai's informer.", "The log clears Maj. Vance: out of Keppel Harbour at 17:28, at No. 96 at 17:50, long after the poison.", "It does not explain Dr. Pillay: left Outram at 16:40, not on duty at 17:56, not seen until 18:02."], holes:["“Vance found the body and forced the door himself. Why isn't he your man?”", "“Who is VICTORIA BIRD FIVE, and how do you know?”", "“Dr. Pillay was called out to certify. Where would he have been before that?”", "“Anyone else the log can't account for?”"] },
   { id:"valerie", n:6, art:"torn", title:"Post-mortem 1943-M-1108", phase:2,
     story:"A mortuary record for Dr. Charles Stanley, torn into pieces and scattered. One piece was in Leong's notebook. The rest are elsewhere.",
     q:"Who wrote the true finding, and how did Dr. Stanley die?",
     hints:[["Sister Mei Lan", "A record torn in three. One piece was locked away, one travelled with a doctor."], ["Sister Mei Lan", "The top of the page is what the public was told. Read to the bottom."], ["Sister Mei Lan", "Compare the handwriting with anything else written tonight. The prescription on the counter, perhaps."]], last:"The true notes are in Dr. Pillay's hand: Dr. Stanley died of interrogation injuries, not heart failure. Leong forced the false certificate and kept a copy to blackmail Pillay.",
-    fields:[{key:"hand", type:"suspect", q:"Whose hand wrote the bottom section?", options:["leong","tanaka","pillay","stanley"]},{key:"cause", type:"choice", q:"Cause of death", options:["Heart failure","Interrogation injuries","Drowning","Fever"]}],
-    ok:a=>a.hand==="pillay" && a.cause==="Interrogation injuries" }
+    fields:[{key:"finding", type:"long", q:"The commission's finding", ph:"In your own words. Say what you can prove, and which evidence shows it."}],
+    ok:a=>String(a.finding||"").trim().length>=12, must:["The true notes are in Dr. Pillay's hand (match them to his prescription slip).", "Dr. Stanley died of injuries from interrogation, not heart failure. The official certificate is false.", "Strong answers add: Leong forced the false certificate and kept a copy to blackmail Pillay with forged ledgers."], holes:["“How do you know whose handwriting that is? Show me.”", "“The certificate says heart failure, signed and filed. Why don't you believe it?”", "“Why would Leong keep a copy of something like this?”"] }
 ];
 const EXHIBITS = [
   {no:"E-01", spot:"provost", phase:1, art:"doc", title:"Statement of Maj. Edward Vance", obj:"Typed statement, signed", found:"Taken at the scene, 18:05", why:"First on the scene. Forced the darkroom latch and reported the smell of bitter almonds.", by:"kabir", f:"Harbour transit log puts his jeep leaving Keppel drydock at 17:28. He could not have been here earlier."},
@@ -1213,7 +1213,7 @@ function answerSummary(t,a){ return t.fields.map(f=>{ let v=a[f.key];
   if(f.type==="dial") v=(a.combo||"000").split("").join("-");
   else if(f.type==="suspect") v=(PP[v]&&PP[v].name)||v;
   else if(f.type==="suspects") v=(v||[]).map(x=>(PP[x]&&PP[x].name)||x).join(", ");
-  return [f.q, String(v||"")]; }); }
+  return [f.q, String(v||"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])).slice(0,2000)]; }); }
 function taskRow(t){
   const st=tState(t);
   const label = st==="done" ? `Sealed at ${S.filed[t.id]||""} hrs` : st==="pending" ? "With the officers, waiting for their stamp" : st==="locked" ? "Opens when Leong's box is opened" : t.q;
@@ -1250,6 +1250,7 @@ function fieldHTML(t,f){
   const d = drafts[t.id], fid=`f-${t.id}-${f.key}`;
   if(f.type==="dial"){ const v=(d.combo||"000").split("");
     return `<div class="fld"><span class="q">${f.q}</span><div class="dials">${[0,1,2].map(i=>`<div class="dial"><button type="button" data-dial="${i}" data-step="1" aria-label="Wheel ${i+1} up">▲</button><output id="dial-${i}">${v[i]}</output><button type="button" data-dial="${i}" data-step="-1" aria-label="Wheel ${i+1} down">▼</button></div>`).join("")}</div></div>`; }
+  if(f.type==="long") return `<div class="fld"><label for="${fid}">${f.q}</label><textarea id="${fid}" data-fk="${f.key}" rows="6" placeholder="${f.ph||""}" style="width:100%;box-sizing:border-box;font:inherit;padding:10px;border:1.5px solid var(--ink-soft);border-radius:8px;background:#fffdf6;color:var(--ink);resize:vertical">${(d[f.key]||"").replace(/</g,"&lt;")}</textarea></div>`;
   if(f.type==="text") return `<div class="fld"><label for="${fid}">${f.q}</label><input id="${fid}" data-fk="${f.key}" autocomplete="off" autocapitalize="characters" placeholder="${f.ph||""}" value="${(d[f.key]||"").replace(/"/g,"&quot;")}"></div>`;
   if(f.type==="spot") return `<div class="fld"><span class="q">${f.q}</span><div class="spotpick" data-fk="${f.key}">${spotSVG(d[f.key])}</div></div>`;
   if(f.type==="suspect"||f.type==="suspects"){ const sel = f.type==="suspects" ? (d[f.key]||[]) : [d[f.key]];
@@ -1293,6 +1294,7 @@ $("sheetBody").addEventListener("click", e=>{
     const a=drafts[t.id], fb=$("taskFb");
     const missing = t.fields.some(f=> f.type==="dial" ? false : f.type==="suspects" ? !(a[f.key]||[]).length : !String(a[f.key]||"").trim());
     if(missing){ fb.textContent="Answer every part first."; return; }
+    if(!t.ok(a) && t.id!=="lockbox"){ fb.textContent="Write a little more: say what the commission can prove, and which evidence shows it."; return; }
     if(!t.ok(a)){ tries[t.id]=(tries[t.id]||0)+1; fb.textContent = "The commission isn't convinced. Something here doesn't hold up." + (tries[t.id]>=2 && (S.hints[t.id]||0)<3 ? " You can ask the officers for a hint." : ""); return; }
     if(isHost()){ sealTask(t.id); return; }
     commit({pending:{[t.id]:{at:Date.now(), by:DEV, ans:answerSummary(t,a)}}, returned:{[t.id]:0}});
@@ -1300,7 +1302,7 @@ $("sheetBody").addEventListener("click", e=>{
   }
 });
 $("sheetBody").addEventListener("keydown", e=>{ const sp=e.target.closest&&e.target.closest("[data-spot-pick]"); if(sp&&(e.key==="Enter"||e.key===" ")){ e.preventDefault(); sp.dispatchEvent(new MouseEvent("click",{bubbles:true})); } });
-$("sheetBody").addEventListener("input", e=>{ const i=e.target.closest("input[data-fk]"); if(i&&curTask) drafts[curTask][i.dataset.fk]=i.value; });
+$("sheetBody").addEventListener("input", e=>{ const i=e.target.closest("input[data-fk],textarea[data-fk]"); if(i&&curTask) drafts[curTask][i.dataset.fk]=i.value; });
 $("taskList").addEventListener("click", e=>{ const b=e.target.closest("[data-task]"); if(b) openTask(b.dataset.task); });
 function sealTask(id){
   const f=FINDINGS.find(x=>x.id===id);
@@ -1696,8 +1698,10 @@ function renderHost(){
       <div class="row"><button class="btn red" data-hintgiven="${tk.id}">Given in person</button><button class="btn ghost" data-hintno="${tk.id}">Not yet</button></div></div>`; }).join("")}</div>` : "";
   const queue = q.length ? `<div class="stampq" id="stampQueue"><p class="kicker" style="margin:0">Awaiting your stamp · ${q.length}</p>${q.map(tk=>`<div style="margin-top:10px"><b>${tk.title}</b>
       <dl>${(S.pending[tk.id].ans||[]).map(([qq,v])=>`<dt>${qq}</dt><dd>${v}</dd>`).join("")}</dl>
-      <p class="typed" style="margin:0 0 6px;color:var(--ok)">✓ Matches the answer key${tk.id==="lockbox"?". Check they have actually opened the box.":"."}</p>
-      <input id="note-${tk.id}" placeholder="Note if sending back (optional)" autocomplete="off" style="width:100%;margin-bottom:8px;background:#fffdf6;color:var(--ink);border:1px solid var(--ink-soft);border-radius:6px;padding:8px;font:inherit;box-sizing:border-box">
+      ${tk.id==="lockbox"?`<p class="typed" style="margin:0 0 6px;color:var(--ok)">✓ Right combination. Check they have actually opened the box.</p>`:""}
+      <p class="typed" style="margin:8px 0 2px;color:var(--ink-soft)">STAMP ONLY IF IT CONTAINS ALL OF</p><ul style="margin:0 0 6px;padding-left:1.1em">${(tk.must||[]).map(m=>`<li>${m}</li>`).join("")}</ul>
+      <p class="typed" style="margin:8px 0 2px;color:var(--ink-soft)">CROSS-EXAMINE FIRST</p><ul style="margin:0 0 8px;padding-left:1.1em">${(tk.holes||[]).map(m=>`<li>${m}</li>`).join("")}</ul>
+      <input id="note-${tk.id}" placeholder="If sending back: a question that pokes the hole" autocomplete="off" style="width:100%;margin-bottom:8px;background:#fffdf6;color:var(--ink);border:1px solid var(--ink-soft);border-radius:6px;padding:8px;font:inherit;box-sizing:border-box">
       <div class="row"><button class="btn red" data-stamp="${tk.id}">Stamp · release</button><button class="btn ghost" data-sendback="${tk.id}">Send back</button></div></div>`).join("")}</div>` : "";
   $("nowCard").innerHTML = hintCard + queue + track + body;
   $("leadCount").textContent = `${FINDINGS.filter(f=>has(f.id)).length} of 6 sealed`;
