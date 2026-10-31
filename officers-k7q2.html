@@ -705,7 +705,7 @@ const EXHIBITS = [
   {no:"E-17", spot:"culvert", phase:2, art:"soil", title:"Soil samples 1 and 2", obj:"Two dishes: culvert ch. 0+110 and Chen's boots", found:"Culvert borehole; Chen's uniform", why:"Campbell says Chen came up through the drain.", by:"farah", f:"Chen's boots carry surface ditch silt. No marine clay."},
   {no:"E-23", spot:"provost", phase:1, art:"doc", title:"Sgt. Chen's notebook", obj:"Two pencilled pages and a folded scrap", found:"Impounded on arrest, 18:20", why:"Captain Campbell calls it a confession.", by:"farah", f:"Page two: the dog was already asleep when Chen reached the gate, and he turned back."},
   {no:"E-24", spot:"provost", phase:2, art:"report", title:"Outram Road Gaol roster", obj:"Guard detail and incident book", found:"Provost file on Sgt. Chen", why:"Chen guarded the Kempeitai prisoners.", by:"farah", f:"Tanaka told Chen who had named his sister: a clerk on Victoria Street."},
-  {no:"E-25", spot:"vent", phase:2, art:"doc", title:"Provost notes at the scene", obj:"Typed notes, 18:00–19:30", found:"Clipboard by the darkroom door", why:"The provost's record of the room as found.", by:"shawn", f:"The vent's inner louvre was open, and its catch is on the inside."},
+  {no:"E-25", spot:"vent", phase:2, art:"doc", title:"Provost notes from the doorway", obj:"Typed notes, 17:55–18:20", found:"Provost file, handed over when the darkroom is opened", why:"The provost looked in from the doorway, then sealed the room untouched.", by:"shawn", f:"The vent's inner louvre was open, and its catch is on the inside."},
   {no:"E-22", spot:null, phase:3, art:"form", title:"B.M.A. Inquest Form 8B", obj:"Verdict sheet for six signatures", found:"Produced by Capt. Campbell", why:"The binding verdict of this commission.", by:null}
 ];
 const EX = Object.fromEntries(EXHIBITS.map(e=>[e.no,e]));
@@ -1501,7 +1501,7 @@ function renderHost(){
   let body="";
   if(st.k==="box") body=`<p class="kicker">Now · Phase 1</p><h3>Waiting for the dispatch box</h3>
     <p>Players can only work the front office. The other five leads show as "opens when the box is opened".</p>
-    <ol class="hdo"><li><b>Unlocks automatically</b> when anyone records the combination in Leads. Every phone, yours included, gets a dispatch.</li><li><b>Then you:</b> lift the provost tape (or bring out the rear-room props box) and let them in.</li><li><b>Stuck by 20:20?</b> Send hint 2 for the box below.</li></ol>
+    <ol class="hdo"><li><b>Unlocks automatically</b> when anyone records the combination in Leads. Every phone, yours included, gets a dispatch.</li><li><b>Then you:</b> they unlock the darkroom with the brass key; hand over the provost file as they go in.</li><li><b>Stuck by 20:20?</b> Send hint 2 for the box below.</li></ol>
     <button class="btn red" id="hostAdvance">They've opened the box · unlock the rear rooms</button>`;
   else if(st.k==="leads") body=`<p class="kicker">Now · Phase 2</p><h3>${left} of ${open2.length} rear-room leads still open</h3>
     <div class="hbar"><i style="width:${(open2.length-left)/open2.length*100}%"></i></div>
