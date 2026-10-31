@@ -850,7 +850,157 @@ function art(kind){
   return `<svg viewBox="0 0 160 110" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">${bg}<g filter="url(#grain)">${g}</g></svg>`;
 }
 
+/* ===== Illustrated faces for the fictional cast (sepia studio-portrait style) =====
+   faceSVG(key, label?) returns a complete <svg viewBox="0 0 100 120">. Pure string building, no DOM. */
+const FACES = {
+  leong:   {skin:"#c9a07a", shade:"#9c7552", hair:"#1b1714", w:1.0,  jaw:12.5, chinY:79, hairStyle:"slick", hat:"fedora", brow:"flat", lid:"mono", nose:4.2, lips:"thin", mouth:"smirk", tache:"pencil", clothes:"suit", age:2},
+  chen:    {skin:"#c39770", shade:"#946b48", hair:"#141210", w:0.94, jaw:12.5, chinY:79, hairStyle:"crop",  hat:"sidecap", brow:"straight", lid:"mono", nose:4.0, lips:"mid", mouth:"set", clothes:"khaki", age:0},
+  vance:   {skin:"#e0b996", shade:"#b48a68", hair:"#5b4632", w:0.99, jaw:14.5, chinY:82, hairStyle:"short", hat:"peaked", brow:"heavy", lid:"double", nose:4.6, lips:"thin", mouth:"set", tache:"clipped", clothes:"service", age:2},
+  connie:  {skin:"#d2aa84", shade:"#a57d5a", hair:"#16120f", w:0.93, jaw:11,   chinY:77, hairStyle:"waves", brow:"soft", lid:"mono", nose:3.5, lips:"full", mouth:"soft", clothes:"cheongsam", age:0, earring:1},
+  pillay:  {skin:"#9a6c48", shade:"#704b2f", hair:"#2a2622", w:1.07, jaw:14.5,   chinY:80, hairStyle:"receding", brow:"heavy", lid:"double", nose:4.8, lips:"mid", mouth:"set", tache:"full", glasses:"round", clothes:"whitecoat", age:3, grey:1},
+  tanaka:  {skin:"#cfa47c", shade:"#9e7552", hair:"#141210", w:0.98, jaw:14,   chinY:79, hairStyle:"crop",  hat:"ijacap", brow:"straight", lid:"mono", nose:4.0, lips:"thin", mouth:"set", clothes:"ija", age:1, shadowEyes:1},
+  campbell:{skin:"#e4bf9c", shade:"#b78e6c", hair:"#7a5a3a", w:1.0,  jaw:15,   chinY:80, hairStyle:"short", hat:"peaked", brow:"straight", lid:"double", nose:4.4, lips:"mid", mouth:"set", clothes:"kdshirt", age:1},
+  meilan:  {skin:"#d6ae88", shade:"#a8805d", hair:"#15110e", w:0.95, jaw:11.5, chinY:78, hairStyle:"tucked", hat:"veil", brow:"soft", lid:"mono", nose:3.7, lips:"mid", mouth:"soft", clothes:"nurse", age:1}
+};
+let _faceN = 0;
+function faceSVG(key, label){
+  const f = FACES[key]; if(!f) return "";
+  const id = "fc"+(++_faceN)+key;
+  const cx=50, w=f.w, cy=54;
+  const L = v => (cx - v*w).toFixed(2), R = v => (cx + v*w).toFixed(2);
+  const ink="#231c15";
+  let s = `<svg viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs>
+    <radialGradient id="${id}bg" cx="45%" cy="38%" r="75%"><stop offset="0" stop-color="#e3d4b2"/><stop offset=".65" stop-color="#c7b28a"/><stop offset="1" stop-color="#8e7a56"/></radialGradient>
+    <radialGradient id="${id}sk" cx="44%" cy="42%" r="62%"><stop offset="0" stop-color="${f.skin}"/><stop offset=".72" stop-color="${f.skin}"/><stop offset="1" stop-color="${f.shade}"/></radialGradient>
+    <linearGradient id="${id}sh" x1="0" x2="1"><stop offset="0" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".22"/></linearGradient>
+    <clipPath id="${id}fc"><path d="${facePath()}"/></clipPath></defs>
+    <rect width="100" height="120" fill="url(#${id}bg)"/><g transform="translate(50 120) scale(1.13) translate(-50 -120)">`;
+  function facePath(){
+    const j=f.jaw, cy2=f.chinY;
+    return `M50 29 C${L(12)} 29 ${L(17.5)} 35 ${L(17.5)} 49 C${L(17.5)} 60 ${(cx-j).toFixed(2)} 70 ${(cx-6.5).toFixed(2)} ${cy2-2} Q50 ${cy2+1} ${(cx+6.5).toFixed(2)} ${cy2-2} C${(cx+j).toFixed(2)} 70 ${R(17.5)} 60 ${R(17.5)} 49 C${R(17.5)} 35 ${R(12)} 29 50 29Z`;
+  }
+  /* back hair (behind head) */
+  if(f.hairStyle==="waves") s+=`<path d="M${L(20)} 50 C${L(23)} 30 ${L(14)} 22 50 21 C${R(14)} 22 ${R(23)} 30 ${R(20)} 50 C${R(22)} 62 ${R(24)} 72 ${R(19)} 84 C${R(14)} 90 ${R(10)} 84 ${R(12)} 76 L${L(12)} 76 C${L(10)} 84 ${L(14)} 90 ${L(19)} 84 C${L(24)} 72 ${L(22)} 62 ${L(20)} 50Z" fill="${f.hair}"/>`;
+  if(f.hat==="veil") s+=`<path d="M${L(21)} 40 C${L(22)} 24 ${R(22)} 24 ${R(21)} 40 L${R(25)} 92 C${R(14)} 96 ${R(18)} 80 ${R(15)} 70 L${L(15)} 70 C${L(18)} 80 ${L(14)} 96 ${L(25)} 92Z" fill="#efe9dc"/><path d="M${R(21)} 44 L${R(25)} 92" stroke="#cfc6b2" stroke-width=".8" fill="none"/>`;
+  /* shoulders & clothes */
+  s += clothes();
+  /* neck */
+  s += `<path d="M43.5 70 L43 90 Q50 95 57 90 L56.5 70Z" fill="${f.shade}"/><path d="M43.5 74 Q50 82 56.5 74 L56.5 79 Q50 86 43.5 79Z" fill="#000" opacity=".18"/>`;
+  s += collarTop();
+  /* ears */
+  s += `<ellipse cx="${L(17.3)}" cy="55" rx="3.2" ry="6" fill="${f.shade}"/><ellipse cx="${R(17.3)}" cy="55" rx="3.2" ry="6" fill="${f.shade}"/><path d="M${L(17.6)} 51.5 q-1.6 3.5 0 7" stroke="#000" stroke-opacity=".25" stroke-width=".6" fill="none"/><path d="M${R(17.6)} 51.5 q1.6 3.5 0 7" stroke="#000" stroke-opacity=".25" stroke-width=".6" fill="none"/>`;
+  if(f.earring) s+=`<circle cx="${L(17.4)}" cy="62" r="1.1" fill="#f3ead2"/><circle cx="${R(17.4)}" cy="62" r="1.1" fill="#f3ead2"/>`;
+  /* face */
+  s += `<path d="${facePath()}" fill="url(#${id}sk)"/>`;
+  s += `<g clip-path="url(#${id}fc)"><rect x="50" y="20" width="22" height="64" fill="url(#${id}sh)"/>
+        <ellipse cx="${L(9)}" cy="62" rx="5" ry="3.2" fill="#b0503a" opacity=".07"/><ellipse cx="${R(9)}" cy="62" rx="5" ry="3.2" fill="#b0503a" opacity=".06"/></g>`;
+  /* age lines */
+  if(f.age>=2) s+=`<path d="M${L(8.5)} 65 Q${L(10)} 69 ${L(7)} 72" stroke="#000" stroke-opacity=".16" stroke-width=".7" fill="none"/><path d="M${R(8.5)} 65 Q${R(10)} 69 ${R(7)} 72" stroke="#000" stroke-opacity=".16" stroke-width=".7" fill="none"/>`;
+  if(f.age>=3) s+=`<path d="M43 40.5 Q50 39.2 57 40.5" stroke="#000" stroke-opacity=".09" stroke-width=".5" fill="none"/>`;
+  /* front hair */
+  s += hairFront();
+  /* brows */
+  const bw = {heavy:1.6, straight:1.25, flat:1.1, soft:.95}[f.brow];
+  const bArch = {heavy:-1.2, straight:-.6, flat:-.3, soft:-1.6}[f.brow];
+  const by=47.2;
+  s += `<path d="M${L(11.5)} ${by+.8} Q${L(7.5)} ${by+bArch} ${L(3.2)} ${by+.2}" stroke="${f.grey?"#3b3530":f.hair}" stroke-width="${bw}" stroke-linecap="round" fill="none"/>
+        <path d="M${R(11.5)} ${by+.8} Q${R(7.5)} ${by+bArch} ${R(3.2)} ${by+.2}" stroke="${f.grey?"#3b3530":f.hair}" stroke-width="${bw}" stroke-linecap="round" fill="none"/>`;
+  /* eyes */
+  s += eye(-1) + eye(1);
+  if(f.shadowEyes) s+=`<defs><linearGradient id="${id}vs" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#000" stop-opacity=".55"/><stop offset=".55" stop-color="#000" stop-opacity=".22"/><stop offset="1" stop-color="#000" stop-opacity="0"/></linearGradient></defs><rect x="20" y="36" width="60" height="22" fill="url(#${id}vs)" clip-path="url(#${id}fc)"/>`;
+  /* nose */
+  const nw=f.nose;
+  s += `<path d="M${(cx+1.6).toFixed(2)} 50 Q${(cx+2.6).toFixed(2)} 58 ${(cx+nw*.55).toFixed(2)} 62.5" stroke="#000" stroke-opacity=".2" stroke-width=".8" fill="none"/>
+        <path d="M${(cx-nw).toFixed(2)} 63 Q${(cx-nw*.7).toFixed(2)} 65.6 ${cx} 65 Q${(cx+nw*.7).toFixed(2)} 65.6 ${(cx+nw).toFixed(2)} 63" stroke="#000" stroke-opacity=".28" stroke-width=".75" fill="none"/>
+        <ellipse cx="${(cx-nw*.45).toFixed(2)}" cy="64.4" rx="${(nw*.24).toFixed(2)}" ry=".55" fill="#000" opacity=".35"/><ellipse cx="${(cx+nw*.45).toFixed(2)}" cy="64.4" rx="${(nw*.24).toFixed(2)}" ry=".55" fill="#000" opacity=".35"/>
+        <ellipse cx="${cx}" cy="60" rx="${(nw*.45).toFixed(2)}" ry="3.2" fill="#fff" opacity=".07"/>`;
+  /* moustache */
+  if(f.tache==="pencil") s+=`<path d="M44.6 68.1 Q47.5 66.6 50 67.4 Q52.5 66.6 55.4 68.1" stroke="${f.hair}" stroke-width=".85" fill="none" stroke-linecap="round"/>`;
+  if(f.tache==="clipped") s+=`<path d="M45.8 67.9 Q50 65.4 54.2 67.9 L54 68.9 Q50 67.6 46 68.9Z" fill="${f.hair}"/>`;
+  if(f.tache==="full") s+=`<path d="M43.6 68.6 Q46 65.6 50 66.5 Q54 65.6 56.4 68.6 Q53 68.2 50 69 Q47 68.2 43.6 68.6Z" fill="#2c2722"/>`;
+  /* mouth */
+  s += mouth();
+  /* glasses */
+  if(f.glasses==="round") s+=`<g fill="none" stroke="#2a241e" stroke-width=".75"><circle cx="${L(7.4)}" cy="53.4" r="4.6"/><circle cx="${R(7.4)}" cy="53.4" r="4.6"/><path d="M${L(2.8)} 53 Q50 51.6 ${R(2.8)} 53"/><path d="M${L(12)} 52.6 L${L(17)} 51.6"/><path d="M${R(12)} 52.6 L${R(17)} 51.6"/></g><circle cx="${L(8.8)}" cy="51.8" r="1.1" fill="#fff" opacity=".35"/><circle cx="${R(6)}" cy="51.8" r="1.1" fill="#fff" opacity=".35"/>`;
+  /* hats */
+  s += hat();
+  s += `</g>`;
+  /* photo finish: border */
+  s += `<rect width="100" height="120" fill="none" stroke="#6f5f42" stroke-width="2"/><rect x="2.5" y="2.5" width="95" height="115" fill="none" stroke="#f1e6cc" stroke-opacity=".35" stroke-width=".6"/>`;
+  if(label) s+=`<rect x="18" y="104" width="64" height="12" fill="#1d1b17"/><text x="50" y="113" text-anchor="middle" font-family="Courier Prime, Courier, monospace" font-size="7" fill="#e9dcb8">${label}</text>`;
+  return s + `</svg>`;
+
+  function eye(side){
+    const ex = cx + side*7.4*w, ey = 53.4;
+    const open = f.lid==="mono" ? 1.15 : 1.45;
+    let e = `<path d="M${(ex-3.4).toFixed(2)} ${ey} Q${ex.toFixed(2)} ${(ey-open*1.6).toFixed(2)} ${(ex+3.4).toFixed(2)} ${ey} Q${ex.toFixed(2)} ${(ey+open*1.1).toFixed(2)} ${(ex-3.4).toFixed(2)} ${ey}Z" fill="#efe6d4"/>
+      <circle cx="${(ex+side*-.15).toFixed(2)}" cy="${(ey-.1).toFixed(2)}" r="${(open*1.05).toFixed(2)}" fill="#2a1d14"/><circle cx="${(ex+side*-.15).toFixed(2)}" cy="${(ey-.1).toFixed(2)}" r=".55" fill="#0d0907"/>
+      <circle cx="${(ex-.5).toFixed(2)}" cy="${(ey-.55).toFixed(2)}" r=".32" fill="#fff" opacity=".9"/>
+      <path d="M${(ex-3.6).toFixed(2)} ${(ey+.1).toFixed(2)} Q${ex.toFixed(2)} ${(ey-open*1.75).toFixed(2)} ${(ex+3.6).toFixed(2)} ${(ey+.1).toFixed(2)}" stroke="#1d1510" stroke-width=".9" fill="none" stroke-linecap="round"/>`;
+    if(f.lid==="double") e+=`<path d="M${(ex-3).toFixed(2)} ${(ey-1.7).toFixed(2)} Q${ex.toFixed(2)} ${(ey-3.4).toFixed(2)} ${(ex+3).toFixed(2)} ${(ey-1.7).toFixed(2)}" stroke="#000" stroke-opacity=".22" stroke-width=".5" fill="none"/>`;
+    else e+=`<path d="M${(ex-3).toFixed(2)} ${(ey-2.1).toFixed(2)} Q${ex.toFixed(2)} ${(ey-2.9).toFixed(2)} ${(ex+3).toFixed(2)} ${(ey-2.1).toFixed(2)}" stroke="#000" stroke-opacity=".1" stroke-width=".9" fill="none"/>`;
+    e+=`<path d="M${(ex-2.6).toFixed(2)} ${(ey+1.9).toFixed(2)} Q${ex.toFixed(2)} ${(ey+2.6).toFixed(2)} ${(ex+2.6).toFixed(2)} ${(ey+1.9).toFixed(2)}" stroke="#000" stroke-opacity=".12" stroke-width=".5" fill="none"/>`;
+    return e;
+  }
+  function mouth(){
+    const y=70.2, mw = f.lips==="full"?4.6:f.lips==="thin"?4.4:4.6;
+    const lipC = f.lips==="full" ? "#9a4a3e" : "#8a5a46";
+    const up = f.mouth==="smirk" ? [0,-.6] : f.mouth==="soft" ? [-.25,-.25] : [0,0];
+    let m = `<path d="M${(cx-mw).toFixed(2)} ${(y+up[0]).toFixed(2)} Q${(cx-mw*.5).toFixed(2)} ${(y-1.1).toFixed(2)} ${cx} ${(y-.5).toFixed(2)} Q${(cx+mw*.5).toFixed(2)} ${(y-1.1).toFixed(2)} ${(cx+mw).toFixed(2)} ${(y+up[1]).toFixed(2)} Q${cx} ${(y+.5).toFixed(2)} ${(cx-mw).toFixed(2)} ${(y+up[0]).toFixed(2)}Z" fill="${lipC}" opacity=".85"/>`;
+    const lo = f.lips==="full"?2.4:f.lips==="thin"?1.3:1.8;
+    m += `<path d="M${(cx-mw*.85).toFixed(2)} ${(y+.4).toFixed(2)} Q${cx} ${(y+lo+.6).toFixed(2)} ${(cx+mw*.85).toFixed(2)} ${(y+.4).toFixed(2)} Q${cx} ${(y+.9).toFixed(2)} ${(cx-mw*.85).toFixed(2)} ${(y+.4).toFixed(2)}Z" fill="${lipC}" opacity=".6"/>`;
+    m += `<path d="M${(cx-mw).toFixed(2)} ${(y+up[0]).toFixed(2)} Q${cx} ${(y+.6).toFixed(2)} ${(cx+mw).toFixed(2)} ${(y+up[1]).toFixed(2)}" stroke="#3a1f16" stroke-width=".6" fill="none"/>`;
+    m += `<path d="M${(cx-2).toFixed(2)} ${(y+lo+2.2).toFixed(2)} Q${cx} ${(y+lo+2.9).toFixed(2)} ${(cx+2).toFixed(2)} ${(y+lo+2.2).toFixed(2)}" stroke="#000" stroke-opacity=".13" stroke-width=".8" fill="none"/>`;
+    return m;
+  }
+  function hairFront(){
+    const h=f.hair;
+    switch(f.hairStyle){
+      case "slick": return `<path d="M${L(17.6)} 46 C${L(18)} 33 ${L(10)} 27.5 50 27.5 C${R(11)} 27.5 ${R(18)} 33 ${R(17.6)} 46 L${R(16.5)} 42 C${R(13)} 34 ${R(4)} 33.5 ${L(3)} 34.5 C${L(9)} 35 ${L(14)} 38 ${L(16.6)} 43Z" fill="${h}"/><path d="M${L(3)} 34.5 L${L(2)} 29" stroke="#4a4038" stroke-width=".4"/>`;
+      case "crop": return `<path d="M${L(17.4)} 45 C${L(17.6)} 32 ${L(10)} 28 50 28 C${R(10)} 28 ${R(17.6)} 32 ${R(17.4)} 45 L${R(16.4)} 41 C${R(12)} 36.5 ${L(12)} 36.5 ${L(16.4)} 41Z" fill="${h}"/>`;
+      case "short": return `<path d="M${L(17.5)} 46 C${L(18)} 33 ${L(10)} 28 50 28 C${R(10)} 28 ${R(18)} 33 ${R(17.5)} 46 L${R(16.4)} 41 C${R(12)} 35.5 ${R(2)} 35 ${L(6)} 36.5 C${L(11)} 37 ${L(14.5)} 39 ${L(16.4)} 42Z" fill="${h}"/>`;
+      case "waves": return `<path d="M${L(18)} 50 C${L(19)} 31 ${L(8)} 25.5 50 25.5 C${R(8)} 25.5 ${R(19)} 31 ${R(18)} 50 C${R(16.6)} 41.5 ${R(11)} 35.4 ${R(3)} 35 C${L(5)} 34.6 ${L(12.5)} 38.6 ${L(18)} 50Z" fill="${h}"/><path d="M${R(3)} 35 C${R(1)} 31 ${L(4)} 28.4 ${L(11)} 30.4" stroke="#5a4c42" stroke-width=".7" fill="none" opacity=".7"/><path d="M${L(15)} 34 Q${L(9)} 28.5 ${R(6)} 28" stroke="#5a4c42" stroke-width=".5" fill="none" opacity=".45"/>`;
+      case "receding": return `<path d="M${L(17.8)} 52 C${L(18.6)} 42 ${L(16.5)} 36 ${L(13)} 34.5 C${L(14.8)} 38.5 ${L(16)} 43 ${L(16.8)} 49Z M${R(17.8)} 52 C${R(18.6)} 42 ${R(16.5)} 36 ${R(13)} 34.5 C${R(14.8)} 38.5 ${R(16)} 43 ${R(16.8)} 49Z" fill="${h}"/><path d="M${L(16.6)} 46 C${L(16.2)} 41 ${L(15)} 38 ${L(13.5)} 36.5 M${R(16.6)} 46 C${R(16.2)} 41 ${R(15)} 38 ${R(13.5)} 36.5" stroke="#a49d93" stroke-width=".8" fill="none"/><ellipse cx="${L(4)}" cy="34" rx="7" ry="2.6" fill="#fff" opacity=".1"/>`;
+      case "tucked": return `<path d="M${L(17.4)} 46 C${L(17.8)} 34 ${L(10)} 29 50 29 C${R(10)} 29 ${R(17.8)} 34 ${R(17.4)} 46 C${R(15)} 39 ${R(8)} 36 50 36.6 C${L(8)} 36 ${L(15)} 39 ${L(17.4)} 46Z" fill="${h}"/>`;
+    }
+    return "";
+  }
+  function hat(){
+    switch(f.hat){
+      case "fedora": return `<path d="M${L(27)} 39.5 Q50 33.5 ${R(27)} 37.8 Q${R(22)} 41.8 ${R(16)} 40.8 Q50 36.8 ${L(16)} 42 Q${L(23)} 42.5 ${L(27)} 39.5Z" fill="#3a3027"/>
+        <path d="M${L(16.8)} 40 C${L(17.5)} 30 ${L(14)} 18.5 50 18 C${R(14)} 18.5 ${R(17.5)} 28.5 ${R(16.8)} 38.6 Q50 35.6 ${L(16.8)} 40Z" fill="#4a3d31"/>
+        <path d="M${L(5)} 19.6 Q50 24.6 ${R(5)} 19.2" stroke="#2c241c" stroke-width="1" fill="none"/>
+        <path d="M${L(17)} 37.2 Q50 33.4 ${R(17)} 35.8 L${R(16.9)} 38.6 Q50 35.6 ${L(16.9)} 40Z" fill="#1e1914"/>`;
+      case "sidecap": return `<path d="M${L(14)} 33.5 C${L(6)} 26 ${R(10)} 24 ${R(18)} 31.5 L${R(17)} 35 Q50 31 ${L(14)} 33.5Z" fill="#5b5a3c"/><path d="M${L(14)} 33.5 Q50 31 ${R(17)} 35" stroke="#3c3b27" stroke-width="1" fill="none"/><circle cx="${R(9)}" cy="31.6" r="1.4" fill="#c8a85a"/>`;
+      case "peaked": return `<path d="M${L(21)} 29 C${L(20)} 20 ${R(20)} 20 ${R(21)} 29 Q${R(19)} 34.5 ${R(17.5)} 35.6 L${L(17.5)} 35.6 Q${L(19)} 34.5 ${L(21)} 29Z" fill="#6b6142"/>
+        <rect x="${L(17.8)}" y="33.2" width="${(35.6*w).toFixed(2)}" height="4.2" fill="#3a2e22"/>
+        <path d="M${L(17)} 37.2 Q50 45.6 ${R(17)} 37.2 Q50 40.2 ${L(17)} 37.2Z" fill="#1a1612"/><path d="M${L(14)} 41 Q50 46 ${R(14)} 41 L${R(14)} 43 Q50 48 ${L(14)} 43Z" fill="#000" opacity=".12"/><path d="M${L(14)} 38.6 Q50 42.4 ${R(14)} 38.6" stroke="#5a5048" stroke-width=".4" fill="none"/>
+        <path d="M47.6 24.8 L50 21.8 L52.4 24.8 L51.2 30.4 L48.8 30.4Z" fill="#c9a95d"/><rect x="${L(17.8)}" y="33.2" width="${(35.6*w).toFixed(2)}" height="4.2" fill="none" stroke="#000" stroke-opacity=".25" stroke-width=".4"/>`;
+      case "ijacap": return `<path d="M${L(19.5)} 31 C${L(19)} 22 ${R(19)} 22 ${R(19.5)} 31 L${R(17.5)} 36 L${L(17.5)} 36Z" fill="#6c6640"/><rect x="${L(17.8)}" y="33.4" width="${(35.6*w).toFixed(2)}" height="3.4" fill="#5c1d16"/>
+        <path d="M${L(16)} 36.6 Q50 42 ${R(16)} 36.6 Q50 39 ${L(16)} 36.6Z" fill="#1a1612"/><path d="M50 26.2 l1 2.2 2.4.2 -1.8 1.6 .6 2.4 -2.2 -1.3 -2.2 1.3 .6 -2.4 -1.8 -1.6 2.4 -.2Z" fill="#d1b45e"/>`;
+      case "veil": return `<path d="M${L(18.6)} 41 C${L(19)} 27 ${R(19)} 27 ${R(18.6)} 41 Q50 34.2 ${L(18.6)} 41Z" fill="#f4efe4"/><path d="M${L(18.6)} 41 Q50 34.2 ${R(18.6)} 41" stroke="#d6cdb8" stroke-width=".8" fill="none"/><path d="M48.6 29.4 h2.8 v1.8 h1.8 v2.8 h-1.8 v1.8 h-2.8 v-1.8 h-1.8 v-2.8 h1.8Z" fill="#a3241b"/>`;
+    }
+    return "";
+  }
+  function clothes(){
+    switch(f.clothes){
+      case "suit": return `<path d="M8 120 C10 98 26 89 43 88 L57 88 C74 89 90 98 92 120Z" fill="#3a332c"/><path d="M43 88 L50 104 L57 88 L54 87 L50 95 L46 87Z" fill="#efe8d8"/><path d="M48.2 91 L50 89.6 L51.8 91 L51 103 L50 105 L49 103Z" fill="#5a2a22"/><path d="M43 88 L36 96 L44 100 L50 106 M57 88 L64 96 L56 100 L50 106" stroke="#241f1a" stroke-width="1.2" fill="none"/><path d="M27.5 104.5 L30.5 101.2 L33.5 103.6Z" fill="#efe8d8"/>`;
+      case "khaki": return `<path d="M8 120 C10 98 26 89 42 88 L58 88 C74 89 90 98 92 120Z" fill="#8a7f55"/><path d="M42 88 L50 98 L58 88 L56 86 L50 93 L44 86Z" fill="#a39668"/><path d="M42 88 L35 94 L44 97 L50 98 M58 88 L65 94 L56 97 L50 98" stroke="#5e5538" stroke-width=".9" fill="none"/><rect x="14" y="99" width="12" height="3.2" rx="1" fill="#6c6343"/><rect x="74" y="99" width="12" height="3.2" rx="1" fill="#6c6343"/><circle cx="50" cy="108" r="1" fill="#5e5538"/><path d="M50 99 V120" stroke="#6e6545" stroke-width=".6"/>`;
+      case "service": return `<path d="M8 120 C10 98 26 89 43 88 L57 88 C74 89 90 98 92 120Z" fill="#7e7550"/><path d="M43 88 L50 101 L57 88Z" fill="#cfc4a4"/><path d="M48.4 90.4 L50 89.2 L51.6 90.4 L50.9 101 L50 102.6 L49.1 101Z" fill="#6b6243"/><path d="M43 88 L33 98 L42 101 L50 108 M57 88 L67 98 L58 101 L50 108" stroke="#5a5236" stroke-width="1.2" fill="none"/><circle cx="37.5" cy="97" r="1.1" fill="#c9a95d"/><circle cx="62.5" cy="97" r="1.1" fill="#c9a95d"/><path d="M18 100 L28 98 M72 98 L82 100" stroke="#5a5236" stroke-width="2"/><circle cx="23" cy="99" r=".9" fill="#c9a95d"/><circle cx="77" cy="99" r=".9" fill="#c9a95d"/>`;
+      case "kdshirt": return `<path d="M8 120 C10 98 26 89 42 88 L58 88 C74 89 90 98 92 120Z" fill="#a8996a"/><path d="M42 88 L50 99 L58 88 L56 86 L50 94 L44 86Z" fill="#bfb183"/><path d="M42 88 L34 95 L44 98 L50 99 M58 88 L66 95 L56 98 L50 99" stroke="#7d7150" stroke-width=".9" fill="none"/><path d="M14 101 L28 97 M86 101 L72 97" stroke="#7d7150" stroke-width="3.2"/><circle cx="19" cy="99.6" r=".9" fill="#d8bb6a"/><circle cx="23" cy="98.4" r=".9" fill="#d8bb6a"/><circle cx="81" cy="99.6" r=".9" fill="#d8bb6a"/><circle cx="77" cy="98.4" r=".9" fill="#d8bb6a"/><path d="M50 99 V120" stroke="#8d8058" stroke-width=".6"/>`;
+      case "cheongsam": return `<path d="M10 120 C12 100 27 91 42 89.5 L58 89.5 C73 91 88 100 90 120Z" fill="#6d4b4e"/><path d="M10 120 C12 100 27 91 42 89.5 L58 89.5 C73 91 88 100 90 120Z" fill="url(#${id}sh)" opacity=".5"/><path d="M42.6 84.6 Q50 87.6 57.4 84.6 L57.8 90 Q50 93 42.2 90Z" fill="#7a5559" stroke="#d7c3a6" stroke-width=".5"/><path d="M57.6 90.4 Q62 96 69 97.4" stroke="#d7c3a6" stroke-width=".7" fill="none"/><path d="M60.6 93.4 h2.6" stroke="#d7c3a6" stroke-width=".8"/>`;
+      case "whitecoat": return `<path d="M8 120 C10 98 26 89 43 88 L57 88 C74 89 90 98 92 120Z" fill="#ece6d8"/><path d="M43 88 L50 101 L57 88Z" fill="#e3dccb"/><path d="M48.4 90.4 L50 89.2 L51.6 90.4 L50.9 101 L50 102.6 L49.1 101Z" fill="#3c3a4a"/><path d="M43 88 L32 99 L42 103 L50 112 M57 88 L68 99 L58 103 L50 112" stroke="#bdb5a3" stroke-width="1.1" fill="none"/><path d="M67 107 V101.5" stroke="#55606e" stroke-width="1.2"/><path d="M63 108 H72" stroke="#cfc8b7" stroke-width=".8"/>`;
+      case "ija": return `<path d="M8 120 C10 98 26 89 42 88 L58 88 C74 89 90 98 92 120Z" fill="#6e6743"/><path d="M41.5 86 L58.5 86 L58.8 92 Q50 94 41.2 92Z" fill="#7a7349"/><rect x="40.6" y="87.4" width="5" height="4" fill="#3e3a28"/><rect x="54.4" y="87.4" width="5" height="4" fill="#3e3a28"/><circle cx="50" cy="100" r="1" fill="#c9a95d"/><circle cx="50" cy="109" r="1" fill="#c9a95d"/>`;
+      case "nurse": return `<path d="M8 120 C10 98 26 89 42 88 L58 88 C74 89 90 98 92 120Z" fill="#8e9aa4"/><path d="M42 88 L50 96 L58 88 L56 86 L50 92 L44 86Z" fill="#f2ede2"/><path d="M42 88 L37 94 L44 95 L50 96 M58 88 L63 94 L56 95 L50 96" stroke="#d8d0be" stroke-width=".8" fill="#f2ede2"/><circle cx="50" cy="104" r="1.6" fill="none" stroke="#c9a95d" stroke-width=".7"/>`;
+    }
+    return "";
+  }
+  function collarTop(){ return ""; }
+}
+
+const LOOK_FACE={fedora:"leong",sidecap:"chen",officer2:"vance",officer:"campbell",waves:"connie",doctor:"pillay",shadow:"tanaka",nurse:"meilan"};
 function portrait(look, label){
+  if(LOOK_FACE[look]) return faceSVG(LOOK_FACE[look], label);
   const sil = "#2a2620";
   let hat="", hair="", extra="";
   const head = `<ellipse cx="50" cy="56" rx="16" ry="20" fill="${sil}"/>`;
