@@ -262,6 +262,9 @@ main{max-width:1080px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-le
 .task .go-arrow{font-size:1.4rem;color:var(--ink-soft)}
 .task.locked{background:var(--paper-3);opacity:.8}
 .task.done{box-shadow:inset 0 0 0 2px var(--ok),0 6px 16px rgba(0,0,0,.4)}
+.hostalert{display:block;width:100%;border:0;margin:0;padding:10px max(16px,env(safe-area-inset-left,0px));background:#b8862a;color:#1a140b;font-family:var(--f-type);font-weight:700;font-size:.9rem;letter-spacing:.04em;text-align:left;cursor:pointer;animation:hapulse 1.6s ease-in-out infinite}
+.hostalert[hidden]{display:none}
+@keyframes hapulse{50%{background:#d9a43c}}
 .task.pending{box-shadow:inset 0 0 0 2px #b58a2a,0 6px 16px rgba(0,0,0,.4)}
 .stampq{border:2px solid #b58a2a;border-radius:10px;padding:12px;margin:0 0 12px;background:rgba(181,138,42,.08)}
 .stampq dl{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:4px 10px;margin:8px 0;font-size:.92rem}
@@ -440,6 +443,7 @@ main{max-width:1080px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-le
     <button class="chip8b" id="chip8b">FORM 8B</button>
     <div class="clock"><b id="worldTime">20:00</b><span id="remain">120:00 left</span></div>
   </div>
+  <button class="hostalert" id="hostAlert" hidden></button>
 </header>
 
 <main>
@@ -567,7 +571,7 @@ main{max-width:1080px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-le
     <div class="paper" id="roomCard"></div>
     <div class="paper">
       <div class="row" style="justify-content:space-between"><h3 style="margin:0">Leads</h3><span class="typed" style="color:var(--ink-soft)" id="leadCount"></span></div>
-      <p class="typed" style="color:var(--ink-soft)">Each lead seals itself when players record the right answer. To help a stuck group, send a hint (it pops up on every phone) or seal it for them.</p>
+      <p class="typed" style="color:var(--ink-soft)">Answers from players wait for your stamp at the top of this screen. Hints are yours to give in person: when a group asks, the words to say appear at the top. The next hint for each lead is also shown here.</p>
       <div id="leadCtl"></div>
     </div>
     <div class="paper">
@@ -653,37 +657,37 @@ const TASKS = [
   { id:"lockbox", n:1, art:"box", title:"Leong's dispatch box", phase:1,
     story:"The clerk kept a locked steel box on his desk. The provost believes the darkroom key is inside. Leong was not a man who trusted his memory, nor anyone else's.",
     q:"What is the combination?",
-    hints:[["Sister Mei Lan","Leong collected things that didn't belong to him. Look at what in this office has nothing to do with a dispensary."],["Sister Mei Lan","Mrs. Choy taught nature study. She filed everything alphabetically, and she always signed off with the last digit."],["Sister Mei Lan","Three envelopes, three wheels. Each leaf has a registry number in the Gardens' index."]],
+    hints:[["Sister Mei Lan", "Leong collected things that had nothing to do with a dispensary. What in this office doesn't belong here?"], ["Sister Mei Lan", "Mrs. Choy's note says she logged her specimens “in the usual way”. The Gardens kept an index. Match each leaf to its row."], ["Sister Mei Lan", "Three envelopes, three wheels. Take the last digit of each accession number, in the order A, B, C."]], last:"A is the creeping fig, SS-BG-1042, so 2. B is the sea almond, 3389, so 9. C is the penaga laut, 3376, so 6. The box opens at 2-9-6.",
     fields:[{key:"combo", type:"dial", q:"Combination"}],
     ok:a=>a.combo==="296" },
   { id:"arun", n:2, art:"strip1", title:"Bitter almonds", phase:2,
     story:"The sink where Leong fell smells faintly of bitter almonds. The provost swabbed the soldier's knife and the studio girl's handbag, and scraped the dog's half-eaten dinner.",
     q:"What killed him, and who could have got hold of it?",
-    hints:[["Clerk","Ink and residue behave differently in water. Some move, some stay, some separate."],["Sister Mei Lan","Bitter almonds mean one thing to a chemist. The chart lists two kinds of it."],["Sister Mei Lan","Read the small print under the chart. Who is allowed the better grade?"]],
+    hints:[["Sister Mei Lan", "Water treats inks and residues differently. Some move, some stay put, some split in two. Run every strip."], ["Sister Mei Lan", "What does a chemist think of when someone says bitter almonds? The chart shows two kinds of it."], ["Sister Mei Lan", "Read the small print under the chart. Who is allowed the better grade? And look at what was in the dog's dinner."]], last:"Strip A, the sink, matches profile 7: potassium cyanide, reagent grade, held only by three laboratories, Outram among them. Strip D, the bait, is chloral hydrate. Chen's knife shows gun oil and Connie's handbag photographic fixer.",
     fields:[{key:"poison", type:"text", q:"What killed Francis Leong?", ph:"substance"},{key:"grade", type:"choice", q:"Which grade?", options:["Commercial grade","Reagent (laboratory) grade"]},{key:"bait", type:"text", q:"What was in the dog's bait?", ph:"substance"}],
     ok:a=>/cyanide/i.test(a.poison||"") && a.grade==="Reagent (laboratory) grade" && /chloral/i.test(a.bait||"") },
   { id:"farah", n:3, art:"blueprint", title:"Campbell's theory", phase:2,
     story:"Captain Campbell has his man: a soldier with a motive, a freshly sharpened knife, mud to the knees, and a notebook that reads like a confession. He thinks Chen came up through the drain.",
     q:"Did Sgt. Chen kill Francis Leong? Prove it either way.",
-    hints:[["Captain Campbell","He came up that drain at low tide. Prove me wrong."],["Sister Mei Lan","What happened to that pipe in 1942, and what was the sea doing tonight?"],["Sister Mei Lan","Have you read the whole of his notebook? Both pages?"]],
+    hints:[["Captain Campbell", "He came up that drain at low tide. Prove me wrong."], ["Sister Mei Lan", "What happened to that pipe in 1942, and what was the sea doing tonight? Lay the overlays on the drawing."], ["Sister Mei Lan", "Try the gauge in the gap. Then read the whole of Chen's notebook. Both pages."]], last:"Overlay 2: the pipe was crushed to 180 mm, and the 450 mm gauge won't pass. Overlay 1: the tide flooded the culvert from 17:15. Page two of the notebook: the dog was already asleep at the gate, and he turned back.",
     fields:[{key:"could", type:"choice", q:"Did Sgt. Chen kill him?", options:["Yes","No"]},{key:"gap", type:"text", q:"The narrowest opening in the drain (mm)", ph:"millimetres"},{key:"gate", type:"choice", q:"What did Chen find at the courtyard gate?", options:["The gate padlocked","The dog asleep","Leong in the yard","A light in the darkroom"]}],
     ok:a=>a.could==="No" && parseFloat(String(a.gap||"").replace(/[^0-9.]/g,""))===180 && a.gate==="The dog asleep" },
   { id:"shawn", n:4, art:"burrs", title:"A bolted door", phase:2,
     story:"The darkroom was bolted from the inside, the window painted shut, the drain flooded. The guard dog in the courtyard never barked. Yet someone put poison in that sink.",
     q:"How did it get in, and who helped from inside?",
-    hints:[["Clerk","Something fell from above. Look at the floor beneath the walls, not the door."],["Sister Mei Lan","Read the provost's note on the vent. Which side of the louvre is the catch on?"],["Sister Mei Lan","Who feeds that dog at five o'clock?"]],
+    hints:[["Sister Mei Lan", "The dog never barked. When doesn't a guard dog bark?"], ["Sister Mei Lan", "Look at the floor under the walls, not at the door. Then read the provost's note on the vent: which side is the catch on?"], ["Sister Mei Lan", "Someone opened that louvre from inside before five. Who was inside then, and who feeds the dog at five?"]], last:"The poison came down the high vent from the chapel ruins. Connie Song opened the louvre from inside and fed the dog the drugged bait before she left at five.",
     fields:[{key:"route", type:"choice", q:"How did the poison get into the darkroom?", options:["Through the front door","Through the window","Up through the storm drain","Down the high vent"]},{key:"helper", type:"suspect", q:"Who helped from inside No. 96?", options:["chen","connie","vance","pillay"]}],
     ok:a=>a.route==="Down the high vent" && a.helper==="connie" },
   { id:"kabir", n:5, art:"slip", title:"The night of the Double Tenth", phase:2,
     story:"Among Leong's things: a pencilled radio intercept dated 10 October 1943, the night the Kempeitai began their arrests. Somewhere, someone kept the key. And the provost's log of who went where tonight.",
     q:"What does the message say, and whose afternoon does the log leave unexplained?",
-    hints:[["Clerk","Signals officers kept their keys in plain sight, in tins no one would look twice at."],["Clerk","Sixteen letters in a square. Read it the way you'd read a page."],["Sister Mei Lan","Who in that log left somewhere at twenty to five and isn't seen again for over an hour?"]],
+    hints:[["Sister Mei Lan", "Signals men kept their keys in plain sight, in tins no one would look at twice."], ["Sister Mei Lan", "Sixteen letters in a square. Row first, then column, the way you read a page."], ["Sister Mei Lan", "Now the checkpoint log. Who left somewhere at twenty to five and isn't seen again until after six?"]], last:"The slip reads DOUBLE TENTH INFORMER, sent as VICTORIA BIRD FIVE: Leong. The log clears Vance (out of Keppel at 17:28). Dr. Pillay left Outram at 16:40 and is unaccounted for until 18:02.",
     fields:[{key:"msg", type:"text", q:"The message", ph:"plain text"},{key:"gap", type:"suspect", q:"Whose afternoon does the log leave unexplained?", options:["chen","connie","vance","pillay"]}],
     ok:a=>String(a.msg||"").toUpperCase().replace(/[^A-Z]/g,"").startsWith("DOUBLETENTHINFOR") && a.gap==="pillay" },
   { id:"valerie", n:6, art:"torn", title:"Post-mortem 1943-M-1108", phase:2,
     story:"A mortuary record for Dr. Charles Stanley, torn into pieces and scattered. One piece was in Leong's notebook. The rest are elsewhere.",
     q:"Who wrote the true finding, and how did Dr. Stanley die?",
-    hints:[["Clerk","A record torn in three. One piece was locked away; one travelled with a doctor."],["Sister Mei Lan","The top of the page is what the public was told. Read to the bottom."],["Sister Mei Lan","Compare the handwriting with anything else written by the people in this case."]],
+    hints:[["Sister Mei Lan", "A record torn in three. One piece was locked away, one travelled with a doctor."], ["Sister Mei Lan", "The top of the page is what the public was told. Read to the bottom."], ["Sister Mei Lan", "Compare the handwriting with anything else written tonight. The prescription on the counter, perhaps."]], last:"The true notes are in Dr. Pillay's hand: Dr. Stanley died of interrogation injuries, not heart failure. Leong forced the false certificate and kept a copy to blackmail Pillay.",
     fields:[{key:"hand", type:"suspect", q:"Whose hand wrote the bottom section?", options:["leong","tanaka","pillay","stanley"]},{key:"cause", type:"choice", q:"Cause of death", options:["Heart failure","Interrogation injuries","Drowning","Fever"]}],
     ok:a=>a.hand==="pillay" && a.cause==="Interrogation injuries" }
 ];
@@ -783,7 +787,7 @@ const PLACES = [
 ];
 
 /* ======================= STATE & SYNC ======================= */
-function initial(){ return {v:3, phase:1, found:{lockbox:0,arun:0,farah:0,shawn:0,kabir:0,valerie:0}, filed:{}, votes:{}, pending:{}, returned:{},
+function initial(){ return {v:3, phase:1, found:{lockbox:0,arun:0,farah:0,shawn:0,kabir:0,valerie:0}, filed:{}, votes:{}, pending:{}, returned:{}, hintReq:{},
   sealed:{verdict:"",at:0,atElapsed:0,a:0,b:0}, clock:{running:false,startedAt:0,elapsed:0}, hints:{}, account:{}, event:{id:"",kind:"",title:"",text:"",at:0}}; }
 const isObj = x => x && typeof x==="object" && !Array.isArray(x);
 function merge(a,b){ const o=Object.assign({},a); for(const k in b){ o[k]=(isObj(b[k])&&isObj(a?.[k]))?merge(a[k],b[k]):b[k]; } return o; }
@@ -1075,6 +1079,7 @@ function go(s){
 document.querySelectorAll(".nav button").forEach(b=>b.addEventListener("click",()=>go(b.dataset.nav)));
 document.addEventListener("click", e=>{ const g=e.target.closest("[data-goto]"); if(g){ closeSheet(); go(g.dataset.goto); } });
 $("chip8b").addEventListener("click",()=>go("verdict"));
+$("hostAlert").addEventListener("click",()=>{ go("host"); setTimeout(()=>{ const q=$("hintQueue")||$("stampQueue"); if(q) q.scrollIntoView({block:"start"}); else window.scrollTo({top:0}); },60); });
 function seenDot(k){ LS.set("vsi3-seen-"+k, String(stamp())); const d=$("dot-"+k); if(d) d.classList.remove("on"); }
 function stamp(){ return S.phase*100 + nFound(); }
 function renderDots(){ ["case","tasks","files"].forEach(k=>{ const d=$("dot-"+k); if(d) d.classList.toggle("on", +LS.get("vsi3-seen-"+k,"0") < stamp() && screen!==k); }); }
@@ -1200,6 +1205,7 @@ document.addEventListener("click", e=>{
 const drafts = {}; TASKS.forEach(t=>drafts[t.id]={});
 const tries = {};
 let curTask = null, curSig = "";
+const hintAsked = id => !!(S.hintReq && S.hintReq[id] && S.hintReq[id].at);
 const isPending = id => !has(id) && S.pending && S.pending[id] && S.pending[id].at;
 const tState = t => has(t.id) ? "done" : isPending(t.id) ? "pending" : (t.phase<=S.phase ? "open" : "locked");
 function answerSummary(t,a){ return t.fields.map(f=>{ let v=a[f.key];
@@ -1217,7 +1223,7 @@ function renderTasks(){
   $("taskList").innerHTML = TASKS.map(taskRow).join("");
   if(curTask && $("sheet").classList.contains("on")){ const sig=taskSig(curTask); if(sig!==curSig) renderTaskSheet(curTask); }
 }
-const taskSig = id => [S.phase, has(id), S.hints[id]||0, (S.pending[id]&&S.pending[id].at)||0, (S.returned[id]&&S.returned[id].at)||0].join("|");
+const taskSig = id => [S.phase, has(id), S.hints[id]||0, (S.hintReq[id]&&S.hintReq[id].at)||0, (S.pending[id]&&S.pending[id].at)||0, (S.returned[id]&&S.returned[id].at)||0].join("|");
 function spotSVG(sel){
   const z=(id,shape,label,lx,ly)=>`<g class="zone" data-spot-pick="${id}" role="button" tabindex="0" aria-label="${label}" aria-pressed="${sel===id}">${shape}<text x="${lx}" y="${ly}" text-anchor="middle">${label}</text></g>`;
   return `<svg viewBox="0 0 400 260" aria-label="Tap where the poison came in">
@@ -1265,9 +1271,9 @@ function renderTaskSheet(id){
     <div class="answer"><h3>Record the commission's answer</h3><p class="typed" style="color:var(--ink-soft);margin-top:-4px">Or write it on your paper Findings Report and take it to Captain Campbell. Either way works.</p>${t.fields.map(fl=>fieldHTML(t,fl)).join("")}
       <button class="btn" id="submitTask" style="background:var(--ink);border-color:var(--ink);color:var(--paper);width:100%">${isHost()?"Seal this finding":"Send to the officers"}</button>
       <p class="fb" id="taskFb" role="status"></p></div>`}
-    ${st!=="done" || nh ? `<details class="fold" style="margin-top:14px" ${nh?"open":""}><summary><b style="font-size:1rem">Hints${nh?` · ${nh} of 3 open`:""}</b></summary>
-      <div class="hintbox" style="margin-top:10px">${t.hints.slice(0,nh).map(h=>`<div class="hint"><span>${h[0].toUpperCase()}</span>${h[1]}</div>`).join("")}</div>
-      ${nh<3&&st!=="done"?`<p style="font-size:.9rem;color:var(--ink-soft)">Opening a hint opens it on every phone.</p><button class="btn ghost small" id="hintBtn" style="color:var(--ink);border-color:var(--ink-soft)">Open hint ${nh+1}</button>`:""}</details>` : ""}`;
+    ${st!=="done" ? `<details class="fold" style="margin-top:14px" ${nh||hintAsked(id)?"open":""}><summary><b style="font-size:1rem">Stuck?${nh?` · ${nh} of 3 hints given`:""}</b></summary>
+      <p style="font-size:.95rem;margin:10px 0 6px">Hints come from the officers in person, not from your phone. Ask, and Captain Campbell or Sister Mei Lan will come to you.</p>
+      ${hintAsked(id)?`<p class="typed" id="hintWait" style="color:var(--ink-soft)">Hint requested at ${S.hintReq[id].hhmm||""}. An officer is on the way.</p>`:nh<3?`<button class="btn ghost small" id="hintBtn" style="color:var(--ink);border-color:var(--ink-soft)">Ask the officers for a hint</button>`:`<p class="typed" style="color:var(--ink-soft)">The officers have given every hint for this lead.</p>`}</details>` : ""}`;
   if($("sheet").classList.contains("on") && curTask===id) $("sheetBody").innerHTML = body; else { openSheet(body, t.title); curTask=id; curSig=taskSig(id); }
 }
 function openTask(id){ curTask=id; $("sheet").classList.remove("on"); renderTaskSheet(id); }
@@ -1280,12 +1286,13 @@ $("sheetBody").addEventListener("click", e=>{
   const op=e.target.closest(".opt[data-fk]");
   if(op){ const k=op.dataset.fk; if(op.dataset.multi==="1"){ const s=new Set(drafts[t.id][k]||[]); s.has(op.dataset.v)?s.delete(op.dataset.v):s.add(op.dataset.v); drafts[t.id][k]=[...s]; op.setAttribute("aria-pressed",String(s.has(op.dataset.v))); }
     else { drafts[t.id][k]=op.dataset.v; op.parentElement.querySelectorAll(".opt").forEach(b=>b.setAttribute("aria-pressed",String(b===op))); } return; }
-  if(e.target.closest("#hintBtn")){ commit({hints:{[t.id]:Math.min(3,(S.hints[t.id]||0)+1)}}); return; }
+  if(e.target.closest("#hintBtn")){ if(hintAsked(t.id)) return; if(isHost()){ toast("Officers give hints from the clipboard."); return; }
+    commit({hintReq:{[t.id]:{at:Date.now(), by:DEV, hhmm:now()}}}); toast("Hint requested. An officer will come to you."); return; }
   if(e.target.closest("#submitTask")){
     const a=drafts[t.id], fb=$("taskFb");
     const missing = t.fields.some(f=> f.type==="dial" ? false : f.type==="suspects" ? !(a[f.key]||[]).length : !String(a[f.key]||"").trim());
     if(missing){ fb.textContent="Answer every part first."; return; }
-    if(!t.ok(a)){ tries[t.id]=(tries[t.id]||0)+1; fb.textContent = "The commission isn't convinced. Something here doesn't hold up." + (tries[t.id]>=2 && (S.hints[t.id]||0)<3 ? " A hint might help." : ""); return; }
+    if(!t.ok(a)){ tries[t.id]=(tries[t.id]||0)+1; fb.textContent = "The commission isn't convinced. Something here doesn't hold up." + (tries[t.id]>=2 && (S.hints[t.id]||0)<3 ? " You can ask the officers for a hint." : ""); return; }
     if(isHost()){ sealTask(t.id); return; }
     commit({pending:{[t.id]:{at:Date.now(), by:DEV, ans:answerSummary(t,a)}}, returned:{[t.id]:0}});
     toast("Sent to the officers for their stamp.");
@@ -1669,7 +1676,7 @@ function renderHost(){
   let body="";
   if(st.k==="box") body=`<p class="kicker">Now · Phase 1</p><h3>Waiting for the dispatch box</h3>
     <p>Players can only work the front office. The other five leads show as "opens when the box is opened".</p>
-    <ol class="hdo"><li><b>When a team records the combination</b>, it appears at the top of this screen for your stamp. Stamp it once they've shown you the open box; every phone then gets the dispatch.</li><li><b>Then you:</b> they unlock the darkroom with the brass key; hand over the provost file as they go in.</li><li><b>Stuck by 20:20?</b> Send hint 2 for the box below.</li></ol>
+    <ol class="hdo"><li><b>When a team records the combination</b>, it appears at the top of this screen for your stamp. Stamp it once they've shown you the open box; every phone then gets the dispatch.</li><li><b>Then you:</b> they unlock the darkroom with the brass key; hand over the provost file as they go in.</li><li><b>Stuck by 20:20?</b> Give hint 2 for the box in person; the words are in its row below.</li></ol>
     <button class="btn red" id="hostAdvance">They've opened the box · unlock the rear rooms</button>`;
   else if(st.k==="leads") body=`<p class="kicker">Now · Phase 2</p><h3>${left} of ${open2.length} rear-room leads still open</h3>
     <div class="hbar"><i style="width:${(open2.length-left)/open2.length*100}%"></i></div>
@@ -1680,17 +1687,22 @@ function renderHost(){
     <ol class="hdo"><li><b>You:</b> Campbell argues for A, Mei Lan for B. Let them debate.</li><li><b>Everyone signs</b> A or B on their own phone and can change their mind.</li><li><b>When the room is ready</b>, seal the docket. Only officers can.</li></ol>
     <button class="btn red" data-goto="verdict">Go to Form 8B to seal</button>`;
   else body=`<p class="kicker">Docket sealed</p><h3>Verdict ${S.sealed.verdict} · ${S.sealed.a}–${S.sealed.b}</h3><p>The epilogue is on every phone. Read it aloud.</p><button class="btn" data-goto="verdict">Show the epilogue</button>`;
-  const q=TASKS.filter(tk=>isPending(tk.id));
+  const q=TASKS.filter(tk=>isPending(tk.id)), hq=TASKS.filter(tk=>hintAsked(tk.id)&&!has(tk.id));
+  const hintCard = hq.length ? `<div class="stampq" id="hintQueue"><p class="kicker" style="margin:0">Hint requested · ${hq.length}</p>${hq.map(tk=>{ const n=Math.min(3,(S.hints[tk.id]||0)+1), h=tk.hints[n-1];
+      return `<div style="margin-top:10px"><b>${tk.title}</b> <span class="typed" style="color:var(--ink-soft)">asked ${S.hintReq[tk.id].hhmm||""} · hint ${n} of 3</span>
+      <p style="margin:6px 0"><span class="typed" style="color:var(--ink-soft)">${h[0]}, in person:</span><br>“${h[1]}”</p>
+      ${n===3?`<p class="typed" style="margin:0 0 6px;color:var(--ink-soft)">If that's not enough: ${tk.last}</p>`:""}
+      <div class="row"><button class="btn red" data-hintgiven="${tk.id}">Given in person</button><button class="btn ghost" data-hintno="${tk.id}">Not yet</button></div></div>`; }).join("")}</div>` : "";
   const queue = q.length ? `<div class="stampq" id="stampQueue"><p class="kicker" style="margin:0">Awaiting your stamp · ${q.length}</p>${q.map(tk=>`<div style="margin-top:10px"><b>${tk.title}</b>
       <dl>${(S.pending[tk.id].ans||[]).map(([qq,v])=>`<dt>${qq}</dt><dd>${v}</dd>`).join("")}</dl>
       <p class="typed" style="margin:0 0 6px;color:var(--ok)">✓ Matches the answer key${tk.id==="lockbox"?". Check they have actually opened the box.":"."}</p>
       <input id="note-${tk.id}" placeholder="Note if sending back (optional)" autocomplete="off" style="width:100%;margin-bottom:8px;background:#fffdf6;color:var(--ink);border:1px solid var(--ink-soft);border-radius:6px;padding:8px;font:inherit;box-sizing:border-box">
       <div class="row"><button class="btn red" data-stamp="${tk.id}">Stamp · release</button><button class="btn ghost" data-sendback="${tk.id}">Send back</button></div></div>`).join("")}</div>` : "";
-  $("nowCard").innerHTML = queue + track + body;
+  $("nowCard").innerHTML = hintCard + queue + track + body;
   $("leadCount").textContent = `${FINDINGS.filter(f=>has(f.id)).length} of 6 sealed`;
   $("leadCtl").innerHTML = TASKS.map(tk=>{ const sealed=has(tk.id), locked=tk.phase>S.phase, nh=S.hints[tk.id]||0;
-    return `<div class="lrow ${sealed?"ok":""}"><div><b>${tk.title}</b><small>${sealed?"Sealed "+(S.filed[tk.id]||"")+" hrs":isPending(tk.id)?"Awaiting your stamp":locked?"Not open yet":"Open"} · hints ${nh}/3</small></div>
-      <div class="row" style="gap:6px;justify-content:flex-end">${!sealed&&!locked&&nh<3?`<button class="btn ghost small" data-hint="${tk.id}">Send hint ${nh+1}</button>`:""}<button class="btn small ${sealed?"ghost":""}" data-find="${tk.id}">${sealed?"Unseal":"Seal for them"}</button></div></div>`; }).join("");
+    return `<div class="lrow ${sealed?"ok":""}"><div><b>${tk.title}</b><small>${sealed?"Sealed "+(S.filed[tk.id]||"")+" hrs":isPending(tk.id)?"Awaiting your stamp":locked?"Not open yet":"Open"} · hints ${nh}/3</small>${!sealed&&!locked&&nh<3?`<small style="margin-top:4px;font-family:var(--f-body);font-size:.88rem;color:var(--ink)">Next hint (${tk.hints[nh][0]}): “${tk.hints[nh][1]}”</small>`:""}</div>
+      <div class="row" style="gap:6px;justify-content:flex-end">${!sealed&&!locked&&nh<3?`<button class="btn ghost small" data-hint="${tk.id}" title="${tk.hints[nh][1].replace(/"/g,"&quot;")}">Log hint ${nh+1} given</button>`:""}<button class="btn small ${sealed?"ghost":""}" data-find="${tk.id}">${sealed?"Unseal":"Seal for them"}</button></div></div>`; }).join("");
   $("phaseCtl").innerHTML = PHASES.map(p=>`<div class="ctl-row"><div><b>Phase ${p.n} · ${p.name}</b><small>${p.at} hrs</small></div>${S.phase===p.n?pill("CURRENT","ok"):`<button class="btn small ${p.n<S.phase?"ghost":""}" data-phase="${p.n}">${p.n<S.phase?"Go back":"Release"}</button>`}</div>`).join("");
 }
 document.addEventListener("click", e=>{
@@ -1699,10 +1711,12 @@ document.addEventListener("click", e=>{
     else if(st.k==="leads"){ commit({phase:3, event:{id:uid(),kind:"phase",title:"Phase 3 · "+PHASES[2].name,text:PHASES[2].dispatch,at:Date.now()}}); }
     return; }
   const h=e.target.closest("[data-hint]"); if(h){ const tk=TASKS.find(x=>x.id===h.dataset.hint); const n=Math.min(3,(S.hints[tk.id]||0)+1); const hint=tk.hints[n-1];
-    commit({hints:{[tk.id]:n}, event:{id:uid(),kind:"hint",title:`${hint[0]} · on "${tk.title}"`,text:hint[1],at:Date.now()}}); toast("Hint sent to every phone."); return; }
+    commit({hints:{[tk.id]:n}, hintReq:{[tk.id]:0}}); toast(`Hint ${n} logged for ${tk.title}.`); return; }
 });
 $("nowCard").addEventListener("click", e=>{
   const st=e.target.closest("[data-stamp]"); if(st){ const id=st.dataset.stamp; if(isPending(id)){ sealTask(id); toast("Stamped. Released to every phone."); } return; }
+  const hg=e.target.closest("[data-hintgiven]"); if(hg){ const id=hg.dataset.hintgiven; commit({hints:{[id]:Math.min(3,(S.hints[id]||0)+1)}, hintReq:{[id]:0}}); toast("Hint logged as given."); return; }
+  const hn=e.target.closest("[data-hintno]"); if(hn){ commit({hintReq:{[hn.dataset.hintno]:0}}); toast("Request cleared."); return; }
   const sb=e.target.closest("[data-sendback]"); if(sb){ const id=sb.dataset.sendback, tk=TASKS.find(x=>x.id===id), note=($("note-"+id)?.value||"").trim();
     commit({pending:{[id]:0}, returned:{[id]:{at:Date.now(), note}}, event:{id:uid(),kind:"returned",title:`Sent back · ${tk.title}`,text:note||"The officers want you to look again.",at:Date.now()}}); toast("Sent back."); }
 });
@@ -1741,8 +1755,11 @@ function checkEvent(){
 /* ======================= RENDER ======================= */
 function renderAll(){
   renderCase(); renderTasks(); renderFiles(); renderMap(); renderVerdict(); renderHost(); renderDots(); tick(); checkEvent();
-  const nq=TASKS.filter(tk=>isPending(tk.id));
-  $("officersBtn").textContent = isHost() ? (nq.length?`Officers · ${nq.length} awaiting stamp`:"Officers · open clipboard") : "Officers only";
+  const nq=TASKS.filter(tk=>isPending(tk.id)), nh2=TASKS.filter(tk=>hintAsked(tk.id)&&!has(tk.id));
+  const waiting=[nq.length?`${nq.length} answer${nq.length>1?"s":""} to stamp`:"", nh2.length?`${nh2.length} hint ${nh2.length>1?"requests":"request"}`:""].filter(Boolean).join(" · ");
+  $("officersBtn").textContent = isHost() ? (waiting?`Officers · ${waiting}`:"Officers · open clipboard") : "Officers only";
+  if(isHost()){ nh2.forEach(tk=>{ const k="h:"+tk.id+":"+S.hintReq[tk.id].at; if(!seenPending.has(k)){ seenPending.add(k); if(booted) toast(`Hint requested: ${tk.title}`); } }); }
+  const ha=$("hostAlert"); if(ha){ const show=isHost()&&!!waiting; ha.hidden=!show; if(show) ha.textContent=`⚑ ${waiting[0].toUpperCase()+waiting.slice(1)} · tap to open the clipboard`; }
   if(isHost()){ nq.forEach(tk=>{ const k=tk.id+":"+S.pending[tk.id].at; if(!seenPending.has(k)){ seenPending.add(k); if(booted) toast(`New answer to stamp: ${tk.title}`); } }); }
 }
 renderAll(); go(screen);
@@ -1854,7 +1871,7 @@ function renderRoomCard(){
   const saved=cleanCode(LS.get("vsi3-room",""));
   if(saved){
     $("gateFb").textContent="Rejoining commission "+saved+"…";
-    try{ const r=await joinRoom(saved,false); if(r==="ok"){ showGate(false); return; } LS.set("vsi3-room",""); $("gateFb").textContent=""; }
+    try{ const r=await joinRoom(saved,false); if(r==="ok"){ showGate(false); if(HOSTPAGE) go("host"); return; } LS.set("vsi3-room",""); $("gateFb").textContent=""; }
     catch(e){ ROOM=saved; ref=roomRef(saved); docExists=true; setSync("CODE "+saved+" · OFFLINE"); startPolling(); showGate(false); return; }
   }
   setSync("");
