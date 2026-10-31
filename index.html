@@ -1211,7 +1211,10 @@ const tries = {};
 let curTask = null, curSig = "";
 const hintAsked = id => !!(S.hintReq && S.hintReq[id] && S.hintReq[id].at);
 const isPending = id => !has(id) && S.pending && S.pending[id] && S.pending[id].at;
-const tState = t => has(t.id) ? "done" : isPending(t.id) ? "pending" : (t.phase<=S.phase ? "open" : "locked");
+/* leads open one at a time: each waits for the one before it to be stamped */
+const prevLead = t => { const i=TASKS.indexOf(t); return i>0 ? TASKS[i-1] : null; };
+const leadOpen = t => t.phase<=S.phase && (!prevLead(t) || has(prevLead(t).id) || S.phase>=3);
+const tState = t => has(t.id) ? "done" : isPending(t.id) ? "pending" : (leadOpen(t) ? "open" : "locked");
 function answerSummary(t,a){ return t.fields.map(f=>{ let v=a[f.key];
   if(f.type==="dial") v=(a.combo||"000").split("").join("-");
   else if(f.type==="suspect") v=(PP[v]&&PP[v].name)||v;
@@ -1219,7 +1222,7 @@ function answerSummary(t,a){ return t.fields.map(f=>{ let v=a[f.key];
   return [f.q, String(v||"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])).slice(0,2000)]; }); }
 function taskRow(t){
   const st=tState(t);
-  const label = st==="done" ? `Sealed at ${S.filed[t.id]||""} hrs` : st==="pending" ? "With the officers, waiting for their stamp" : st==="locked" ? "Opens when Leong's box is opened" : t.q;
+  const label = st==="done" ? `Sealed at ${S.filed[t.id]||""} hrs` : st==="pending" ? "With the officers, waiting for their stamp" : st==="locked" ? (t.phase>S.phase ? "Opens when Leong's box is opened" : "Opens when the finding before it is stamped") : t.q;
   return `<button class="task ${st}" data-task="${t.id}">${st==="locked"?art("form"):art(t.art)}<span><b>${st==="locked"?"Sealed lead":t.title}</b><small>${label}</small></span>
     <span>${st==="done"?pill("SEALED","ok"):st==="pending"?pill("AWAITING STAMP","warn"):st==="locked"?pill("LATER","mute"):pill("OPEN","warn")}</span></button>`;
 }
@@ -1265,7 +1268,7 @@ function renderTaskSheet(id){
   const t=TASKS.find(x=>x.id===id); if(!t) return; curTask=id; curSig=taskSig(id);
   const st=tState(t), f=FINDINGS.find(x=>x.id===id), nh=S.hints[id]||0;
   const body = st==="locked"
-    ? `<p class="kicker">Sealed lead</p><h2>Behind the provost tape</h2><p>This question concerns the rear of the building. It opens on every phone once the officers have stamped the combination to Leong\'s dispatch box.</p><button class="btn" data-goto="tasks" style="background:var(--ink);border-color:var(--ink);color:var(--paper)">Back to the open lead</button>`
+    ? `<p class="kicker">Sealed lead</p><h2>Not yet</h2><p>${t.phase>S.phase?"This question concerns the rear of the building. It opens on every phone once the officers have stamped the combination to Leong's dispatch box.":"Leads open one at a time. This one opens on every phone when the officers stamp the finding before it."}</p><button class="btn" data-goto="tasks" style="background:var(--ink);border-color:var(--ink);color:var(--paper)">Back to the open lead</button>`
     : `<p class="kicker">Lead</p><h2>${t.title}</h2>
     <p>${t.story}</p>
     <p class="lead-q">${t.q}</p>
@@ -1709,7 +1712,7 @@ function renderHost(){
   $("nowCard").innerHTML = hintCard + queue + track + body;
   $("leadCount").textContent = `${FINDINGS.filter(f=>has(f.id)).length} of 6 sealed`;
   $("leadCtl").innerHTML = TASKS.map(tk=>{ const sealed=has(tk.id), locked=tk.phase>S.phase, nh=S.hints[tk.id]||0;
-    return `<div class="lrow ${sealed?"ok":""}"><div><b>${tk.title}</b><small>${sealed?"Sealed "+(S.filed[tk.id]||"")+" hrs":isPending(tk.id)?"Awaiting your stamp":locked?"Not open yet":"Open"} · hints ${nh}/3</small>${!sealed&&!locked&&nh<3?`<small style="margin-top:4px;font-family:var(--f-body);font-size:.88rem;color:var(--ink)">Next hint (${tk.hints[nh][0]}): “${tk.hints[nh][1]}”</small>`:""}</div>
+    return `<div class="lrow ${sealed?"ok":""}"><div><b>${tk.title}</b><small>${sealed?"Sealed "+(S.filed[tk.id]||"")+" hrs":isPending(tk.id)?"Awaiting your stamp":(locked||!leadOpen(tk))?"Not open yet":"Open"} · hints ${nh}/3</small>${!sealed&&!locked&&nh<3?`<small style="margin-top:4px;font-family:var(--f-body);font-size:.88rem;color:var(--ink)">Next hint (${tk.hints[nh][0]}): “${tk.hints[nh][1]}”</small>`:""}</div>
       <div class="row" style="gap:6px;justify-content:flex-end">${!sealed&&!locked&&nh<3?`<button class="btn ghost small" data-hint="${tk.id}" title="${tk.hints[nh][1].replace(/"/g,"&quot;")}">Log hint ${nh+1} given</button>`:""}<button class="btn small ${sealed?"ghost":""}" data-find="${tk.id}">${sealed?"Unseal":"Seal for them"}</button></div></div>`; }).join("");
   $("phaseCtl").innerHTML = PHASES.map(p=>`<div class="ctl-row"><div><b>Phase ${p.n} · ${p.name}</b><small>${p.at} hrs</small></div>${S.phase===p.n?pill("CURRENT","ok"):`<button class="btn small ${p.n<S.phase?"ghost":""}" data-phase="${p.n}">${p.n<S.phase?"Go back":"Release"}</button>`}</div>`).join("");
 }
